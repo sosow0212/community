@@ -9,8 +9,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import yoon.community.dto.RegisterDto;
 import yoon.community.response.Response;
-import yoon.community.response.Success;
 import yoon.community.service.UserService;
+
+import javax.validation.Valid;
 
 import static yoon.community.response.Response.success;
 
@@ -22,8 +23,15 @@ public class UserController {
 
     @ApiOperation(value = "회원가입", notes="회원가입 진행")
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/auth")
-    public Response register(@RequestBody RegisterDto registerDto) {
-        return success(userService.register(registerDto));
+    @PostMapping("/api/auth")
+    public Response register(@Valid @RequestBody RegisterDto registerDto) {
+        userService.register(registerDto);
+        return success();
     }
+
+//    @PostMapping("/api/sign-in")
+//    @ResponseStatus(HttpStatus.OK)
+//    public Response signIn(@Valid RegisterDto registerDto) { // 3
+//        return success(userService.signIn(req));
+//    }
 }
