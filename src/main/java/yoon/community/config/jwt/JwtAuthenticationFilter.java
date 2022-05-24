@@ -10,7 +10,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import yoon.community.config.auth.PrincipalDetails;
-import yoon.community.dto.LoginRequestDto;
+import yoon.community.dto.sign.LoginRequestDto;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;

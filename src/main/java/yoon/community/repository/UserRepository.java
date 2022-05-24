@@ -6,4 +6,7 @@ import yoon.community.entity.User;
 public interface UserRepository extends JpaRepository<User, Integer> {
     public User findByUsername(String username);
     public User findByName(String name);
+
+    public boolean existsByUsername(String username);
+    public boolean existsByNickname(String nickname);
 }

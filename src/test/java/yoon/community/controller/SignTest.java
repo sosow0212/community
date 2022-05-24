@@ -10,11 +10,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import yoon.community.dto.LoginRequestDto;
-import yoon.community.dto.RegisterDto;
+import yoon.community.dto.sign.RegisterDto;
 import yoon.community.service.UserService;
 
-import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
