@@ -33,7 +33,7 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter:5.5.2")
 
     // jwt
-    implementation group: 'com.auth0', name: 'java-jwt', version: '3.10.3'
+    implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
 
     // Swagger
     implementation 'io.springfox:springfox-boot-starter:3.0.0'

@@ -1,5 +1,6 @@
 package yoon.community.config;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -8,20 +9,22 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import yoon.community.config.jwt.JwtAuthenticationFilter;
-import yoon.community.config.jwt.JwtAuthorizationFilter;
+import org.springframework.web.filter.CorsFilter;
+import yoon.community.config.jwt.JwtAuthFilter;
 import yoon.community.repository.UserRepository;
 
 
 @Configuration
 @EnableWebSecurity // 시큐리티 활성화 -> 기본 스프링 필터체인에 등록
+@RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter{
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    @Autowired
-    private CorsConfig corsConfig;
+    private final CorsConfig corsConfig;
+
+    private final JwtAuthFilter jwtAuthFilter;
+
 
     @Bean
     public BCryptPasswordEncoder encoder() {
@@ -40,8 +43,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
                 .formLogin().disable()
                 .httpBasic().disable()
 
-                .addFilter(new JwtAuthenticationFilter(authenticationManager()))
-                .addFilter(new JwtAuthorizationFilter(authenticationManager(), userRepository))
                 .authorizeRequests()
                 .antMatchers("/boards/**")
                 .access("hasRole('ROLE_USER') or hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
@@ -52,6 +53,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
                 .antMatchers("/comments/**")
                 .access("hasRole('ROLE_USER') or hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
 
+                .antMatchers("/test/**")
+                .access("hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
+
                 .anyRequest().permitAll();
+
+        http.addFilterAfter(jwtAuthFilter, CorsFilter.class);
     }
 }

@@ -11,7 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import yoon.community.dto.sign.RegisterDto;
-import yoon.community.service.UserService;
+import yoon.community.service.AuthService;
 
 import static org.mockito.BDDMockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -20,14 +20,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ExtendWith(MockitoExtension.class)
 class SignTest {
-    @InjectMocks UserController userController;
-    @Mock UserService signService;
+    @InjectMocks
+    AuthController authController;
+    @Mock
+    AuthService signService;
     MockMvc mockMvc;
     ObjectMapper objectMapper = new ObjectMapper(); // 1
 
     @BeforeEach
     void beforeEach() {
-        mockMvc = MockMvcBuilders.standaloneSetup(userController).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(authController).build();
     }
 
     @Test
