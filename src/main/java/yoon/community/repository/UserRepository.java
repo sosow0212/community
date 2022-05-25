@@ -1,7 +1,7 @@
 package yoon.community.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import yoon.community.entity.User;
+import yoon.community.entity.user.User;
 
 import java.util.Optional;
 

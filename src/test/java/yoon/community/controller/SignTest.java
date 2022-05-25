@@ -44,7 +44,7 @@ class SignTest {
                                 .content(objectMapper.writeValueAsString(req))) // 2
                 .andExpect(status().isCreated());
 
-        verify(signService).register(req);
+        verify(signService).signup(req);
     }
 
 //    @Test

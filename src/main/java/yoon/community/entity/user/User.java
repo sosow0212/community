@@ -1,14 +1,12 @@
-package yoon.community.entity;
+package yoon.community.entity.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -32,13 +30,16 @@ public class User {
     @Column(nullable = false, unique = true)
     private String nickname;
 
-    private String roles; // USER, ADMIN
+    @Enumerated(EnumType.STRING)
+    private Authority authority;
 
-    public List<String> getRoleList() {
-        if (this.roles.length() > 0) {
-            return Arrays.asList(this.roles.split(","));
-        }
-        return new ArrayList<>();
+    @Builder
+    public User(String username, String password, Authority authority) {
+        this.username = username;
+        this.password = password;
+        this.name = name;
+        this.nickname = nickname;
+        this.authority = authority;
     }
 
 }
