@@ -18,7 +18,7 @@ public class SwaggerConfig {
         return new Docket(DocumentationType.OAS_30)
                 .useDefaultResponseMessages(false)
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("self.study.controller"))
+                .apis(RequestHandlerSelectors.basePackage("yoon.community.controller"))
                 .paths(PathSelectors.any())
                 .build()
                 .apiInfo(apiInfo());
