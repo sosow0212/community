@@ -32,13 +32,13 @@ public class AuthService {
     public void signup(RegisterDto req) {
         validateSignUpInfo(req);
 
+        // Builder로 리팩토링 해야함
         User user = new User();
         user.setUsername(req.getUsername());
         user.setPassword(passwordEncoder.encode(req.getPassword()));
         user.setNickname(req.getNickname());
         user.setName(req.getName());
         user.setAuthority(Authority.ROLE_USER);
-
         userRepository.save(user);
     }
 
@@ -48,6 +48,8 @@ public class AuthService {
         User user = userRepository.findByUsername(req.getUsername()).orElseThrow(() -> {
             return new LoginFailureException();
         });
+
+        validatePassword(req, user);
 
         // 1. Login ID/PW 를 기반으로 AuthenticationToken 생성
         UsernamePasswordAuthenticationToken authenticationToken = req.toAuthentication();
@@ -70,7 +72,6 @@ public class AuthService {
         // 5. 토큰 발급
         return tokenDto;
     }
-
 
 
     @Transactional
@@ -104,19 +105,15 @@ public class AuthService {
     }
 
 
-
-
-
-
     private void validateSignUpInfo(RegisterDto registerDto) {
-        if(userRepository.existsByUsername(registerDto.getUsername()))
+        if (userRepository.existsByUsername(registerDto.getUsername()))
             throw new MemberUsernameAlreadyExistsException(registerDto.getUsername());
-        if(userRepository.existsByNickname(registerDto.getNickname()))
+        if (userRepository.existsByNickname(registerDto.getNickname()))
             throw new MemberNicknameAlreadyExistsException(registerDto.getNickname());
     }
 
     private void validatePassword(LoginRequestDto loginRequestDto, User user) {
-        if(!passwordEncoder.matches(loginRequestDto.getPassword(), user.getPassword())) {
+        if (!passwordEncoder.matches(loginRequestDto.getPassword(), user.getPassword())) {
             throw new LoginFailureException();
         }
     }
