@@ -44,7 +44,7 @@ public class AuthService {
 
 
     @Transactional
-    public TokenDto signIn(LoginRequestDto req) {
+    public TokenResponseDto signIn(LoginRequestDto req) {
         User user = userRepository.findByUsername(req.getUsername()).orElseThrow(() -> {
             return new LoginFailureException();
         });
@@ -68,14 +68,14 @@ public class AuthService {
                 .build();
 
         refreshTokenRepository.save(refreshToken);
-
+        TokenResponseDto tokenResponseDto = new TokenResponseDto(tokenDto.getAccessToken(), tokenDto.getRefreshToken());
         // 5. 토큰 발급
-        return tokenDto;
+        return tokenResponseDto;
     }
 
 
     @Transactional
-    public TokenDto reissue(TokenRequestDto tokenRequestDto) {
+    public TokenResponseDto reissue(TokenRequestDto tokenRequestDto) {
         // 1. Refresh Token 검증
         if (!tokenProvider.validateToken(tokenRequestDto.getRefreshToken())) {
             throw new RuntimeException("Refresh Token 이 유효하지 않습니다.");
@@ -101,7 +101,8 @@ public class AuthService {
         refreshTokenRepository.save(newRefreshToken);
 
         // 토큰 발급
-        return tokenDto;
+        TokenResponseDto tokenResponseDto = new TokenResponseDto(tokenDto.getAccessToken(), tokenDto.getRefreshToken());
+        return tokenResponseDto;
     }
 
 
