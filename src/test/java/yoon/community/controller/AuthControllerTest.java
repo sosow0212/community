@@ -38,11 +38,11 @@ class AuthControllerTest {
     @Test
     void signUpTest() throws Exception {
         // given
-        RegisterDto req = new RegisterDto("test123", "test", "username", "nickname");
+        SignUpRequestDto req = new SignUpRequestDto("test123", "test", "username", "nickname");
 
         // when, then
         mockMvc.perform(
-                        post("/auth/signup")
+                        post("/api/sign-up")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(objectMapper.writeValueAsString(req)))
                 .andExpect(status().isCreated());
@@ -59,7 +59,7 @@ class AuthControllerTest {
 
         // when, then
         mockMvc.perform(
-                        post("/auth/sign-in")
+                        post("/api/sign-in")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(objectMapper.writeValueAsString(req)))
                 .andExpect(status().isOk())
@@ -74,11 +74,11 @@ class AuthControllerTest {
     void ignoreNullValueInJsonResponseTest() throws Exception {
         // 응답결과로 반환되는 JSON 문자열이 올바르게 제거되는지 검증
         // given
-        RegisterDto req = new RegisterDto("test123", "test", "username", "nickname");
+        SignUpRequestDto req = new SignUpRequestDto("test123", "test", "username", "nickname");
 
         // when, then
         mockMvc.perform(
-                        post("/auth/signup")
+                        post("/api/sign-up")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(objectMapper.writeValueAsString(req)))
                 .andExpect(status().isCreated())

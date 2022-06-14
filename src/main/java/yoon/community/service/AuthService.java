@@ -29,7 +29,7 @@ public class AuthService {
     private final RefreshTokenRepository refreshTokenRepository;
 
     @Transactional
-    public void signup(RegisterDto req) {
+    public void signup(SignUpRequestDto req) {
         validateSignUpInfo(req);
 
         // Builder로 리팩토링 해야함
@@ -106,11 +106,11 @@ public class AuthService {
     }
 
 
-    private void validateSignUpInfo(RegisterDto registerDto) {
-        if (userRepository.existsByUsername(registerDto.getUsername()))
-            throw new MemberUsernameAlreadyExistsException(registerDto.getUsername());
-        if (userRepository.existsByNickname(registerDto.getNickname()))
-            throw new MemberNicknameAlreadyExistsException(registerDto.getNickname());
+    private void validateSignUpInfo(SignUpRequestDto signUpRequestDto) {
+        if (userRepository.existsByUsername(signUpRequestDto.getUsername()))
+            throw new MemberUsernameAlreadyExistsException(signUpRequestDto.getUsername());
+        if (userRepository.existsByNickname(signUpRequestDto.getNickname()))
+            throw new MemberNicknameAlreadyExistsException(signUpRequestDto.getNickname());
     }
 
     private void validatePassword(LoginRequestDto loginRequestDto, User user) {

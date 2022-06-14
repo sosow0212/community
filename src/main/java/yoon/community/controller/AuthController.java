@@ -1,14 +1,12 @@
 package yoon.community.controller;
 
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import yoon.community.config.jwt.TokenProvider;
 import yoon.community.dto.sign.LoginRequestDto;
-import yoon.community.dto.sign.RegisterDto;
-import yoon.community.dto.sign.TokenDto;
+import yoon.community.dto.sign.SignUpRequestDto;
 import yoon.community.dto.sign.TokenRequestDto;
 import yoon.community.response.Response;
 import yoon.community.service.AuthService;
@@ -17,18 +15,19 @@ import javax.validation.Valid;
 
 import static yoon.community.response.Response.success;
 
+@Api(value = "Sign Controller", tags = "Sign")
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api")
 public class AuthController {
 
     private final AuthService authService;
 
     @ApiOperation(value = "회원가입", notes = "회원가입 진행")
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/signup")
-    public Response register(@Valid @RequestBody RegisterDto registerDto) {
-        authService.signup(registerDto);
+    @PostMapping("/sign-up")
+    public Response register(@Valid @RequestBody SignUpRequestDto signUpRequestDto) {
+        authService.signup(signUpRequestDto);
         return success();
     }
 

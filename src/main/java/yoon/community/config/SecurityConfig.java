@@ -54,7 +54,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
 
-                .antMatchers("/auth/**").permitAll() // 이건 그냥 누구나 접근 가능
+                .antMatchers("/api/reissue").permitAll()
+                .antMatchers("/api/sign-up").permitAll()
+                .antMatchers("/api/sign-in").permitAll()
+
                 .antMatchers("/swagger-ui/**").permitAll() // swagger
                 .antMatchers("/v3/**").permitAll() // swagger
 
