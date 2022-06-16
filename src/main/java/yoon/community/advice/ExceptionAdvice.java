@@ -6,10 +6,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import yoon.community.exception.LoginFailureException;
-import yoon.community.exception.MemberNicknameAlreadyExistsException;
-import yoon.community.exception.MemberNotFoundException;
-import yoon.community.exception.MemberUsernameAlreadyExistsException;
+import yoon.community.exception.*;
 import yoon.community.response.Response;
 
 import javax.management.relation.RoleNotFoundException;
@@ -41,6 +38,14 @@ public class ExceptionAdvice {
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public Response loginFailureException() {
         return Response.failure(401, "로그인에 실패하였습니다.");
+    }
+
+    // 401 응답
+    // 유저 정보가 일치하지 않음
+    @ExceptionHandler(MemberNotEqualsException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public Response memberNotEqualsException() {
+        return Response.failure(401, "유저 정보가 일치하지 않습니다.");
     }
 
 
@@ -77,4 +82,5 @@ public class ExceptionAdvice {
     public Response roleNotFoundException() {
         return Response.failure(404, "요청한 권한 등급을 찾을 수 없습니다.");
     }
+
 }
