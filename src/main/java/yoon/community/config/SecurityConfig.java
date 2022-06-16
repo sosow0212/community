@@ -2,6 +2,7 @@ package yoon.community.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -54,29 +55,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
 
-                .antMatchers("/api/reissue").permitAll()
-                .antMatchers("/api/sign-up").permitAll()
-                .antMatchers("/api/sign-in").permitAll()
-
-                .antMatchers("/swagger-ui/**").permitAll() // swagger
-                .antMatchers("/v3/**").permitAll() // swagger
-
-
-                .antMatchers("/boards/**")
-                .access("hasRole('ROLE_USER') or hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
-                .antMatchers("/messages/**")
-                .access("hasRole('ROLE_USER') or hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
-                .antMatchers("/users/**")
-                .access("hasRole('ROLE_USER') or hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
-                .antMatchers("/comments/**")
-                .access("hasRole('ROLE_USER') or hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
+                .antMatchers("/swagger-ui/**", "/v3/**").permitAll() // swagger
                 .antMatchers("/test")
                 .access("hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
 
 
-                .antMatchers("/all").permitAll() // 이건 그냥 누구나 접근 가능
-
-                .anyRequest().authenticated() // 나머지는 전부 인증 필요
+                .antMatchers("/api/sign-up", "/api/sign-in", "/api/reissue").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/users").access("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
+                .antMatchers(HttpMethod.GET, "/api/users/{id}").access("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
+                .antMatchers(HttpMethod.PUT, "/api/users/{id}").access("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
+                .antMatchers(HttpMethod.DELETE, "/api/users/{id}").access("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
+                .anyRequest().hasAnyRole("ROLE_ADMIN")
+//                .anyRequest().authenticated() // 나머지는 전부 인증 필요
 //                .anyRequest().permitAll()   // 나머지는 모두 그냥 접근 가능
 
                 // JwtFilter 를 addFilterBefore 로 등록했던 JwtSecurityConfig 클래스를 적용
