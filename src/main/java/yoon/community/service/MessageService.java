@@ -114,6 +114,8 @@ public class MessageService {
 
         if(message.getReceiver() == user) {
             message.deleteByReceiver();
+        } else {
+            throw new MemberNotEqualsException();
         }
 
         if(message.isDeletedMessage()) {
@@ -131,6 +133,8 @@ public class MessageService {
 
         if(message.getSender() == user) {
             message.deleteBySender();
+        } else {
+            throw new MemberNotEqualsException();
         }
 
         if(message.isDeletedMessage()) {
