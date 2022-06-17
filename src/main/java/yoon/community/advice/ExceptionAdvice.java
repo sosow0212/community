@@ -67,7 +67,7 @@ public class ExceptionAdvice {
 
 
     // 404 응답
-    // 요청한 자원을 찾을 수 없음
+    // 요청한 User를 찾을 수 없음
     @ExceptionHandler(MemberNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public Response memberNotFoundException() {
@@ -81,6 +81,14 @@ public class ExceptionAdvice {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public Response roleNotFoundException() {
         return Response.failure(404, "요청한 권한 등급을 찾을 수 없습니다.");
+    }
+
+    // 404 응답
+    // 요청한 Message를 찾을 수 없음
+    @ExceptionHandler(MessageNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Response messageNotFountException() {
+        return Response.failure(404, "메시지를 찾을 수 없습니다.");
     }
 
 }
