@@ -65,6 +65,10 @@ public class MessageService {
         if(message.getReceiver() != user) {
             throw new MemberNotEqualsException();
         }
+
+        if(message.isDeletedByReceiver()) {
+            throw new MessageNotFoundException();
+        }
         return MessageDto.toDto(message);
     }
 
@@ -93,6 +97,10 @@ public class MessageService {
 
         if(message.getSender() != user) {
             throw new MemberNotEqualsException();
+        }
+
+        if(message.isDeletedByReceiver()) {
+            throw new MessageNotFoundException();
         }
         return MessageDto.toDto(message);
     }
