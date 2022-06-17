@@ -23,7 +23,6 @@ public class MessageController {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/messages")
     public Response createMessage(@Valid @RequestBody MessageCreateRequest req) {
-        System.out.println("실행됨?ㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇ");
         return Response.success(messageService.createMessage(req));
     }
 
