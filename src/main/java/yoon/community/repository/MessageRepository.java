@@ -8,6 +8,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface MessageRepository extends JpaRepository<Message, Integer> {
-    List<Message> findAllByReceiver(User user);
-    List<Message> findAllBySender(User user);
+    List<Message> findAllByReceiverAndDeletedByReceiverFalseOrderByIdDesc(User user);
+    List<Message> findAllBySenderAndDeletedBySenderFalseOrderByIdDesc(User user);
 }

@@ -2,7 +2,6 @@ package yoon.community.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,12 +43,10 @@ public class MessageService {
         User user = userRepository.findByUsername(authentication.getName()).orElseThrow(MemberNotFoundException::new);
 
         List<MessageDto> messageDtoList = new ArrayList<>();
-        List<Message> messageList = messageRepository.findAllByReceiver(user);
+        List<Message> messageList = messageRepository.findAllByReceiverAndDeletedByReceiverFalseOrderByIdDesc(user);
 
         for(Message message : messageList) {
-            if(!message.isDeletedByReceiver()) {
-                messageDtoList.add(MessageDto.toDto(message));
-            }
+            messageDtoList.add(MessageDto.toDto(message));
         }
         return messageDtoList;
     }
@@ -78,12 +75,10 @@ public class MessageService {
         User user = userRepository.findByUsername(authentication.getName()).orElseThrow(MemberNotFoundException::new);
 
         List<MessageDto> messageDtoList = new ArrayList<>();
-        List<Message> messageList = messageRepository.findAllBySender(user);
+        List<Message> messageList = messageRepository.findAllBySenderAndDeletedBySenderFalseOrderByIdDesc(user);
 
         for(Message message : messageList) {
-            if(!message.isDeletedBySender()) {
-                messageDtoList.add(MessageDto.toDto(message));
-            }
+            messageDtoList.add(MessageDto.toDto(message));
         }
         return messageDtoList;
     }
