@@ -28,13 +28,11 @@ public class MessageService {
     @Transactional
     public MessageDto createMessage(MessageCreateRequest req) {
         User receiver = userRepository.findByNickname(req.getReceiverNickname()).orElseThrow(MemberNotFoundException::new);
-
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User sender = userRepository.findByUsername(authentication.getName()).orElseThrow(MemberNotFoundException::new);
-        Message message = new Message(req.getTitle(), req.getContent(), sender, receiver);
-        messageRepository.save(message);
 
-        return MessageDto.toDto(message);
+        Message message = new Message(req.getTitle(), req.getContent(), sender, receiver);
+        return MessageDto.toDto(messageRepository.save(message));
     }
 
     @Transactional(readOnly = true)

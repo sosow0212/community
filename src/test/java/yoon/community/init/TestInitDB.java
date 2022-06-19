@@ -8,6 +8,7 @@ import yoon.community.entity.user.Authority;
 import yoon.community.entity.user.User;
 import yoon.community.repository.UserRepository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Component
@@ -32,7 +33,7 @@ public class TestInitDB {
     private void initTestAdmin() {
         userRepository.saveAll(
                 List.of(
-                        new User(1, adminUsername, passwordEncoder.encode(password), "이름", "닉네임", Authority.ROLE_ADMIN)
+                        new User(1, adminUsername, passwordEncoder.encode(password), "이름", "닉네임", Authority.ROLE_ADMIN, LocalDate.now())
                 ));
 
     }
@@ -40,8 +41,8 @@ public class TestInitDB {
     private void initTestUser() {
         userRepository.saveAll(
                 List.of(
-                        new User(1, userUsername, passwordEncoder.encode(password), "이름", "닉네임", Authority.ROLE_USER),
-                        new User(2, userUsername, passwordEncoder.encode(password), "이름2", "닉네임2", Authority.ROLE_USER))
+                        new User(1, userUsername, passwordEncoder.encode(password), "이름", "닉네임", Authority.ROLE_USER, LocalDate.now()),
+                        new User(2, userUsername, passwordEncoder.encode(password), "이름2", "닉네임2", Authority.ROLE_USER, LocalDate.now()))
                 );
     }
 
