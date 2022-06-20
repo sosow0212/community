@@ -1,4 +1,4 @@
-package yoon.community.controller;
+package yoon.community.controller.auth;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -9,7 +9,7 @@ import yoon.community.dto.sign.LoginRequestDto;
 import yoon.community.dto.sign.SignUpRequestDto;
 import yoon.community.dto.sign.TokenRequestDto;
 import yoon.community.response.Response;
-import yoon.community.service.AuthService;
+import yoon.community.service.auth.AuthService;
 
 import javax.validation.Valid;
 

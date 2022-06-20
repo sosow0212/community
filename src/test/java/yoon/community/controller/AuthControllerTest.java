@@ -11,8 +11,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import yoon.community.controller.auth.AuthController;
 import yoon.community.dto.sign.*;
-import yoon.community.service.AuthService;
+import yoon.community.service.auth.AuthService;
 
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.verify;

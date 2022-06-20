@@ -1,4 +1,4 @@
-package yoon.community.service;
+package yoon.community.service.auth;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -15,8 +15,8 @@ import yoon.community.entity.user.User;
 import yoon.community.exception.LoginFailureException;
 import yoon.community.exception.MemberNicknameAlreadyExistsException;
 import yoon.community.exception.MemberUsernameAlreadyExistsException;
-import yoon.community.repository.RefreshTokenRepository;
-import yoon.community.repository.UserRepository;
+import yoon.community.repository.refreshToken.RefreshTokenRepository;
+import yoon.community.repository.user.UserRepository;
 
 @Service
 @RequiredArgsConstructor

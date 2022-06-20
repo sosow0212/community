@@ -1,4 +1,4 @@
-package yoon.community.controller;
+package yoon.community.controller.user;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import yoon.community.dto.user.UserDto;
 import yoon.community.response.Response;
-import yoon.community.service.UserService;
+import yoon.community.service.user.UserService;
 
 @Api(value = "User Controller", tags = "User")
 @RequestMapping("/api")
