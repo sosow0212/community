@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import yoon.community.entity.user.Authority;
 import yoon.community.entity.user.User;
-import yoon.community.repository.UserRepository;
+import yoon.community.repository.user.UserRepository;
 
 import java.time.LocalDate;
 import java.util.List;

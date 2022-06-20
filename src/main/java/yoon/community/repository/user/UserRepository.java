@@ -1,4 +1,4 @@
-package yoon.community.repository;
+package yoon.community.repository.user;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import yoon.community.entity.user.User;

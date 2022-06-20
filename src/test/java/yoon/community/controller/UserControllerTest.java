@@ -11,8 +11,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import yoon.community.controller.user.UserController;
 import yoon.community.dto.user.UserDto;
-import yoon.community.service.UserService;
+import yoon.community.service.user.UserService;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;

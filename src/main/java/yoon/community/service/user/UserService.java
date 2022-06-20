@@ -1,4 +1,4 @@
-package yoon.community.service;
+package yoon.community.service.user;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -10,7 +10,7 @@ import yoon.community.entity.user.Authority;
 import yoon.community.entity.user.User;
 import yoon.community.exception.MemberNotEqualsException;
 import yoon.community.exception.MemberNotFoundException;
-import yoon.community.repository.UserRepository;
+import yoon.community.repository.user.UserRepository;
 
 import java.util.ArrayList;
 import java.util.List;
