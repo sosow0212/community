@@ -1,4 +1,4 @@
-package yoon.community.repository;
+package yoon.community.repository.message;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import yoon.community.entity.message.Message;

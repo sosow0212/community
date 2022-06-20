@@ -1,4 +1,4 @@
-package yoon.community.controller;
+package yoon.community.controller.message;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import yoon.community.dto.message.MessageCreateRequest;
 import yoon.community.response.Response;
-import yoon.community.service.MessageService;
+import yoon.community.service.message.MessageService;
 
 import javax.validation.Valid;
 
