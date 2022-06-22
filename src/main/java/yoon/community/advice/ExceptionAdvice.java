@@ -2,6 +2,7 @@ package yoon.community.advice;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.BindException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -31,6 +32,14 @@ public class ExceptionAdvice {
         return Response.failure(400, e.getBindingResult().getFieldError().getDefaultMessage());
     }
 
+    // 400 에러
+    // Valid 제약조건 위배 캐치
+    @ExceptionHandler(BindException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Response bindException(BindException e) {
+        return Response.failure(400, e.getBindingResult().getFieldError().getDefaultMessage());
+    }
+
 
     // 401 응답
     // 아이디 혹은 비밀번호 오류시
@@ -46,23 +55,6 @@ public class ExceptionAdvice {
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public Response memberNotEqualsException() {
         return Response.failure(401, "유저 정보가 일치하지 않습니다.");
-    }
-
-
-    // 409 응답
-    // username 중복
-    @ExceptionHandler(MemberUsernameAlreadyExistsException.class)
-    @ResponseStatus(HttpStatus.CONFLICT)
-    public Response memberEmailAlreadyExistsException(MemberUsernameAlreadyExistsException e) {
-        return Response.failure(409, e.getMessage() + "은 중복된 아이디 입니다.");
-    }
-
-    // 409 응답
-    // nickname 중복
-    @ExceptionHandler(MemberNicknameAlreadyExistsException.class)
-    @ResponseStatus(HttpStatus.CONFLICT)
-    public Response memberNicknameAlreadyExistsException(MemberNicknameAlreadyExistsException e) {
-        return Response.failure(409, e.getMessage() + "은 중복된 닉네임 입니다.");
     }
 
 
@@ -91,4 +83,46 @@ public class ExceptionAdvice {
         return Response.failure(404, "메시지를 찾을 수 없습니다.");
     }
 
+
+    // 404 응답
+    // Image 형식 지원하지 않음
+    @ExceptionHandler(UnsupportedImageFormatException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Response unsupportedImageFormatException() {
+        return Response.failure(404, "이미지 형식을 지원하지 않습니다.");
+    }
+
+    // 404 응답
+    // 파일 업로드 실패
+    @ExceptionHandler(FileUploadFailureException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Response fileUploadFailureException(FileUploadFailureException e) {
+        log.error("e = {}", e.getMessage());
+        return Response.failure(404, "이미지 업로드 실패");
+    }
+
+    // 404 응답
+    // 게시글 찾기 실패
+    @ExceptionHandler(BoardNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Response boardNotFoundException() {
+        return Response.failure(404, "게시글을 찾을 수 없습니다.");
+    }
+
+
+    // 409 응답
+    // username 중복
+    @ExceptionHandler(MemberUsernameAlreadyExistsException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public Response memberEmailAlreadyExistsException(MemberUsernameAlreadyExistsException e) {
+        return Response.failure(409, e.getMessage() + "은 중복된 아이디 입니다.");
+    }
+
+    // 409 응답
+    // nickname 중복
+    @ExceptionHandler(MemberNicknameAlreadyExistsException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public Response memberNicknameAlreadyExistsException(MemberNicknameAlreadyExistsException e) {
+        return Response.failure(409, e.getMessage() + "은 중복된 닉네임 입니다.");
+    }
 }
