@@ -1,0 +1,37 @@
+package yoon.community.dto.board;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import yoon.community.dto.user.UserDto;
+import yoon.community.entity.board.Board;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
+
+import static java.util.stream.Collectors.toList;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class BoardDto {
+    private int id;
+    private String title;
+    private String content;
+    private UserDto userDto;
+    private List<ImageDto> images;
+    private LocalDate createdAt;
+
+    public static BoardDto toDto(Board board) {
+        return new BoardDto(
+                board.getId(),
+                board.getTitle(),
+                board.getContent(),
+                UserDto.toDto(board.getUser()),
+                board.getImages().stream().map(i -> ImageDto.toDto(i)).collect(toList()),
+                board.getCreateDate()
+        );
+    }
+}
