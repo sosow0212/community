@@ -3,6 +3,7 @@ package yoon.community.dto.board;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import yoon.community.entity.board.Board;
 
 @Data
 @AllArgsConstructor
@@ -12,5 +13,9 @@ public class BoardSimpleDto {
     private int id;
     private String title;
     private String nickname;
+
+    public BoardSimpleDto toDto(Board board) {
+        return new BoardSimpleDto(board.getId() ,board.getTitle(), board.getUser().getNickname());
+    }
 
 }

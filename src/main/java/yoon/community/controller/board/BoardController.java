@@ -5,13 +5,13 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import yoon.community.dto.board.BoardCreateRequest;
-import yoon.community.dto.board.BoardReadCondition;
 import yoon.community.dto.board.BoardUpdateRequest;
-import yoon.community.entity.board.Board;
 import yoon.community.response.Response;
 import yoon.community.service.board.BoardService;
 
@@ -25,7 +25,7 @@ import javax.validation.Valid;
 public class BoardController {
     private final BoardService boardService;
 
-    @ApiOperation(value ="게시글 생성", notes = "게시글을 작성합니다.")
+    @ApiOperation(value = "게시글 생성", notes = "게시글을 작성합니다.")
     @PostMapping("/boards")
     @ResponseStatus(HttpStatus.CREATED)
     public Response create(@Valid @ModelAttribute BoardCreateRequest req) {
@@ -35,8 +35,9 @@ public class BoardController {
     @ApiOperation(value = "게시글 목록 조회", notes = "게시글 목록을 조회합니다.")
     @GetMapping("/boards")
     @ResponseStatus(HttpStatus.OK)
-    public Response findAllBoards(@RequestParam(value = "page", defaultValue = "0") int page) {
-        return Response.success(boardService.findAllBoards(page));
+    public Response findAllBoards(@PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+        // ex) http://localhost:8080/api/boards/?page=0
+        return Response.success(boardService.findAllBoards(pageable));
     }
 
     @ApiOperation(value = "게시글 단건 조회", notes = "게시글을 단건 조회합니다.")
@@ -53,12 +54,20 @@ public class BoardController {
         return Response.success(boardService.editBoard(id, req));
     }
 
-    @ApiOperation(value = "게시글 삭제", notes = "게시글을 삭제합니다..")
+    @ApiOperation(value = "게시글 삭제", notes = "게시글을 삭제합니다.")
     @DeleteMapping("/boards/{id}")
     @ResponseStatus(HttpStatus.OK)
     public Response deleteBoard(@PathVariable int id) {
         boardService.deleteBoard(id);
         return Response.success();
+    }
+
+    @ApiOperation(value = "게시글 검색", notes = "게시글을 검색합니다.")
+    @GetMapping("/boards/search")
+    @ResponseStatus(HttpStatus.OK)
+    public Response search(String keyword, @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+        // ex) http://localhost:8080/api/boards/search?page=0
+        return Response.success(boardService.search(keyword, pageable));
     }
 
 }

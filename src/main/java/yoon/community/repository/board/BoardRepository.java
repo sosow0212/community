@@ -8,7 +8,8 @@ import yoon.community.entity.board.Board;
 import java.util.List;
 
 public interface BoardRepository extends JpaRepository<Board, Integer> {
-    Page<Board> findAll(Pageable pageable);
 
+    List<Board> findByTitleContaining(String keyword, Pageable pageable);
+    Page<Board> findAll(Pageable pageable);
 
 }

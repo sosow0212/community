@@ -21,6 +21,7 @@ import yoon.community.repository.user.UserRepository;
 import yoon.community.service.file.FileService;
 
 import java.security.Security;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
 
@@ -47,9 +48,11 @@ public class BoardService {
     }
 
     @Transactional(readOnly = true)
-    public Page<Board> findAllBoards(int page) {
-        Pageable pageable = PageRequest.of(page, 10);
-        return boardRepository.findAll(pageable);
+    public List<BoardSimpleDto> findAllBoards(Pageable pageable) {
+        Page<Board> boards = boardRepository.findAll(pageable);
+        List<BoardSimpleDto> boardSimpleDtoList = new ArrayList<>();
+        boards.stream().forEach(i -> boardSimpleDtoList.add(new BoardSimpleDto().toDto(i)));
+        return boardSimpleDtoList;
     }
 
     @Transactional(readOnly = true)
@@ -86,6 +89,13 @@ public class BoardService {
         boardRepository.delete(board);
     }
 
+    @Transactional(readOnly = true)
+    public List<BoardSimpleDto> search(String keyword, Pageable pageable) {
+        List<Board> boards = boardRepository.findByTitleContaining(keyword, pageable);
+        List<BoardSimpleDto> boardSimpleDtoList = new ArrayList<>();
+        boards.stream().forEach(i -> boardSimpleDtoList.add(new BoardSimpleDto().toDto(i)));
+        return boardSimpleDtoList;
+    }
 
 
 
