@@ -41,6 +41,8 @@ public class Board {
     @OneToMany(mappedBy = "board", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<Image> images;
 
+    @Column(nullable = true)
+    private int liked; // 추천 수
 
     @DateTimeFormat(pattern = "yyyy-mm-dd")
     private LocalDate createDate; // 날짜
@@ -54,6 +56,7 @@ public class Board {
         this.title = title;
         this.content = content;
         this.user = user;
+        this.liked = 0;
         this.images = new ArrayList<>();
         addImages(images);
     }

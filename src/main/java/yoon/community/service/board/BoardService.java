@@ -12,11 +12,13 @@ import org.springframework.web.multipart.MultipartFile;
 import yoon.community.dto.board.*;
 import yoon.community.entity.board.Board;
 import yoon.community.entity.board.Image;
+import yoon.community.entity.board.LikeBoard;
 import yoon.community.entity.user.User;
 import yoon.community.exception.BoardNotFoundException;
 import yoon.community.exception.MemberNotEqualsException;
 import yoon.community.exception.MemberNotFoundException;
 import yoon.community.repository.board.BoardRepository;
+import yoon.community.repository.board.LikeBoardRepository;
 import yoon.community.repository.user.UserRepository;
 import yoon.community.service.file.FileService;
 
@@ -34,6 +36,7 @@ public class BoardService {
     private final UserRepository userRepository;
     private final BoardRepository boardRepository;
     private final FileService fileService;
+    private final LikeBoardRepository likeBoardRepository;
 
     @Transactional
     public BoardCreateResponse create(BoardCreateRequest req) {
@@ -58,6 +61,37 @@ public class BoardService {
     @Transactional(readOnly = true)
     public BoardDto findBoard(int id) {
         return BoardDto.toDto(boardRepository.findById(id).orElseThrow(BoardNotFoundException::new));
+    }
+
+    @Transactional
+    public String likeBoard(int id) {
+        Board board = boardRepository.findById(id).orElseThrow(BoardNotFoundException::new);
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findByUsername(authentication.getName()).orElseThrow(MemberNotFoundException::new);
+
+        if(likeBoardRepository.findLikeBoardByUser(user) == null) {
+            // 좋아요를 누른적 없다면 LikeBoard 생성 후, 좋아요 처리
+            board.setLiked(board.getLiked() + 1);
+            LikeBoard likeBoard = new LikeBoard(board, user); // true 처리
+            likeBoardRepository.save(likeBoard);
+            return "좋아요 처리 완료";
+        } else {
+            // 좋아요를 누른적 있다면 취소 처리 후 테이블 삭제
+            LikeBoard likeBoard = likeBoardRepository.findLikeBoardByUser(user);
+            likeBoard.unLikeBoard(board);
+            likeBoardRepository.delete(likeBoard);
+            return "좋아요 취소";
+        }
+    }
+
+    @Transactional(readOnly = true)
+    public List<BoardSimpleDto> findBestBoards(Pageable pageable) {
+        // 10 이상은 추천글
+        List<Board> boards = boardRepository.findByLikedGreaterThanEqual(pageable, 10);
+        List<BoardSimpleDto> boardSimpleDtoList = new ArrayList<>();
+        boards.stream().forEach(i -> boardSimpleDtoList.add(new BoardSimpleDto().toDto(i)));
+        return boardSimpleDtoList;
     }
 
     @Transactional

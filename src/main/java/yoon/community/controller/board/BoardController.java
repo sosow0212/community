@@ -54,6 +54,20 @@ public class BoardController {
         return Response.success(boardService.editBoard(id, req));
     }
 
+    @ApiOperation(value = "게시글 좋아요", notes = "사용자가 게시글 좋아요를 누릅니다.")
+    @PostMapping("/boards/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public Response likeBoard(@ApiParam(value = "게시글 id", required = true) @PathVariable int id) {
+        return Response.success(boardService.likeBoard(id));
+    }
+
+    @ApiOperation(value = "인기글 조회", notes = "추천수 10이상 게시글을 조회합니다.")
+    @GetMapping("/boards/best")
+    @ResponseStatus(HttpStatus.OK)
+    public Response bestBoards(@PageableDefault(size = 5, sort = "liked", direction = Sort.Direction.DESC) Pageable pageable) {
+        return Response.success(boardService.findBestBoards(pageable));
+    }
+
     @ApiOperation(value = "게시글 삭제", notes = "게시글을 삭제합니다.")
     @DeleteMapping("/boards/{id}")
     @ResponseStatus(HttpStatus.OK)
@@ -69,5 +83,4 @@ public class BoardController {
         // ex) http://localhost:8080/api/boards/search?page=0
         return Response.success(boardService.search(keyword, pageable));
     }
-
 }
