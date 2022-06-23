@@ -1,6 +1,8 @@
 package yoon.community.entity.board;
 
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.format.annotation.DateTimeFormat;
 import yoon.community.entity.board.Board;
 import yoon.community.entity.user.User;
@@ -24,6 +26,7 @@ public class LikeBoard {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;
 
     @Column(nullable = false)
