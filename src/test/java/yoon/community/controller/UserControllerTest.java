@@ -58,6 +58,18 @@ public class UserControllerTest {
     }
 
     @Test
+    @DisplayName("즐겨찾기 조회")
+    public void findFavoritesTest() throws Exception {
+        // given
+
+        // when, then
+        mockMvc.perform(
+                get("/api/users/favorites"))
+                .andExpect(status().isOk());
+        verify(userService).findFavorites();
+    }
+
+    @Test
     @DisplayName("회원 정보 수정")
     public void editUserInfoTest() throws Exception {
         // given

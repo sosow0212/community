@@ -87,10 +87,10 @@ public class BoardControllerTest {
     public void searchTest() throws Exception {
         // given
         Pageable pageable = PageRequest.of(0, 5, Sort.Direction.DESC, "id");
-        List<Board> result = boardRepository.findByTitleContaining("keyword", pageable);
+        Page<Board> result = boardRepository.findByTitleContaining("keyword", pageable);
 
         // when, then
-        assertThat(result).isEqualTo(new ArrayList<>());
+        assertThat(result).isEqualTo(null);
 
     }
 
@@ -122,6 +122,47 @@ public class BoardControllerTest {
 
         verify(boardService).findBoard(id);
     }
+
+
+    @Test
+    @DisplayName("추천글 조회")
+    public void bestBoardsTest() throws Exception {
+        // given
+        Pageable pageable = PageRequest.of(0, 5, Sort.Direction.DESC, "id");
+        Page<Board> result = boardRepository.findByLikedGreaterThanEqual(pageable, 3);
+
+        // when, then
+        assertThat(result).isEqualTo(null);
+    }
+
+    @Test
+    @DisplayName("게시글 좋아요 및 취소")
+    public void likeBoardTest() throws Exception {
+        // given
+        int id = 1;
+
+        // when, then
+        mockMvc.perform(
+                        post("/api/boards/{id}", id)
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+
+    @Test
+    @DisplayName("즐겨찾기 등록 및 취소")
+    public void favoriteBoardTest() throws Exception {
+        // given
+        int id = 1;
+
+        // when, then
+        mockMvc.perform(
+                        post("/api/boards/{id}/favorites", id)
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+
 
     @Test
     @DisplayName("게시글 수정")
