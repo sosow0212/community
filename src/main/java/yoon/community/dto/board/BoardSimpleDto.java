@@ -14,9 +14,10 @@ public class BoardSimpleDto {
     private String title;
     private String nickname;
     private int liked;
+    private int favorited;
 
     public BoardSimpleDto toDto(Board board) {
-        return new BoardSimpleDto(board.getId() ,board.getTitle(), board.getUser().getNickname(), board.getLiked());
+        return new BoardSimpleDto(board.getId() ,board.getTitle(), board.getUser().getNickname(), board.getLiked(), board.getFavorited());
     }
 
 }

@@ -4,6 +4,9 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import yoon.community.dto.user.UserDto;
@@ -45,5 +48,12 @@ public class UserController {
     public Response deleteUserInfo(@ApiParam(value = "User ID", required = true) @PathVariable int id) {
         userService.deleteUserInfo(id);
         return Response.success();
+    }
+
+    @ApiOperation(value = "즐겨찾기 한 글 조회", notes = "유저가 즐겨찾기 한 게시글들 조회")
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/users/favorites")
+    public Response findFavorites(@PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+        return Response.success(userService.findFavorites(pageable));
     }
 }

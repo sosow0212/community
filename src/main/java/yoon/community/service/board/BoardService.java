@@ -2,7 +2,6 @@ package yoon.community.service.board;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -11,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import yoon.community.dto.board.*;
 import yoon.community.entity.board.Board;
+import yoon.community.entity.board.Favorite;
 import yoon.community.entity.board.Image;
 import yoon.community.entity.board.LikeBoard;
 import yoon.community.entity.user.User;
@@ -18,11 +18,11 @@ import yoon.community.exception.BoardNotFoundException;
 import yoon.community.exception.MemberNotEqualsException;
 import yoon.community.exception.MemberNotFoundException;
 import yoon.community.repository.board.BoardRepository;
+import yoon.community.repository.board.FavoriteRepository;
 import yoon.community.repository.board.LikeBoardRepository;
 import yoon.community.repository.user.UserRepository;
 import yoon.community.service.file.FileService;
 
-import java.security.Security;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
@@ -37,6 +37,7 @@ public class BoardService {
     private final BoardRepository boardRepository;
     private final FileService fileService;
     private final LikeBoardRepository likeBoardRepository;
+    private final FavoriteRepository favoriteRepository;
 
     @Transactional
     public BoardCreateResponse create(BoardCreateRequest req) {
@@ -70,7 +71,7 @@ public class BoardService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = userRepository.findByUsername(authentication.getName()).orElseThrow(MemberNotFoundException::new);
 
-        if(likeBoardRepository.findLikeBoardByUser(user) == null) {
+        if(likeBoardRepository.findByBoardAndUser(board, user) == null) {
             // 좋아요를 누른적 없다면 LikeBoard 생성 후, 좋아요 처리
             board.setLiked(board.getLiked() + 1);
             LikeBoard likeBoard = new LikeBoard(board, user); // true 처리
@@ -78,12 +79,36 @@ public class BoardService {
             return "좋아요 처리 완료";
         } else {
             // 좋아요를 누른적 있다면 취소 처리 후 테이블 삭제
-            LikeBoard likeBoard = likeBoardRepository.findLikeBoardByUser(user);
+            LikeBoard likeBoard = likeBoardRepository.findByBoardAndUser(board, user);
             likeBoard.unLikeBoard(board);
             likeBoardRepository.delete(likeBoard);
             return "좋아요 취소";
         }
     }
+
+
+    @Transactional
+    public String favoriteBoard(int id) {
+        Board board = boardRepository.findById(id).orElseThrow(BoardNotFoundException::new);
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findByUsername(authentication.getName()).orElseThrow(MemberNotFoundException::new);
+
+        if(favoriteRepository.findByBoardAndUser(board, user) == null) {
+            // 좋아요를 누른적 없다면 Favorite 생성 후, 즐겨찾기 처리
+            board.setFavorited(board.getFavorited() + 1);
+            Favorite favorite = new Favorite(board, user); // true 처리
+            favoriteRepository.save(favorite);
+            return "즐겨찾기 처리 완료";
+        } else {
+            // 즐겨찾기 누른적 있다면 즐겨찾기 처리 후 테이블 삭제
+            Favorite favorite = favoriteRepository.findFavoriteByBoard(board);
+            favorite.unFavoriteBoard(board);
+            favoriteRepository.delete(favorite);
+            return "즐겨찾기 취소";
+        }
+    }
+
 
     @Transactional(readOnly = true)
     public List<BoardSimpleDto> findBestBoards(Pageable pageable) {

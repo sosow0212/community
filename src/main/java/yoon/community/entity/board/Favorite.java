@@ -1,8 +1,9 @@
 package yoon.community.entity.board;
 
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.format.annotation.DateTimeFormat;
-import yoon.community.entity.board.Board;
 import yoon.community.entity.user.User;
 
 import javax.persistence.*;
@@ -13,21 +14,23 @@ import java.time.LocalDate;
 @Data
 @Builder
 @Entity
-public class LikeBoard {
+public class Favorite {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "board_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Board board;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;
 
     @Column(nullable = false)
-    private boolean status; // true = 좋아요, false = 좋아요 취소
+    private boolean status; // true = 즐겨찾기, false = 즐겨찾기 취소
 
     @DateTimeFormat(pattern = "yyyy-mm-dd")
     private LocalDate createDate; // 날짜
@@ -37,14 +40,14 @@ public class LikeBoard {
         this.createDate = LocalDate.now();
     }
 
-    public LikeBoard(Board board, User user) {
+    public Favorite(Board board, User user) {
         this.board = board;
         this.user = user;
         this.status = true;
     }
 
-    public void unLikeBoard(Board board) {
+    public void unFavoriteBoard(Board board) {
         this.status = false;
-        board.setLiked(board.getLiked() - 1);
+        board.setFavorited(board.getFavorited() - 1);
     }
 }

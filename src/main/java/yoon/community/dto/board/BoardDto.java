@@ -20,6 +20,7 @@ public class BoardDto {
     private String content;
     private UserDto userDto;
     private int liked;
+    private int favorited;
     private List<ImageDto> images;
     private LocalDate createdAt;
 
@@ -30,6 +31,7 @@ public class BoardDto {
                 board.getContent(),
                 UserDto.toDto(board.getUser()),
                 board.getLiked(),
+                board.getFavorited(),
                 board.getImages().stream().map(i -> ImageDto.toDto(i)).collect(toList()),
                 board.getCreateDate()
         );
