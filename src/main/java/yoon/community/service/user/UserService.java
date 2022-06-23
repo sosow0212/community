@@ -82,7 +82,7 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public List<BoardSimpleDto> findFavorites(Pageable pageable) {
+    public List<BoardSimpleDto> findFavorites() {
         final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = userRepository.findByUsername(authentication.getName()).orElseThrow(MemberNotFoundException::new);
 

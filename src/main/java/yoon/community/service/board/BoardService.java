@@ -113,7 +113,7 @@ public class BoardService {
     @Transactional(readOnly = true)
     public List<BoardSimpleDto> findBestBoards(Pageable pageable) {
         // 10 이상은 추천글
-        List<Board> boards = boardRepository.findByLikedGreaterThanEqual(pageable, 10);
+        Page<Board> boards = boardRepository.findByLikedGreaterThanEqual(pageable, 10);
         List<BoardSimpleDto> boardSimpleDtoList = new ArrayList<>();
         boards.stream().forEach(i -> boardSimpleDtoList.add(new BoardSimpleDto().toDto(i)));
         return boardSimpleDtoList;
@@ -150,7 +150,7 @@ public class BoardService {
 
     @Transactional(readOnly = true)
     public List<BoardSimpleDto> search(String keyword, Pageable pageable) {
-        List<Board> boards = boardRepository.findByTitleContaining(keyword, pageable);
+        Page<Board> boards = boardRepository.findByTitleContaining(keyword, pageable);
         List<BoardSimpleDto> boardSimpleDtoList = new ArrayList<>();
         boards.stream().forEach(i -> boardSimpleDtoList.add(new BoardSimpleDto().toDto(i)));
         return boardSimpleDtoList;

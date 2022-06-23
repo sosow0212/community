@@ -53,7 +53,8 @@ public class UserController {
     @ApiOperation(value = "즐겨찾기 한 글 조회", notes = "유저가 즐겨찾기 한 게시글들 조회")
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/users/favorites")
-    public Response findFavorites(@PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
-        return Response.success(userService.findFavorites(pageable));
+    public Response findFavorites() {
+//        @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable
+        return Response.success(userService.findFavorites());
     }
 }

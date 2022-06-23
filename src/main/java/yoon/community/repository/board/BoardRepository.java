@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface BoardRepository extends JpaRepository<Board, Integer> {
 
-    List<Board> findByTitleContaining(String keyword, Pageable pageable);
+    Page<Board> findByTitleContaining(String keyword, Pageable pageable);
     Page<Board> findAll(Pageable pageable);
-    List<Board> findByLikedGreaterThanEqual(Pageable pageable, int number);
+    Page<Board> findByLikedGreaterThanEqual(Pageable pageable, int number);
 }
