@@ -27,7 +27,7 @@
 - docs : 주석 추가 삭제, 문서 변경
 
 
-###
+### API 설명
 
 - Auth : 회원가입 및 Spring Security + JWT 로그인 및 refreshToken 으로 토큰 재활성화
 - User : 전체 및 개별 유저 조회, 즐겨찾기 한 글 목록 조회, 유저 정보 관련 CRUD
