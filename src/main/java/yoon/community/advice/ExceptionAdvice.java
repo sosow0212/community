@@ -83,6 +83,14 @@ public class ExceptionAdvice {
         return Response.failure(404, "메시지를 찾을 수 없습니다.");
     }
 
+    // 404 응답
+    // 요청한 Comment를 찾을 수 없음
+    @ExceptionHandler(CommentNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Response commentNotFoundException() {
+        return Response.failure(404, "댓글 찾을 수 없습니다.");
+    }
+
 
     // 404 응답
     // Image 형식 지원하지 않음
