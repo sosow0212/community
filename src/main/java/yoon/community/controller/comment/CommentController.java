@@ -13,7 +13,7 @@ import yoon.community.service.comment.CommentService;
 
 import javax.validation.Valid;
 
-@Api(value = "Comment Controller", tags = "Comment")
+@Api(value = "Comment Controller", tags = "Comment ")
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api")
