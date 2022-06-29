@@ -50,7 +50,7 @@ public class BoardController {
     @ApiOperation(value = "게시글 수정", notes = "게시글을 수정합니다.")
     @PutMapping("/boards/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Response editBoard(@PathVariable int id, @Valid @ModelAttribute BoardUpdateRequest req) {
+    public Response editBoard(@ApiParam(value = "게시글 id", required = true) @PathVariable int id, @Valid @ModelAttribute BoardUpdateRequest req) {
         return Response.success(boardService.editBoard(id, req));
     }
 
@@ -79,7 +79,7 @@ public class BoardController {
     @ApiOperation(value = "게시글 삭제", notes = "게시글을 삭제합니다.")
     @DeleteMapping("/boards/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Response deleteBoard(@PathVariable int id) {
+    public Response deleteBoard(@ApiParam(value = "게시글 id", required = true) @PathVariable int id) {
         boardService.deleteBoard(id);
         return Response.success();
     }
