@@ -88,6 +88,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/api/comments").authenticated()
                 .antMatchers(HttpMethod.DELETE, "/api/comments/{id}").access("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
 
+                .antMatchers(HttpMethod.POST, "/api/reports/users").authenticated()
+                .antMatchers(HttpMethod.POST, "/api/reports/boards").authenticated()
+
 
 
 
