@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import yoon.community.exception.*;
+import yoon.community.exception.type.NotSelfReportException;
 import yoon.community.response.Response;
 
 import javax.management.relation.RoleNotFoundException;
@@ -115,6 +116,22 @@ public class ExceptionAdvice {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public Response boardNotFoundException() {
         return Response.failure(404, "게시글을 찾을 수 없습니다.");
+    }
+
+    // 404 응답
+    // 이미 신고 처리해서 신고 실패 실패
+    @ExceptionHandler(AlreadyReportException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Response alreadyReportException() {
+        return Response.failure(404, "이미 신고처리를 했습니다.");
+    }
+
+    // 404 응답
+    // 자기 자신을 신고할 수 없다.
+    @ExceptionHandler(NotSelfReportException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Response notSelfReportException() {
+        return Response.failure(404, "자기 자신은 신고할 수 없습니다..");
     }
 
 
