@@ -35,6 +35,9 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Authority authority;
 
+    @Column(nullable = false)
+    private boolean reported;
+
     @DateTimeFormat(pattern = "yyyy-mm-dd")
     private LocalDate createDate; // 날짜
 
@@ -49,6 +52,7 @@ public class User {
         this.password = password;
         this.name = name;
         this.nickname = nickname;
+        this.reported = false;
         this.authority = authority;
     }
 

@@ -47,6 +47,9 @@ public class Board {
     @Column(nullable = true)
     private int favorited; // 즐겨찾기 수
 
+    @Column(nullable = false)
+    private boolean reported;
+
     @DateTimeFormat(pattern = "yyyy-mm-dd")
     private LocalDate createDate; // 날짜
 
@@ -61,6 +64,7 @@ public class Board {
         this.user = user;
         this.liked = 0;
         this.favorited = 0;
+        this.reported = false;
         this.images = new ArrayList<>();
         addImages(images);
     }
