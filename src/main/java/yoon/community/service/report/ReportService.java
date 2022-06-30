@@ -38,17 +38,17 @@ public class ReportService {
         User reporter = userRepository.findByUsername(authentication.getName()).orElseThrow(MemberNotFoundException::new);
         User reportedUser = userRepository.findById(req.getReportedUserId()).orElseThrow(MemberNotFoundException::new);
 
-        if(reporter.getId() == req.getReportedUserId()) {
+        if (reporter.getId() == req.getReportedUserId()) {
             // 자기 자신을 신고한 경우
             throw new NotSelfReportException();
         }
 
-        if(userReportRepository.findByReporterIdAndReportedUserId(reporter.getId(), req.getReportedUserId()) == null) {
+        if (userReportRepository.findByReporterIdAndReportedUserId(reporter.getId(), req.getReportedUserId()) == null) {
             // 신고 한 적이 없다면, 테이블 생성 후 신고 처리 (ReportedUser의 User테이블 boolean 값 true 변경 ==> 신고처리)
             UserReport userReport = new UserReport(reporter.getId(), reportedUser.getId(), req.getContent());
             userReportRepository.save(userReport);
 
-            if(userReportRepository.findByReportedUserId(req.getReportedUserId()).size() >= 10) {
+            if (userReportRepository.findByReportedUserId(req.getReportedUserId()).size() >= 10) {
                 // 신고 수 10 이상일 시 true 설정
                 reportedUser.setReported(true);
             }
@@ -67,16 +67,17 @@ public class ReportService {
         User reporter = userRepository.findByUsername(authentication.getName()).orElseThrow(MemberNotFoundException::new);
         Board reportedBoard = boardRepository.findById(req.getReportedBoardId()).orElseThrow(BoardNotFoundException::new);
 
-        if(reporter.getId() == reportedBoard.getUser().getId()) {
+        if (reporter.getId() == reportedBoard.getUser().getId()) {
             throw new NotSelfReportException();
         }
 
-        if(boardReportRepository.findByReporterIdAndReportedBoardId(reporter.getId(), reportedBoard.getId()) == null) {
+        if (boardReportRepository.findByReporterIdAndReportedBoardId(reporter.getId(), req.getReportedBoardId()) == null) {
             // 신고 한 적이 없다면, 테이블 생성 후 신고 처리
             BoardReport boardReport = new BoardReport(reporter.getId(), reportedBoard.getId(), req.getContent());
             boardReportRepository.save(boardReport);
 
-            if(boardReportRepository.findByReportedBoardId(req.getReportedBoardId()).size() >= 10) {
+
+            if (boardReportRepository.findByReportedBoardId(req.getReportedBoardId()).size() >= 10) {
                 // 신고 수 10 이상일 시 true 설정
                 reportedBoard.setReported(true);
             }

@@ -36,7 +36,6 @@ public class ReportController {
     }
 
 
-
 //    @ApiOperation(value = "게시글 신고 해제", notes = "게시글을 신고 해제합니다.")
 //    @ResponseStatus(HttpStatus.OK)
 //    @GetMapping("/reports/boards/{id}")
