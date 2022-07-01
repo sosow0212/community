@@ -56,4 +56,8 @@ public class User {
         this.authority = authority;
     }
 
+    public boolean isReported() {
+        return this.reported;
+    }
+
 }

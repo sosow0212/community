@@ -112,6 +112,10 @@ public class Board {
         return imageFiles.stream().map(imageFile -> new Image(imageFile.getOriginalFilename())).collect(toList());
     }
 
+    public boolean isReported() {
+        return this.reported;
+    }
+
     @Getter
     @AllArgsConstructor
     public static class ImageUpdatedResult {
