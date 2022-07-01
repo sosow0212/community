@@ -131,7 +131,15 @@ public class ExceptionAdvice {
     @ExceptionHandler(NotSelfReportException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public Response notSelfReportException() {
-        return Response.failure(404, "자기 자신은 신고할 수 없습니다..");
+        return Response.failure(404, "자기 자신은 신고할 수 없습니다.");
+    }
+
+    // 404 응답
+    // 신고되지 않은 게시물 혹은 유저
+    @ExceptionHandler(NotReportedException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Response notReportedException() {
+        return Response.failure(404, "신고되지 않은 유저 혹은 게시물입니다.");
     }
 
 
