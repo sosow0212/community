@@ -44,4 +44,34 @@ public class AdminController {
     public Response unlockBoard(@PathVariable int id) {
         return Response.success(adminService.unlockBoard(id));
     }
+
+
+    // 밑에서부터 7월 7일 비행기 작업 (포스트맨 테스트 이후, 커밋 필요)
+
+    @ApiOperation(value = "카테고리 관리", notes = "카테고리를 관리합니다.")
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/admin/manages/category")
+    public Response manageCategory() {
+        return null;
+    }
+
+    @ApiOperation(value = "방문자 수 조회", notes = "방문자 수를 조회합니다.")
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/admin/manages/users/count")
+    public Response manageUserCount() {
+        return null;
+    }
+
+    @ApiOperation(value = "게시글 조회수 관리", notes = "게시글 순위를 검색합니다.")
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/admin/manage/boards/count")
+    public Response manageBoardsCount() {
+        return null;
+    }
+
+
+
+    //
+
+
 }
