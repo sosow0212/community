@@ -13,13 +13,16 @@ import yoon.community.entity.board.Board;
 import yoon.community.entity.board.Favorite;
 import yoon.community.entity.board.Image;
 import yoon.community.entity.board.LikeBoard;
+import yoon.community.entity.category.Category;
 import yoon.community.entity.user.User;
 import yoon.community.exception.BoardNotFoundException;
+import yoon.community.exception.CategoryNotFoundException;
 import yoon.community.exception.MemberNotEqualsException;
 import yoon.community.exception.MemberNotFoundException;
 import yoon.community.repository.board.BoardRepository;
 import yoon.community.repository.board.FavoriteRepository;
 import yoon.community.repository.board.LikeBoardRepository;
+import yoon.community.repository.category.CategoryRepository;
 import yoon.community.repository.user.UserRepository;
 import yoon.community.service.file.FileService;
 
@@ -38,14 +41,16 @@ public class BoardService {
     private final FileService fileService;
     private final LikeBoardRepository likeBoardRepository;
     private final FavoriteRepository favoriteRepository;
+    private final CategoryRepository categoryRepository;
 
     @Transactional
     public BoardCreateResponse create(BoardCreateRequest req) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = userRepository.findByUsername(authentication.getName()).orElseThrow(MemberNotFoundException::new);
         List<Image> images = req.getImages().stream().map(i -> new Image(i.getOriginalFilename())).collect(toList());
+        Category category = categoryRepository.findById(req.getCategoryId()).orElseThrow(CategoryNotFoundException::new);
 
-        Board board = boardRepository.save(new Board(req.getTitle(), req.getContent(), user, images));
+        Board board = boardRepository.save(new Board(req.getTitle(), req.getContent(), user, category, images));
 
         uploadImages(board.getImages(), req.getImages());
         return new BoardCreateResponse(board.getId(), board.getTitle(), board.getContent());
@@ -71,7 +76,7 @@ public class BoardService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = userRepository.findByUsername(authentication.getName()).orElseThrow(MemberNotFoundException::new);
 
-        if(likeBoardRepository.findByBoardAndUser(board, user) == null) {
+        if (likeBoardRepository.findByBoardAndUser(board, user) == null) {
             // 좋아요를 누른적 없다면 LikeBoard 생성 후, 좋아요 처리
             board.setLiked(board.getLiked() + 1);
             LikeBoard likeBoard = new LikeBoard(board, user); // true 처리
@@ -94,7 +99,7 @@ public class BoardService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = userRepository.findByUsername(authentication.getName()).orElseThrow(MemberNotFoundException::new);
 
-        if(favoriteRepository.findByBoardAndUser(board, user) == null) {
+        if (favoriteRepository.findByBoardAndUser(board, user) == null) {
             // 좋아요를 누른적 없다면 Favorite 생성 후, 즐겨찾기 처리
             board.setFavorited(board.getFavorited() + 1);
             Favorite favorite = new Favorite(board, user); // true 처리
@@ -125,7 +130,7 @@ public class BoardService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = userRepository.findByUsername(authentication.getName()).orElseThrow(MemberNotFoundException::new);
 
-        if(user != board.getUser()) {
+        if (user != board.getUser()) {
             throw new MemberNotEqualsException();
         }
 
@@ -141,7 +146,7 @@ public class BoardService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = userRepository.findByUsername(authentication.getName()).orElseThrow(MemberNotFoundException::new);
 
-        if(user != board.getUser()) {
+        if (user != board.getUser()) {
             throw new MemberNotEqualsException();
         }
 
@@ -155,9 +160,6 @@ public class BoardService {
         boards.stream().forEach(i -> boardSimpleDtoList.add(new BoardSimpleDto().toDto(i)));
         return boardSimpleDtoList;
     }
-
-
-
 
 
     private void uploadImages(List<Image> images, List<MultipartFile> fileImages) {

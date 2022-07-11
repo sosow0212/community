@@ -13,7 +13,7 @@ public interface BoardRepository extends JpaRepository<Board, Integer> {
 
     Page<Board> findByTitleContaining(String keyword, Pageable pageable);
     Page<Board> findAll(Pageable pageable);
+    Page<Board> findAllByCategoryId(Pageable pageable, int id);
     Page<Board> findByLikedGreaterThanEqual(Pageable pageable, int number);
-
     List<Board> findByReportedIsTrue();
 }

@@ -6,6 +6,7 @@ import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
 import yoon.community.dto.board.BoardUpdateRequest;
+import yoon.community.entity.category.Category;
 import yoon.community.entity.user.User;
 
 import javax.persistence.*;
@@ -38,6 +39,11 @@ public class Board {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private Category category;
+
     @OneToMany(mappedBy = "board", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<Image> images;
 
@@ -58,13 +64,14 @@ public class Board {
         this.createDate = LocalDate.now();
     }
 
-    public Board(String title, String content, User user, List<Image> images) {
+    public Board(String title, String content, User user, Category category, List<Image> images) {
         this.title = title;
         this.content = content;
         this.user = user;
         this.liked = 0;
         this.favorited = 0;
         this.reported = false;
+        this.category = category;
         this.images = new ArrayList<>();
         addImages(images);
     }
