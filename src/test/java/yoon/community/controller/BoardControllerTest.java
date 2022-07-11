@@ -60,7 +60,7 @@ public class BoardControllerTest {
         List<MultipartFile> images = new ArrayList<>();
         images.add(new MockMultipartFile("test1", "test1.PNG", MediaType.IMAGE_PNG_VALUE, "test1".getBytes()));
         images.add(new MockMultipartFile("test2", "test2.PNG", MediaType.IMAGE_PNG_VALUE, "test2".getBytes()));
-        BoardCreateRequest req = new BoardCreateRequest("title", "content", images);
+        BoardCreateRequest req = new BoardCreateRequest("title", "content", 1, images);
 
         // when, then
         mockMvc.perform(
