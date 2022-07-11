@@ -24,6 +24,15 @@ public class ExceptionAdvice {
         return Response.failure(500, e.getMessage().toString());
     }
 
+    // 500 에러
+    // 컨버트 실패
+    @ExceptionHandler(CannotConvertHelperException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public Response cannotConvertNestedStructureException(CannotConvertHelperException e) {
+        log.error("e = {}", e.getMessage());
+        return Response.failure(500, e.getMessage().toString());
+    }
+
     // 400 에러
     // 요청 객체의 validation을 수행할 때, MethodArgumentNotValidException이 발생
     // 각 검증 어노테이션 별로 지정해놨던 메시지를 응답
@@ -140,6 +149,15 @@ public class ExceptionAdvice {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public Response notReportedException() {
         return Response.failure(404, "신고되지 않은 유저 혹은 게시물입니다.");
+    }
+
+
+    // 404 응답
+    // 카테고리 찾을 수 없음
+    @ExceptionHandler(CategoryNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Response categoryNotFoundException() {
+        return Response.failure(404, "카테고리를 찾을 수 없습니다.");
     }
 
 
