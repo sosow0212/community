@@ -57,8 +57,8 @@ public class BoardService {
     }
 
     @Transactional(readOnly = true)
-    public List<BoardSimpleDto> findAllBoards(Pageable pageable) {
-        Page<Board> boards = boardRepository.findAll(pageable);
+    public List<BoardSimpleDto> findAllBoards(Pageable pageable, int categoryId) {
+        Page<Board> boards = boardRepository.findAllByCategoryId(pageable, categoryId);
         List<BoardSimpleDto> boardSimpleDtoList = new ArrayList<>();
         boards.stream().forEach(i -> boardSimpleDtoList.add(new BoardSimpleDto().toDto(i)));
         return boardSimpleDtoList;
