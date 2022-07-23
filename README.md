@@ -5,6 +5,7 @@
 ### 프로젝트 설명
 - RESTFul 한 서버를 만드는 것을 목표로 잡고 진행한 커뮤니티 프로젝트입니다.
 - 최소한의 DB 조회를 위해 JPA와 데이터베이스 설계에 집중했습니다.
+- NoSQL Redis를 이용해서 JWT RefreshToken을 관리합니다.
 - 자세한 내용은 다음 블로그 링크를 따라서 보실 수 있습니다. 
 - https://blog.naver.com/sosow0212/222747372730
 
@@ -18,6 +19,7 @@
 - MySQL Driver
 - Validation
 - Swagger
+- Redis
 
 
 ### Git Convention
@@ -31,7 +33,7 @@
 
 ### API 설명
 
-- Auth : 회원가입 및 Spring Security + JWT 로그인 및 refreshToken 으로 토큰 재활성화
+- Auth : 회원가입 및 Spring Security + JWT 로그인 및 Redis를 이용해서 RefreshToken 관리 및 AccessToken 재활성화
 - User : 전체 및 개별 유저 조회, 즐겨찾기 한 글 목록 조회, 유저 정보 관련 CRUD
 - Category : 계층형 카테고리 구현
 - Board : 게시글 CRUD 및 검색 기능 추가, 이미지 업로드, 게시글 좋아요 및 즐겨찾기 기능
