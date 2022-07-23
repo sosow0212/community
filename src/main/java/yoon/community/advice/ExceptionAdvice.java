@@ -42,6 +42,14 @@ public class ExceptionAdvice {
         return Response.failure(400, e.getBindingResult().getFieldError().getDefaultMessage());
     }
 
+    // 400
+    // 토큰 만료
+    @ExceptionHandler(TokenExpiredException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Response tokenExpiredException() {
+        return Response.failure(400, "토큰이 만료되었습니다.");
+    }
+
     // 400 에러
     // Valid 제약조건 위배 캐치
     @ExceptionHandler(BindException.class)
