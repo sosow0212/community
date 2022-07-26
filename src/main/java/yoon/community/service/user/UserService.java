@@ -31,7 +31,7 @@ public class UserService {
     private final FavoriteRepository favoriteRepository;
 
     @Transactional(readOnly = true)
-    public Object findAllUsers() {
+    public List<UserDto> findAllUsers() {
         List<User> users = userRepository.findAll();
         List<UserDto> userDtos = new ArrayList<>();
         for(User user : users) {
