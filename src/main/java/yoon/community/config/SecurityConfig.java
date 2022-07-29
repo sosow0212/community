@@ -10,10 +10,14 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsUtils;
 import yoon.community.config.jwt.JwtAccessDeniedHandler;
 import yoon.community.config.jwt.JwtAuthenticationEntryPoint;
 import yoon.community.config.jwt.JwtSecurityConfig;
 import yoon.community.config.jwt.TokenProvider;
+
+import java.util.List;
 
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -39,6 +43,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         // CSRF 설정 Disable
         http.csrf().disable();
 
+        // CORS
+        http.cors().configurationSource(request -> {
+            var cors = new CorsConfiguration();
+            cors.setAllowedOrigins(List.of("http://localhost:3000"));
+            cors.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
+            cors.setAllowedHeaders(List.of("*"));
+            return cors;
+        });
+        http
+                .authorizeRequests()
+                .requestMatchers(CorsUtils::isPreFlightRequest).permitAll();
+
+
         http
                 // exception handling 할 때 우리가 만든 클래스를 추가
                 .exceptionHandling()
@@ -56,7 +73,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
 
-                .antMatchers("/swagger-ui/**", "/v3/**").permitAll() // swagger
+                .antMatchers("/swagger-ui/**", "/v3/**", "/test").permitAll() // swagger
                 .antMatchers(HttpMethod.GET, "/image/**").permitAll()
 
                 .antMatchers("/api/sign-up", "/api/sign-in", "/api/reissue").permitAll()
