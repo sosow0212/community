@@ -53,7 +53,7 @@ public class UserService {
         });
 
         // 권한 처리
-        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if(!authentication.getName().equals(user.getUsername())) {
             throw new MemberNotEqualsException();
@@ -68,11 +68,10 @@ public class UserService {
     public void deleteUserInfo(int id) {
         User user = userRepository.findById(id).orElseThrow(MemberNotFoundException::new);
 
-        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         String auth = String.valueOf(authentication.getAuthorities());
         String authByAdmin = "[" + Authority.ROLE_ADMIN +"]";
-
 
         if(authentication.getName().equals(user.getUsername()) || auth.equals(authByAdmin)) {
             userRepository.deleteById(id);
