@@ -60,7 +60,7 @@ public class BoardControllerTest {
         List<MultipartFile> images = new ArrayList<>();
         images.add(new MockMultipartFile("test1", "test1.PNG", MediaType.IMAGE_PNG_VALUE, "test1".getBytes()));
         images.add(new MockMultipartFile("test2", "test2.PNG", MediaType.IMAGE_PNG_VALUE, "test2".getBytes()));
-        BoardCreateRequest req = new BoardCreateRequest("title", "content", 1, images);
+        BoardCreateRequest req = new BoardCreateRequest("title", "content", images);
 
         // when, then
         mockMvc.perform(
@@ -76,7 +76,7 @@ public class BoardControllerTest {
                                 .contentType(MediaType.MULTIPART_FORM_DATA))
                 .andExpect(status().isCreated());
 
-        verify(boardService).create(boardCreateRequestArgumentCaptor.capture());
+        verify(boardService).create(boardCreateRequestArgumentCaptor.capture(), anyInt());
 
         BoardCreateRequest capturedReq = boardCreateRequestArgumentCaptor.getValue();
         assertThat(capturedReq.getImages().size()).isEqualTo(2);
