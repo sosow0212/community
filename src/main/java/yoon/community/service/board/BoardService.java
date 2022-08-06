@@ -44,12 +44,11 @@ public class BoardService {
     private final CategoryRepository categoryRepository;
 
     @Transactional
-    public BoardCreateResponse create(BoardCreateRequest req) {
+    public BoardCreateResponse create(BoardCreateRequest req, int categoryId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = userRepository.findByUsername(authentication.getName()).orElseThrow(MemberNotFoundException::new);
         List<Image> images = req.getImages().stream().map(i -> new Image(i.getOriginalFilename())).collect(toList());
-        Category category = categoryRepository.findById(req.getCategoryId()).orElseThrow(CategoryNotFoundException::new);
-
+        Category category = categoryRepository.findById(categoryId).orElseThrow(CategoryNotFoundException::new);
         Board board = boardRepository.save(new Board(req.getTitle(), req.getContent(), user, category, images));
 
         uploadImages(board.getImages(), req.getImages());

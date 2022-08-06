@@ -28,8 +28,10 @@ public class BoardController {
     @ApiOperation(value = "게시글 생성", notes = "게시글을 작성합니다.")
     @PostMapping("/boards")
     @ResponseStatus(HttpStatus.CREATED)
-    public Response create(@Valid @ModelAttribute BoardCreateRequest req) {
-        return Response.success(boardService.create(req));
+    public Response create(@Valid @ModelAttribute BoardCreateRequest req,
+                           @RequestParam(value = "category", defaultValue = "1") int categoryId) {
+        // http://localhost:8080/api/boards?category=3
+        return Response.success(boardService.create(req, categoryId));
     }
 
     @ApiOperation(value = "게시글 목록 조회", notes = "게시글 목록을 조회합니다.")
