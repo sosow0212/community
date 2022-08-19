@@ -10,21 +10,36 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import yoon.community.controller.comment.CommentController;
 import yoon.community.dto.comment.CommentCreateRequest;
 import yoon.community.dto.comment.CommentReadCondition;
+import yoon.community.entity.user.User;
+import yoon.community.repository.user.UserRepository;
 import yoon.community.service.comment.CommentService;
 
+import java.util.Collections;
+import java.util.Optional;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static yoon.community.factory.UserFactory.createUserWithAdminRole;
 
 @ExtendWith(MockitoExtension.class)
 public class CommentControllerTest {
     @InjectMocks
     CommentController commentController;
+
+    @Mock
+    UserRepository userRepository;
 
     @Mock
     CommentService commentService;
@@ -36,12 +51,16 @@ public class CommentControllerTest {
         mockMvc = MockMvcBuilders.standaloneSetup(commentController).build();
     }
 
-
     @Test
     @DisplayName("댓글 작성")
     public void createCommentTest() throws Exception {
         // given
         CommentCreateRequest req = new CommentCreateRequest("content", 1);
+
+        User user = createUserWithAdminRole();
+        Authentication authentication = new UsernamePasswordAuthenticationToken(user.getId(), "", Collections.emptyList());
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        given(userRepository.findByUsername(authentication.getName())).willReturn(Optional.of(user));
 
         //when then
         mockMvc.perform(
@@ -50,7 +69,7 @@ public class CommentControllerTest {
                                 .content(objectMapper.writeValueAsString(req)))
                 .andExpect(status().isCreated());
 
-        verify(commentService).create(req);
+        verify(commentService).create(req, user);
     }
 
 
@@ -76,10 +95,15 @@ public class CommentControllerTest {
         // given
         int id = 1;
 
+        User user = createUserWithAdminRole();
+        Authentication authentication = new UsernamePasswordAuthenticationToken(user.getId(), "", Collections.emptyList());
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        given(userRepository.findByUsername(authentication.getName())).willReturn(Optional.of(user));
+
         // when, then
         mockMvc.perform(
                         delete("/api/comments/{id}", id))
                 .andExpect(status().isOk());
-        verify(commentService).delete(id);
+        verify(commentService).delete(id, user);
     }
 }
