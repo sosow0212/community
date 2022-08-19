@@ -44,9 +44,7 @@ public class BoardService {
     private final CategoryRepository categoryRepository;
 
     @Transactional
-    public BoardCreateResponse create(BoardCreateRequest req, int categoryId) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = userRepository.findByUsername(authentication.getName()).orElseThrow(MemberNotFoundException::new);
+    public BoardCreateResponse create(BoardCreateRequest req, int categoryId, User user) {
         List<Image> images = req.getImages().stream().map(i -> new Image(i.getOriginalFilename())).collect(toList());
         Category category = categoryRepository.findById(categoryId).orElseThrow(CategoryNotFoundException::new);
         Board board = boardRepository.save(new Board(req.getTitle(), req.getContent(), user, category, images));
@@ -69,11 +67,8 @@ public class BoardService {
     }
 
     @Transactional
-    public String likeBoard(int id) {
+    public String likeBoard(int id, User user) {
         Board board = boardRepository.findById(id).orElseThrow(BoardNotFoundException::new);
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = userRepository.findByUsername(authentication.getName()).orElseThrow(MemberNotFoundException::new);
 
         if (likeBoardRepository.findByBoardAndUser(board, user) == null) {
             // 좋아요를 누른적 없다면 LikeBoard 생성 후, 좋아요 처리
@@ -92,11 +87,8 @@ public class BoardService {
 
 
     @Transactional
-    public String favoriteBoard(int id) {
+    public String favoriteBoard(int id, User user) {
         Board board = boardRepository.findById(id).orElseThrow(BoardNotFoundException::new);
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = userRepository.findByUsername(authentication.getName()).orElseThrow(MemberNotFoundException::new);
 
         if (favoriteRepository.findByBoardAndUser(board, user) == null) {
             // 좋아요를 누른적 없다면 Favorite 생성 후, 즐겨찾기 처리
@@ -124,10 +116,8 @@ public class BoardService {
     }
 
     @Transactional
-    public BoardDto editBoard(int id, BoardUpdateRequest req) {
+    public BoardDto editBoard(int id, BoardUpdateRequest req, User user) {
         Board board = boardRepository.findById(id).orElseThrow(BoardNotFoundException::new);
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = userRepository.findByUsername(authentication.getName()).orElseThrow(MemberNotFoundException::new);
 
         if (user != board.getUser()) {
             throw new MemberNotEqualsException();
@@ -140,10 +130,8 @@ public class BoardService {
     }
 
     @Transactional
-    public void deleteBoard(int id) {
+    public void deleteBoard(int id, User user) {
         Board board = boardRepository.findById(id).orElseThrow(BoardNotFoundException::new);
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = userRepository.findByUsername(authentication.getName()).orElseThrow(MemberNotFoundException::new);
 
         if (user != board.getUser()) {
             throw new MemberNotEqualsException();

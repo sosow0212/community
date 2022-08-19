@@ -34,7 +34,7 @@ public class UserService {
     public List<UserDto> findAllUsers() {
         List<User> users = userRepository.findAll();
         List<UserDto> userDtos = new ArrayList<>();
-        for(User user : users) {
+        for (User user : users) {
             userDtos.add(UserDto.toDto(user));
         }
         return userDtos;
@@ -55,7 +55,7 @@ public class UserService {
         // 권한 처리
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        if(!authentication.getName().equals(user.getUsername())) {
+        if (!authentication.getName().equals(user.getUsername())) {
             throw new MemberNotEqualsException();
         } else {
             user.setNickname(updateInfo.getNickname());
@@ -71,9 +71,9 @@ public class UserService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         String auth = String.valueOf(authentication.getAuthorities());
-        String authByAdmin = "[" + Authority.ROLE_ADMIN +"]";
+        String authByAdmin = "[" + Authority.ROLE_ADMIN + "]";
 
-        if(authentication.getName().equals(user.getUsername()) || auth.equals(authByAdmin)) {
+        if (authentication.getName().equals(user.getUsername()) || auth.equals(authByAdmin)) {
             userRepository.deleteById(id);
         } else {
             throw new MemberNotEqualsException();
@@ -81,14 +81,11 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public List<BoardSimpleDto> findFavorites() {
-        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = userRepository.findByUsername(authentication.getName()).orElseThrow(MemberNotFoundException::new);
-
+    public List<BoardSimpleDto> findFavorites(User user) {
         List<Favorite> favorites = favoriteRepository.findAllByUser(user);
         List<Board> boards = new ArrayList<>();
 
-        for(Favorite fav : favorites) {
+        for (Favorite fav : favorites) {
             boards.add(fav.getBoard());
         }
 

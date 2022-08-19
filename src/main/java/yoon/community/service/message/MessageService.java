@@ -26,24 +26,19 @@ public class MessageService {
     private final UserRepository userRepository;
 
     @Transactional
-    public MessageDto createMessage(MessageCreateRequest req) {
+    public MessageDto createMessage(User sender, MessageCreateRequest req) {
         User receiver = userRepository.findByNickname(req.getReceiverNickname()).orElseThrow(MemberNotFoundException::new);
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User sender = userRepository.findByUsername(authentication.getName()).orElseThrow(MemberNotFoundException::new);
-
         Message message = new Message(req.getTitle(), req.getContent(), sender, receiver);
         return MessageDto.toDto(messageRepository.save(message));
     }
 
     @Transactional(readOnly = true)
-    public List<MessageDto> receiveMessages() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = userRepository.findByUsername(authentication.getName()).orElseThrow(MemberNotFoundException::new);
+    public List<MessageDto> receiveMessages(User user) {
 
         List<MessageDto> messageDtoList = new ArrayList<>();
         List<Message> messageList = messageRepository.findAllByReceiverAndDeletedByReceiverFalseOrderByIdDesc(user);
 
-        for(Message message : messageList) {
+        for (Message message : messageList) {
             messageDtoList.add(MessageDto.toDto(message));
         }
         return messageDtoList;
@@ -51,86 +46,70 @@ public class MessageService {
 
 
     @Transactional(readOnly = true)
-    public MessageDto receiveMessage(int id) {
+    public MessageDto receiveMessage(int id, User user) {
         Message message = messageRepository.findById(id).orElseThrow(MessageNotFoundException::new);
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = userRepository.findByUsername(authentication.getName()).orElseThrow(MemberNotFoundException::new);
-
-        if(message.getReceiver() != user) {
+        if (message.getReceiver() != user) {
             throw new MemberNotEqualsException();
         }
-
-        if(message.isDeletedByReceiver()) {
+        if (message.isDeletedByReceiver()) {
             throw new MessageNotFoundException();
         }
         return MessageDto.toDto(message);
     }
 
     @Transactional(readOnly = true)
-    public List<MessageDto> sendMessages() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = userRepository.findByUsername(authentication.getName()).orElseThrow(MemberNotFoundException::new);
-
+    public List<MessageDto> sendMessages(User user) {
         List<MessageDto> messageDtoList = new ArrayList<>();
         List<Message> messageList = messageRepository.findAllBySenderAndDeletedBySenderFalseOrderByIdDesc(user);
 
-        for(Message message : messageList) {
+        for (Message message : messageList) {
             messageDtoList.add(MessageDto.toDto(message));
         }
         return messageDtoList;
     }
 
     @Transactional(readOnly = true)
-    public MessageDto sendMessage(int id) {
+    public MessageDto sendMessage(int id, User user) {
         Message message = messageRepository.findById(id).orElseThrow(MessageNotFoundException::new);
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = userRepository.findByUsername(authentication.getName()).orElseThrow(MemberNotFoundException::new);
-
-        if(message.getSender() != user) {
+        if (message.getSender() != user) {
             throw new MemberNotEqualsException();
         }
 
-        if(message.isDeletedByReceiver()) {
+        if (message.isDeletedByReceiver()) {
             throw new MessageNotFoundException();
         }
         return MessageDto.toDto(message);
     }
 
     @Transactional
-    public void deleteMessageByReceiver(int id) {
+    public void deleteMessageByReceiver(int id, User user) {
         Message message = messageRepository.findById(id).orElseThrow(MessageNotFoundException::new);
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = userRepository.findByUsername(authentication.getName()).orElseThrow(MemberNotFoundException::new);
-
-        if(message.getReceiver() == user) {
+        if (message.getReceiver() == user) {
             message.deleteByReceiver();
         } else {
             throw new MemberNotEqualsException();
         }
 
-        if(message.isDeletedMessage()) {
+        if (message.isDeletedMessage()) {
             // 수신, 송신자 둘다 삭제할 경우
             messageRepository.delete(message);
         }
     }
 
     @Transactional
-    public void deleteMessageBySender(int id) {
+    public void deleteMessageBySender(int id, User user) {
         Message message = messageRepository.findById(id).orElseThrow(MessageNotFoundException::new);
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = userRepository.findByUsername(authentication.getName()).orElseThrow(MemberNotFoundException::new);
-
-        if(message.getSender() == user) {
+        if (message.getSender() == user) {
             message.deleteBySender();
         } else {
             throw new MemberNotEqualsException();
         }
 
-        if(message.isDeletedMessage()) {
+        if (message.isDeletedMessage()) {
             messageRepository.delete(message);
         }
     }

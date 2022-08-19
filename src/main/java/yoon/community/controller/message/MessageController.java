@@ -5,8 +5,13 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import yoon.community.dto.message.MessageCreateRequest;
+import yoon.community.entity.user.User;
+import yoon.community.exception.MemberNotFoundException;
+import yoon.community.repository.user.UserRepository;
 import yoon.community.response.Response;
 import yoon.community.service.message.MessageService;
 
@@ -19,47 +24,65 @@ import javax.validation.Valid;
 public class MessageController {
 
     private final MessageService messageService;
+    private final UserRepository userRepository;
 
     @ApiOperation(value = "편지 작성", notes = "편지 보내기")
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/messages")
     public Response createMessage(@Valid @RequestBody MessageCreateRequest req) {
-        return Response.success(messageService.createMessage(req));
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User sender = userRepository.findByUsername(authentication.getName()).orElseThrow(MemberNotFoundException::new);
+        return Response.success(messageService.createMessage(sender, req));
     }
 
     @ApiOperation(value = "받은 쪽지 전부 확인", notes = "받은 쪽지함 확인")
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/messages/receiver")
     public Response receiveMessages() {
-        return Response.success(messageService.receiveMessages());
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findByUsername(authentication.getName()).orElseThrow(MemberNotFoundException::new);
+
+        return Response.success(messageService.receiveMessages(user));
     }
 
-    @ApiOperation(value="받은 쪽지 중 한 개 확인", notes = "받은 편지 중 하나를 확인")
+    @ApiOperation(value = "받은 쪽지 중 한 개 확인", notes = "받은 편지 중 하나를 확인")
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/messages/receiver/{id}")
     public Response receiveMessage(@ApiParam(value = "쪽지 id", required = true) @PathVariable int id) {
-        return Response.success(messageService.receiveMessage(id));
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findByUsername(authentication.getName()).orElseThrow(MemberNotFoundException::new);
+
+        return Response.success(messageService.receiveMessage(id, user));
     }
 
     @ApiOperation(value = "보낸 쪽지 전부 확인", notes = "보낸 쪽지함 확인")
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/messages/sender")
     public Response sendMessages() {
-        return Response.success(messageService.sendMessages());
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findByUsername(authentication.getName()).orElseThrow(MemberNotFoundException::new);
+
+        return Response.success(messageService.sendMessages(user));
     }
 
     @ApiOperation(value = "보낸 쪽지 중 한 개 확인", notes = "보낸 쪽지 중 하나를 확인")
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/messages/sender/{id}")
     public Response sendMessage(@ApiParam(value = "쪽지 id", required = true) @PathVariable int id) {
-        return Response.success(messageService.sendMessage(id));
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findByUsername(authentication.getName()).orElseThrow(MemberNotFoundException::new);
+
+        return Response.success(messageService.sendMessage(id, user));
     }
 
     @ApiOperation(value = "받은 쪽지 삭제", notes = "받은 쪽지 삭제하기")
     @ResponseStatus(HttpStatus.OK)
     @DeleteMapping("/messages/receiver/{id}")
     public Response deleteReceiveMessage(@ApiParam(value = "쪽지 id", required = true) @PathVariable int id) {
-        messageService.deleteMessageByReceiver(id);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findByUsername(authentication.getName()).orElseThrow(MemberNotFoundException::new);
+
+        messageService.deleteMessageByReceiver(id, user);
         return Response.success();
     }
 
@@ -67,7 +90,10 @@ public class MessageController {
     @ResponseStatus(HttpStatus.OK)
     @DeleteMapping("/messages/sender/{id}")
     public Response deleteSendMessage(@ApiParam(value = "쪽지 id", required = true) @PathVariable int id) {
-        messageService.deleteMessageBySender(id);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findByUsername(authentication.getName()).orElseThrow(MemberNotFoundException::new);
+
+        messageService.deleteMessageBySender(id, user);
         return Response.success();
     }
 

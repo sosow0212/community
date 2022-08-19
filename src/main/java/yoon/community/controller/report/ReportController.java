@@ -5,9 +5,14 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import yoon.community.dto.report.BoardReportRequest;
 import yoon.community.dto.report.UserReportRequest;
+import yoon.community.entity.user.User;
+import yoon.community.exception.MemberNotFoundException;
+import yoon.community.repository.user.UserRepository;
 import yoon.community.response.Response;
 import yoon.community.service.report.ReportService;
 
@@ -20,19 +25,25 @@ import javax.validation.Valid;
 public class ReportController {
 
     private final ReportService reportService;
+    private final UserRepository userRepository;
 
     @ApiOperation(value = "유저 신고", notes = "유저를 신고합니다.")
     @ResponseStatus(HttpStatus.OK)
     @PostMapping("/reports/users")
     public Response reportUser(@Valid @RequestBody UserReportRequest userReportRequest) {
-        return Response.success(reportService.reportUser(userReportRequest));
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findByUsername(authentication.getName()).orElseThrow(MemberNotFoundException::new);
+        return Response.success(reportService.reportUser(user, userReportRequest));
     }
 
     @ApiOperation(value = "게시글 신고", notes = "게시글을 신고합니다.")
     @ResponseStatus(HttpStatus.OK)
     @PostMapping("/reports/boards")
     public Response reportBoard(@Valid @RequestBody BoardReportRequest boardReportRequest) {
-        return Response.success(reportService.reportBoard(boardReportRequest));
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findByUsername(authentication.getName()).orElseThrow(MemberNotFoundException::new);
+
+        return Response.success(reportService.reportBoard(user, boardReportRequest));
     }
 
 

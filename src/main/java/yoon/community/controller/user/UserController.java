@@ -8,8 +8,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import yoon.community.dto.user.UserDto;
+import yoon.community.entity.user.User;
+import yoon.community.exception.MemberNotFoundException;
+import yoon.community.repository.user.UserRepository;
 import yoon.community.response.Response;
 import yoon.community.service.user.UserService;
 
@@ -20,6 +25,7 @@ import yoon.community.service.user.UserService;
 public class UserController {
 
     private final UserService userService;
+    private final UserRepository userRepository;
 
     @ApiOperation(value = "전체 회원 조회", notes = "전체 회원을 조회")
     @ResponseStatus(HttpStatus.OK)
@@ -55,6 +61,9 @@ public class UserController {
     @GetMapping("/users/favorites")
     public Response findFavorites() {
 //        @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable
-        return Response.success(userService.findFavorites());
+        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findByUsername(authentication.getName()).orElseThrow(MemberNotFoundException::new);
+
+        return Response.success(userService.findFavorites(user));
     }
 }

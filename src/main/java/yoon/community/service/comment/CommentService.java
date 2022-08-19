@@ -42,23 +42,18 @@ public class CommentService {
     }
 
     @Transactional
-    public CommentDto create(CommentCreateRequest req) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = userRepository.findByUsername(authentication.getName()).orElseThrow(MemberNotFoundException::new);
+    public CommentDto create(CommentCreateRequest req, User user) {
         Board board = boardRepository.findById(req.getBoardId()).orElseThrow(BoardNotFoundException::new);
-
         Comment comment = new Comment(req.getContent(), user, board);
         commentRepository.save(comment);
         return new CommentDto().toDto(comment);
     }
 
     @Transactional
-    public void delete(int id) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = userRepository.findByUsername(authentication.getName()).orElseThrow(MemberNotFoundException::new);
+    public void delete(int id, User user) {
         Comment comment = commentRepository.findById(id).orElseThrow(CommentNotFoundException::new);
         Board board = boardRepository.findById(comment.getBoard().getId()).orElseThrow(BoardNotFoundException::new);
-        if(comment.getUser().equals(user)) {
+        if (comment.getUser().equals(user)) {
             // 삭제 진행
             commentRepository.delete(comment);
         } else {

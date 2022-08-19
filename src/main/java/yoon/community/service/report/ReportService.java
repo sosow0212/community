@@ -33,9 +33,7 @@ public class ReportService {
     public final BoardRepository boardRepository;
 
     @Transactional
-    public UserReportResponse reportUser(UserReportRequest req) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User reporter = userRepository.findByUsername(authentication.getName()).orElseThrow(MemberNotFoundException::new);
+    public UserReportResponse reportUser(User reporter, UserReportRequest req) {
         User reportedUser = userRepository.findById(req.getReportedUserId()).orElseThrow(MemberNotFoundException::new);
 
         if (reporter.getId() == req.getReportedUserId()) {
@@ -62,9 +60,7 @@ public class ReportService {
     }
 
     @Transactional
-    public BoardReportResponse reportBoard(BoardReportRequest req) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User reporter = userRepository.findByUsername(authentication.getName()).orElseThrow(MemberNotFoundException::new);
+    public BoardReportResponse reportBoard(User reporter, BoardReportRequest req) {
         Board reportedBoard = boardRepository.findById(req.getReportedBoardId()).orElseThrow(BoardNotFoundException::new);
 
         if (reporter.getId() == reportedBoard.getUser().getId()) {
