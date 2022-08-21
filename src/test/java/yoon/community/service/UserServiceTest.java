@@ -28,6 +28,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
+import static yoon.community.factory.UserFactory.createUser;
 import static yoon.community.factory.UserFactory.createUserWithAdminRole;
 
 @ExtendWith(MockitoExtension.class)
@@ -65,17 +66,18 @@ public class UserServiceTest {
         assertThatThrownBy(() -> userService.findUser(1)).isInstanceOf(MemberNotFoundException.class);
     }
 
-    @WithMockUser(roles = "ADMIN")
+
     @Test
     @DisplayName("deleteUserInfo() 서비스 테스트")
     void deleteUserInfoTest() {
         // given
-        given(userRepository.findById(anyInt())).willReturn(Optional.of(createUserWithAdminRole()));
+        given(userRepository.findById(anyInt())).willReturn(Optional.of(createUser()));
 
         // when
-        userService.deleteUserInfo(1);
+        userService.deleteUserInfo(createUser(), anyInt());
 
         // then
-        verify(userRepository).delete(any());
+        verify(userRepository).deleteById(anyInt());
+
     }
 }
