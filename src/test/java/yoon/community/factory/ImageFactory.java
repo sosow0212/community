@@ -1,5 +1,6 @@
 package yoon.community.factory;
 
+import org.springframework.test.util.ReflectionTestUtils;
 import yoon.community.entity.board.Image;
 
 public class ImageFactory {
@@ -11,4 +12,9 @@ public class ImageFactory {
         return new Image(originName);
     }
 
+    public static Image createImageWithIdAndOriginName(Long id, String originName) {
+        Image image = new Image(originName);
+        ReflectionTestUtils.setField(image, "id", id);
+        return image;
+    }
 }
