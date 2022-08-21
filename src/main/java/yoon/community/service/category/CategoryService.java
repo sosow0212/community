@@ -26,9 +26,6 @@ public class CategoryService {
 
     @Transactional(readOnly = true)
     public List<CategoryDto> findAll() {
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        User user = userRepository.findByUsername(authentication.getName()).orElseThrow(MemberNotFoundException::new);
-
         List<Category> categories = categoryRepository.findAllOrderByParentIdAscNullsFirstCategoryIdAsc();
         return CategoryDto.toDtoList(categories);
     }

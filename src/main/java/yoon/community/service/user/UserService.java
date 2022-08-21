@@ -65,15 +65,10 @@ public class UserService {
     }
 
     @Transactional
-    public void deleteUserInfo(int id) {
-        User user = userRepository.findById(id).orElseThrow(MemberNotFoundException::new);
+    public void deleteUserInfo(User user, int id) {
+        User target = userRepository.findById(id).orElseThrow(MemberNotFoundException::new);
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        String auth = String.valueOf(authentication.getAuthorities());
-        String authByAdmin = "[" + Authority.ROLE_ADMIN + "]";
-
-        if (authentication.getName().equals(user.getUsername()) || auth.equals(authByAdmin)) {
+        if (user.equals(target)) {
             userRepository.deleteById(id);
         } else {
             throw new MemberNotEqualsException();

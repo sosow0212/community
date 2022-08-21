@@ -52,7 +52,10 @@ public class UserController {
     @ResponseStatus(HttpStatus.OK)
     @DeleteMapping("/users/{id}")
     public Response deleteUserInfo(@ApiParam(value = "User ID", required = true) @PathVariable int id) {
-        userService.deleteUserInfo(id);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findByUsername(authentication.getName()).orElseThrow(MemberNotFoundException::new);
+
+        userService.deleteUserInfo(user, id);
         return Response.success();
     }
 
@@ -61,7 +64,7 @@ public class UserController {
     @GetMapping("/users/favorites")
     public Response findFavorites() {
 //        @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable
-        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = userRepository.findByUsername(authentication.getName()).orElseThrow(MemberNotFoundException::new);
 
         return Response.success(userService.findFavorites(user));

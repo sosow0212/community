@@ -119,7 +119,7 @@ public class BoardService {
     public BoardDto editBoard(int id, BoardUpdateRequest req, User user) {
         Board board = boardRepository.findById(id).orElseThrow(BoardNotFoundException::new);
 
-        if (user != board.getUser()) {
+        if (!user.equals(board.getUser())) {
             throw new MemberNotEqualsException();
         }
 
@@ -133,7 +133,7 @@ public class BoardService {
     public void deleteBoard(int id, User user) {
         Board board = boardRepository.findById(id).orElseThrow(BoardNotFoundException::new);
 
-        if (user != board.getUser()) {
+        if (!user.equals(board.getUser())) {
             throw new MemberNotEqualsException();
         }
 
