@@ -9,14 +9,22 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import yoon.community.controller.user.UserController;
 import yoon.community.dto.user.UserDto;
 import yoon.community.entity.user.User;
+import yoon.community.repository.user.UserRepository;
 import yoon.community.service.user.UserService;
 
+import java.util.Collections;
+import java.util.Optional;
+
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -26,6 +34,9 @@ import static yoon.community.factory.UserFactory.createUserWithAdminRole;
 public class UserControllerTest {
     @InjectMocks
     UserController userController;
+
+    @Mock
+    UserRepository userRepository;
 
     @Mock
     UserService userService;
@@ -97,11 +108,17 @@ public class UserControllerTest {
         // given
         int id = 1;
 
+        User user = createUserWithAdminRole();
+        Authentication authentication = new UsernamePasswordAuthenticationToken(user.getId(), "", Collections.emptyList());
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        given(userRepository.findByUsername(authentication.getName())).willReturn(Optional.of(user));
+
         // when then
         mockMvc.perform(
                 delete("/api/users/{id}", id))
                 .andExpect(status().isOk());
-        verify(userService).deleteUserInfo(id);
+
+        verify(userService).deleteUserInfo(user, id);
 
     }
 }
