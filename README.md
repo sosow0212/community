@@ -3,11 +3,10 @@
 <hr>
 
 ### 프로젝트 설명
-- RESTFul 한 서버를 만드는 것을 목표로 잡고 진행한 커뮤니티 프로젝트입니다.
-- 최소한의 DB 조회를 위해 JPA와 데이터베이스 설계에 집중했습니다.
+- 커뮤니티 API 서버 제작 개인 프로젝트입니다.
+- 성능 튜닝을 위해 JPA 설계와 테이블 설계에 집중했습니다.
 - NoSQL Redis를 이용해서 JWT RefreshToken을 관리합니다.
-- 자세한 내용은 다음 블로그 링크를 따라서 보실 수 있습니다. 
-- https://blog.naver.com/sosow0212/222747372730
+- 자세한 내용은 <a href="https://blog.naver.com/sosow0212/222747372730">블로그</a> 링크를 따라서 보실 수 있습니다. (같은 카테고리 안에 순서대로 글을 따라가시면 됩니다.)
 
 
 ### Dependency
@@ -41,3 +40,14 @@
 - Message : 쪽지 CRUD, 받은 쪽지와 보낸 쪽지 사이 둘다 삭제되면 테이블에서 Column 제거
 - Report : 유저 및 게시글 신고 관리 기능
 - Admin : 관리를 위한 백오피스 구현
+
+<img width="1217" alt="image" src="https://user-images.githubusercontent.com/63213487/186867100-8983c4f6-98cf-414f-b9b6-df5ab0c05624.png">
+
+
+
+### JUnit5 테스트 코드
+- Junit5 를 이용해서 컨트롤러 및 서비스 레이어의 단위테스트를 진행했습니다.
+
+<img width="323" alt="image" src="https://user-images.githubusercontent.com/63213487/186866768-4e091e48-e3ee-43c1-86db-aa5c81069227.png"> 
+<img width="316" alt="image" src="https://user-images.githubusercontent.com/63213487/186866894-e44c50e7-572b-4298-ad84-3e1323ce5373.png">
+
