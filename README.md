@@ -19,6 +19,7 @@
 - Validation
 - Swagger
 - Redis
+- Docker
 
 
 ### Git Convention
