@@ -9,7 +9,7 @@
 - 자세한 내용은 <a href="https://blog.naver.com/sosow0212/222747372730">블로그</a> 링크를 따라서 보실 수 있습니다. (같은 카테고리 안에 순서대로 글을 따라가시면 됩니다.)
 
 
-### Dependency
+### Skills
 - Spring Web
 - JPA
 - JUnit5
@@ -19,6 +19,7 @@
 - Validation
 - Swagger
 - Redis
+- Docker, Docker-compose
 
 
 ### Git Convention
