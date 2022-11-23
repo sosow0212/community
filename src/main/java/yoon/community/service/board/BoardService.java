@@ -15,6 +15,7 @@ import yoon.community.entity.category.Category;
 import yoon.community.entity.user.User;
 import yoon.community.exception.BoardNotFoundException;
 import yoon.community.exception.CategoryNotFoundException;
+import yoon.community.exception.FavoriteNotFoundException;
 import yoon.community.exception.MemberNotEqualsException;
 import yoon.community.repository.board.BoardRepository;
 import yoon.community.repository.board.FavoriteRepository;
@@ -32,8 +33,11 @@ import static java.util.stream.Collectors.toList;
 @RequiredArgsConstructor
 @Service
 public class BoardService {
+    private final static String PROCESS_LIKE_BOARD = "좋아요 처리 완료";
+    private final static String PROCESS_UNLIKE_BOARD = "좋아요 취소 완료";
+    private final static String PROCESS_FAVORITE_BOARD = "즐겨찾기 처리 완료";
+    private final static String PROCESS_UNFAVORITE_BOARD = "즐겨찾기 취소 완료";
 
-    private final UserRepository userRepository;
     private final BoardRepository boardRepository;
     private final FileService fileService;
     private final LikeBoardRepository likeBoardRepository;
@@ -54,7 +58,7 @@ public class BoardService {
     public List<BoardSimpleDto> findAllBoards(Pageable pageable, int categoryId) {
         Page<Board> boards = boardRepository.findAllByCategoryId(pageable, categoryId);
         List<BoardSimpleDto> boardSimpleDtoList = new ArrayList<>();
-        boards.stream().forEach(i -> boardSimpleDtoList.add(new BoardSimpleDto().toDto(i)));
+        boards.stream().map(i -> boardSimpleDtoList.add(new BoardSimpleDto().toDto(i)));
         return boardSimpleDtoList;
     }
 
@@ -66,40 +70,63 @@ public class BoardService {
     @Transactional
     public String likeBoard(int id, User user) {
         Board board = boardRepository.findById(id).orElseThrow(BoardNotFoundException::new);
-
-        if (likeBoardRepository.findByBoardAndUser(board, user) == null) {
-            // 좋아요를 누른적 없다면 LikeBoard 생성 후, 좋아요 처리
-            board.setLiked(board.getLiked() + 1);
-            LikeBoard likeBoard = new LikeBoard(board, user); // true 처리
-            likeBoardRepository.save(likeBoard);
-            return "좋아요 처리 완료";
-        } else {
-            // 좋아요를 누른적 있다면 취소 처리 후 테이블 삭제
-            LikeBoard likeBoard = likeBoardRepository.findByBoardAndUser(board, user);
-            likeBoard.unLikeBoard(board);
-            likeBoardRepository.delete(likeBoard);
-            return "좋아요 취소";
+        if (didUserClickLikeAlready(board, user)) {
+            return processUserUnlikeBoard(board, user);
         }
+        return processUserLikeBoard(board, user);
     }
 
+    public String processUserLikeBoard(Board board, User user) {
+        board.processLiked();
+        LikeBoard likeBoard = new LikeBoard(board, user); // true 처리
+        likeBoardRepository.save(likeBoard);
+        return PROCESS_LIKE_BOARD;
+    }
+
+    public String processUserUnlikeBoard(Board board, User user) {
+        LikeBoard likeBoard = likeBoardRepository.findByBoardAndUser(board, user);
+        likeBoard.unLikeBoard(board);
+        likeBoardRepository.delete(likeBoard);
+        return PROCESS_UNLIKE_BOARD;
+    }
+
+    public boolean didUserClickLikeAlready(Board board, User user) {
+        if (likeBoardRepository.findByBoardAndUser(board, user) == null) {
+            return false;
+        }
+        return true;
+    }
 
     @Transactional
     public String favoriteBoard(int id, User user) {
         Board board = boardRepository.findById(id).orElseThrow(BoardNotFoundException::new);
-
-        if (favoriteRepository.findByBoardAndUser(board, user) == null) {
-            // 좋아요를 누른적 없다면 Favorite 생성 후, 즐겨찾기 처리
-            board.setFavorited(board.getFavorited() + 1);
-            Favorite favorite = new Favorite(board, user); // true 처리
-            favoriteRepository.save(favorite);
-            return "즐겨찾기 처리 완료";
-        } else {
-            // 즐겨찾기 누른적 있다면 즐겨찾기 처리 후 테이블 삭제
-            Favorite favorite = favoriteRepository.findFavoriteByBoard(board);
-            favorite.unFavoriteBoard(board);
-            favoriteRepository.delete(favorite);
-            return "즐겨찾기 취소";
+        System.out.println(didUserClickFavoriteAlready(board, user));
+        if (didUserClickFavoriteAlready(board, user)) {
+            return processUserUnFavoriteBoard(board, user);
         }
+        return processUserFavoriteBoard(board, user);
+    }
+
+    public String processUserFavoriteBoard(Board board, User user) {
+        board.processFavorite();
+        Favorite favorite = new Favorite(board, user); // true 처리
+        favoriteRepository.save(favorite);
+        return PROCESS_FAVORITE_BOARD;
+    }
+
+    public String processUserUnFavoriteBoard(Board board, User user) {
+        Favorite favorite = favoriteRepository.findByBoardAndUser(board, user)
+                .orElseThrow(FavoriteNotFoundException::new);
+        favorite.unFavoriteBoard(board);
+        favoriteRepository.delete(favorite);
+        return PROCESS_UNFAVORITE_BOARD;
+    }
+
+    public boolean didUserClickFavoriteAlready(Board board, User user) {
+        if (favoriteRepository.findByBoardAndUser(board, user).isEmpty()) {
+            return false;
+        }
+        return true;
     }
 
 
@@ -147,7 +174,8 @@ public class BoardService {
 
 
     private void uploadImages(List<Image> images, List<MultipartFile> fileImages) {
-        IntStream.range(0, images.size()).forEach(i -> fileService.upload(fileImages.get(i), images.get(i).getUniqueName()));
+        IntStream.range(0, images.size())
+                .forEach(i -> fileService.upload(fileImages.get(i), images.get(i).getUniqueName()));
     }
 
     private void deleteImages(List<Image> images) {

@@ -12,6 +12,8 @@ import yoon.community.dto.board.BoardCreateRequest;
 import yoon.community.dto.board.BoardCreateResponse;
 import yoon.community.dto.board.BoardDto;
 import yoon.community.entity.board.Board;
+import yoon.community.entity.board.Favorite;
+import yoon.community.entity.board.LikeBoard;
 import yoon.community.entity.user.User;
 import yoon.community.repository.board.BoardRepository;
 import yoon.community.repository.board.FavoriteRepository;
@@ -33,20 +35,22 @@ import static org.mockito.Mockito.verify;
 import static yoon.community.factory.BoardFactory.createBoard;
 import static yoon.community.factory.BoardFactory.createBoardWithImages;
 import static yoon.community.factory.CategoryFactory.createCategory;
+import static yoon.community.factory.FavoriteFactory.createFavoriteWithFavorite;
 import static yoon.community.factory.ImageFactory.createImage;
 import static yoon.community.factory.UserFactory.createUser;
 
 @ExtendWith(MockitoExtension.class)
 public class BoardServiceTest {
+    private final static String PROCESS_LIKE_BOARD = "좋아요 처리 완료";
+    private final static String PROCESS_UNLIKE_BOARD = "좋아요 취소 완료";
+    private final static String PROCESS_FAVORITE_BOARD = "즐겨찾기 처리 완료";
+    private final static String PROCESS_UNFAVORITE_BOARD = "즐겨찾기 취소 완료";
+
     @InjectMocks
     BoardService boardService;
 
     @Mock
-    UserRepository userRepository;
-    @Mock
     BoardRepository boardRepository;
-    @Mock
-    FileService fileService;
     @Mock
     LikeBoardRepository likeBoardRepository;
     @Mock
@@ -118,36 +122,109 @@ public class BoardServiceTest {
 
 
     @Test
-    @DisplayName("likeBoard 서비스 테스트")
-    void likeBoardTest() {
+    @DisplayName("게시글 좋아요 처리 테스트")
+    void processUserLikeBoardTest() {
         // given
-        int id = 1;
         User user = createUser();
         Board board = createBoard();
-        given(boardRepository.findById(any())).willReturn(Optional.of(board));
 
         // when
-        String result = boardService.likeBoard(id, user);
+        String result = boardService.processUserLikeBoard(board, user);
 
         // then
-        assertThat(result).isEqualTo("좋아요 처리 완료");
+        assertThat(result).isEqualTo(PROCESS_LIKE_BOARD);
+        assertThat(board.getLiked()).isEqualTo(1);
+        verify(likeBoardRepository).save(any());
     }
 
     @Test
-    @DisplayName("favoriteBoard 서비스 테스트")
-    void favoriteBoardTest() {
+    @DisplayName("게시글 좋아요 취소 처리 테스트")
+    void processUserUnLikeBoardTest() {
         // given
-        int id = 1;
         User user = createUser();
         Board board = createBoard();
-        given(boardRepository.findById(any())).willReturn(Optional.of(board));
+        board.setLiked(1);
+        LikeBoard likeBoard = new LikeBoard(1, board, user, true, null);
+        given(likeBoardRepository.findByBoardAndUser(board, user)).willReturn(likeBoard);
 
         // when
-        String result = boardService.favoriteBoard(id, user);
+        String result = boardService.processUserUnlikeBoard(board, user);
 
         // then
-        assertThat(result).isEqualTo("즐겨찾기 처리 완료");
+        assertThat(result).isEqualTo(PROCESS_UNLIKE_BOARD);
+        assertThat(board.getLiked()).isEqualTo(0);
+        verify(likeBoardRepository).delete(likeBoard);
     }
+
+    @Test
+    @DisplayName("유저가 좋아요를 이미 클릭했는지 테스트")
+    public void didUserClickLikeAlreadyTest() {
+        // given
+        Board board = createBoard();
+        User user = createUser();
+        LikeBoard likeBoard = new LikeBoard(1, board, user, true, null);
+        given(likeBoardRepository.findByBoardAndUser(board, user)).willReturn(likeBoard);
+
+        // when
+        boolean result = boardService.didUserClickLikeAlready(board, user);
+
+        // then
+        assertThat(result).isEqualTo(true);
+    }
+
+
+    @Test
+    @DisplayName("게시글 즐겨찾기 처리 테스트")
+    void processUserFavoriteBoard() {
+        // given
+        User user = createUser();
+        Board board = createBoard();
+        board.setFavorited(0);
+
+        // when
+        String result = boardService.processUserFavoriteBoard(board, user);
+
+        // then
+        assertThat(result).isEqualTo(PROCESS_FAVORITE_BOARD);
+        assertThat(board.getFavorited()).isEqualTo(1);
+        verify(favoriteRepository).save(any());
+    }
+
+    @Test
+    @DisplayName("게시글 즐겨찾기 취소 처리 테스트")
+    void processUserUnFavoriteBoard() {
+        // given
+        User user = createUser();
+        Board board = createBoard();
+        board.setFavorited(1);
+        Favorite favorite = createFavoriteWithFavorite(board, user);
+        given(favoriteRepository.findByBoardAndUser(board, user)).willReturn(Optional.of(favorite));
+
+        // when
+        String result = boardService.processUserUnFavoriteBoard(board, user);
+
+        // then
+        assertThat(result).isEqualTo(PROCESS_UNFAVORITE_BOARD);
+        assertThat(board.getFavorited()).isEqualTo(0);
+        verify(favoriteRepository).delete(any());
+    }
+
+    @Test
+    @DisplayName("유저가 즐겨찾기를 이미 클릭했는지 테스트")
+    public void didUserClickFavoriteAlready() {
+        // given
+        Board board = createBoard();
+        User user = createUser();
+        Favorite favorite = createFavoriteWithFavorite(board, user);
+        given(favoriteRepository.findByBoardAndUser(board, user)).willReturn(Optional.of(favorite));
+
+        // when
+        boolean result = boardService.didUserClickFavoriteAlready(board, user);
+
+        // then
+        assertThat(result).isEqualTo(true);
+    }
+
 
     @Test
     @DisplayName("editBoard 서비스 테스트")

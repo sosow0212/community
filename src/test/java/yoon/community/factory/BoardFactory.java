@@ -21,6 +21,8 @@ public class BoardFactory {
     public static Board createBoard() {
         List<Image> images = new ArrayList<>();
         images.add(createImage());
-        return new Board("title", "content", createUser(), createCategory(), images);
+        Board board = new Board("title", "content", createUser(), createCategory(), images);
+        board.setLiked(0);
+        return board;
     }
 }

@@ -48,6 +48,6 @@ public class LikeBoard {
 
     public void unLikeBoard(Board board) {
         this.status = false;
-        board.setLiked(board.getLiked() - 1);
+        board.processUnLiked();
     }
 }
