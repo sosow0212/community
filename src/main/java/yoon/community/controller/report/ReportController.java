@@ -31,8 +31,7 @@ public class ReportController {
     @ResponseStatus(HttpStatus.OK)
     @PostMapping("/reports/users")
     public Response reportUser(@Valid @RequestBody UserReportRequest userReportRequest) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = userRepository.findByUsername(authentication.getName()).orElseThrow(MemberNotFoundException::new);
+        User user = getPrincipal();
         return Response.success(reportService.reportUser(user, userReportRequest));
     }
 
@@ -40,9 +39,7 @@ public class ReportController {
     @ResponseStatus(HttpStatus.OK)
     @PostMapping("/reports/boards")
     public Response reportBoard(@Valid @RequestBody BoardReportRequest boardReportRequest) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = userRepository.findByUsername(authentication.getName()).orElseThrow(MemberNotFoundException::new);
-
+        User user = getPrincipal();
         return Response.success(reportService.reportBoard(user, boardReportRequest));
     }
 
@@ -60,4 +57,10 @@ public class ReportController {
 //    public Response unReportUser(@ApiParam(value = "유저 id", required = true) @PathVariable int id) {
 //        return Response.success();
 //    }
+
+    private User getPrincipal() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findByUsername(authentication.getName()).orElseThrow(MemberNotFoundException::new);
+        return user;
+    }
 }

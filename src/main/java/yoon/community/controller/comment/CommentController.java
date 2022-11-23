@@ -37,9 +37,7 @@ public class CommentController {
     @PostMapping("/comments")
     @ResponseStatus(HttpStatus.CREATED)
     public Response create(@Valid @RequestBody CommentCreateRequest req) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = userRepository.findByUsername(authentication.getName()).orElseThrow(MemberNotFoundException::new);
-
+        User user = getPrincipal();
         return Response.success(commentService.create(req, user));
     }
 
@@ -47,10 +45,14 @@ public class CommentController {
     @DeleteMapping("/comments/{id}")
     @ResponseStatus(HttpStatus.OK)
     public Response delete(@ApiParam(value = "댓글 id", required = true) @PathVariable int id) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = userRepository.findByUsername(authentication.getName()).orElseThrow(MemberNotFoundException::new);
-
+        User user = getPrincipal();
         commentService.delete(id, user);
         return Response.success();
+    }
+
+    private User getPrincipal() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findByUsername(authentication.getName()).orElseThrow(MemberNotFoundException::new);
+        return user;
     }
 }

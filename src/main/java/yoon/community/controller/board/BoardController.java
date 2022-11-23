@@ -37,16 +37,15 @@ public class BoardController {
     public Response create(@Valid @ModelAttribute BoardCreateRequest req,
                            @RequestParam(value = "category", defaultValue = "1") int categoryId) {
         // http://localhost:8080/api/boards?category=3
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = userRepository.findByUsername(authentication.getName()).orElseThrow(MemberNotFoundException::new);
-
+        User user = getPrincipal();
         return Response.success(boardService.create(req, categoryId, user));
     }
 
     @ApiOperation(value = "게시글 목록 조회", notes = "게시글 목록을 조회합니다.")
     @GetMapping("/boards/all/{categoryId}")
     @ResponseStatus(HttpStatus.OK)
-    public Response findAllBoards(@ApiParam(value = "게시글 id", required = true) @PathVariable int categoryId, @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+    public Response findAllBoards(@ApiParam(value = "게시글 id", required = true) @PathVariable int categoryId,
+                                  @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
         // ex) http://localhost:8080/api/boards/all/{categoryId}/?page=0
         return Response.success(boardService.findAllBoards(pageable, categoryId));
     }
@@ -61,10 +60,9 @@ public class BoardController {
     @ApiOperation(value = "게시글 수정", notes = "게시글을 수정합니다.")
     @PutMapping("/boards/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Response editBoard(@ApiParam(value = "게시글 id", required = true) @PathVariable int id, @Valid @ModelAttribute BoardUpdateRequest req) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = userRepository.findByUsername(authentication.getName()).orElseThrow(MemberNotFoundException::new);
-
+    public Response editBoard(@ApiParam(value = "게시글 id", required = true) @PathVariable int id,
+                              @Valid @ModelAttribute BoardUpdateRequest req) {
+        User user = getPrincipal();
         return Response.success(boardService.editBoard(id, req, user));
     }
 
@@ -72,9 +70,7 @@ public class BoardController {
     @PostMapping("/boards/{id}")
     @ResponseStatus(HttpStatus.OK)
     public Response likeBoard(@ApiParam(value = "게시글 id", required = true) @PathVariable int id) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = userRepository.findByUsername(authentication.getName()).orElseThrow(MemberNotFoundException::new);
-
+        User user = getPrincipal();
         return Response.success(boardService.likeBoard(id, user));
     }
 
@@ -82,16 +78,15 @@ public class BoardController {
     @PostMapping("/boards/{id}/favorites")
     @ResponseStatus(HttpStatus.OK)
     public Response favoriteBoard(@ApiParam(value = "게시글 id", required = true) @PathVariable int id) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = userRepository.findByUsername(authentication.getName()).orElseThrow(MemberNotFoundException::new);
-
+        User user = getPrincipal();
         return Response.success(boardService.favoriteBoard(id, user));
     }
 
     @ApiOperation(value = "인기글 조회", notes = "추천수 10이상 게시글을 조회합니다.")
     @GetMapping("/boards/best")
     @ResponseStatus(HttpStatus.OK)
-    public Response bestBoards(@PageableDefault(size = 5, sort = "liked", direction = Sort.Direction.DESC) Pageable pageable) {
+    public Response bestBoards(
+            @PageableDefault(size = 5, sort = "liked", direction = Sort.Direction.DESC) Pageable pageable) {
         return Response.success(boardService.findBestBoards(pageable));
     }
 
@@ -100,9 +95,7 @@ public class BoardController {
     @DeleteMapping("/boards/{id}")
     @ResponseStatus(HttpStatus.OK)
     public Response deleteBoard(@ApiParam(value = "게시글 id", required = true) @PathVariable int id) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = userRepository.findByUsername(authentication.getName()).orElseThrow(MemberNotFoundException::new);
-
+        User user = getPrincipal();
         boardService.deleteBoard(id, user);
         return Response.success();
     }
@@ -110,8 +103,15 @@ public class BoardController {
     @ApiOperation(value = "게시글 검색", notes = "게시글을 검색합니다.")
     @GetMapping("/boards/search")
     @ResponseStatus(HttpStatus.OK)
-    public Response search(String keyword, @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+    public Response search(String keyword,
+                           @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
         // ex) http://localhost:8080/api/boards/search?page=0
         return Response.success(boardService.search(keyword, pageable));
+    }
+
+    private User getPrincipal() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findByUsername(authentication.getName()).orElseThrow(MemberNotFoundException::new);
+        return user;
     }
 }

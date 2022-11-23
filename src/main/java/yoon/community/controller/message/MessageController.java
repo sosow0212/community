@@ -30,8 +30,7 @@ public class MessageController {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/messages")
     public Response createMessage(@Valid @RequestBody MessageCreateRequest req) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User sender = userRepository.findByUsername(authentication.getName()).orElseThrow(MemberNotFoundException::new);
+        User sender = getPrincipal();
         return Response.success(messageService.createMessage(sender, req));
     }
 
@@ -39,9 +38,7 @@ public class MessageController {
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/messages/receiver")
     public Response receiveMessages() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = userRepository.findByUsername(authentication.getName()).orElseThrow(MemberNotFoundException::new);
-
+        User user = getPrincipal();
         return Response.success(messageService.receiveMessages(user));
     }
 
@@ -49,9 +46,7 @@ public class MessageController {
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/messages/receiver/{id}")
     public Response receiveMessage(@ApiParam(value = "쪽지 id", required = true) @PathVariable int id) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = userRepository.findByUsername(authentication.getName()).orElseThrow(MemberNotFoundException::new);
-
+        User user = getPrincipal();
         return Response.success(messageService.receiveMessage(id, user));
     }
 
@@ -59,9 +54,7 @@ public class MessageController {
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/messages/sender")
     public Response sendMessages() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = userRepository.findByUsername(authentication.getName()).orElseThrow(MemberNotFoundException::new);
-
+        User user = getPrincipal();
         return Response.success(messageService.sendMessages(user));
     }
 
@@ -69,9 +62,7 @@ public class MessageController {
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/messages/sender/{id}")
     public Response sendMessage(@ApiParam(value = "쪽지 id", required = true) @PathVariable int id) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = userRepository.findByUsername(authentication.getName()).orElseThrow(MemberNotFoundException::new);
-
+        User user = getPrincipal();
         return Response.success(messageService.sendMessage(id, user));
     }
 
@@ -79,9 +70,7 @@ public class MessageController {
     @ResponseStatus(HttpStatus.OK)
     @DeleteMapping("/messages/receiver/{id}")
     public Response deleteReceiveMessage(@ApiParam(value = "쪽지 id", required = true) @PathVariable int id) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = userRepository.findByUsername(authentication.getName()).orElseThrow(MemberNotFoundException::new);
-
+        User user = getPrincipal();
         messageService.deleteMessageByReceiver(id, user);
         return Response.success();
     }
@@ -90,11 +79,14 @@ public class MessageController {
     @ResponseStatus(HttpStatus.OK)
     @DeleteMapping("/messages/sender/{id}")
     public Response deleteSendMessage(@ApiParam(value = "쪽지 id", required = true) @PathVariable int id) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = userRepository.findByUsername(authentication.getName()).orElseThrow(MemberNotFoundException::new);
-
+        User user = getPrincipal();
         messageService.deleteMessageBySender(id, user);
         return Response.success();
     }
 
+    private User getPrincipal() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findByUsername(authentication.getName()).orElseThrow(MemberNotFoundException::new);
+        return user;
+    }
 }
