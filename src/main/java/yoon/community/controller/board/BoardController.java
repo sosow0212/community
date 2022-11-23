@@ -38,7 +38,7 @@ public class BoardController {
                            @RequestParam(value = "category", defaultValue = "1") int categoryId) {
         // http://localhost:8080/api/boards?category=3
         User user = getPrincipal();
-        return Response.success(boardService.create(req, categoryId, user));
+        return Response.success(boardService.createBoard(req, categoryId, user));
     }
 
     @ApiOperation(value = "게시글 목록 조회", notes = "게시글 목록을 조회합니다.")
@@ -106,7 +106,7 @@ public class BoardController {
     public Response searchBoard(String keyword,
                            @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
         // ex) http://localhost:8080/api/boards/search?page=0
-        return Response.success(boardService.search(keyword, pageable));
+        return Response.success(boardService.searchBoard(keyword, pageable));
     }
 
     private User getPrincipal() {

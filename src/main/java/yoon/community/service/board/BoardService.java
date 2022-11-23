@@ -3,8 +3,6 @@ package yoon.community.service.board;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,7 +16,6 @@ import yoon.community.entity.user.User;
 import yoon.community.exception.BoardNotFoundException;
 import yoon.community.exception.CategoryNotFoundException;
 import yoon.community.exception.MemberNotEqualsException;
-import yoon.community.exception.MemberNotFoundException;
 import yoon.community.repository.board.BoardRepository;
 import yoon.community.repository.board.FavoriteRepository;
 import yoon.community.repository.board.LikeBoardRepository;
@@ -44,7 +41,7 @@ public class BoardService {
     private final CategoryRepository categoryRepository;
 
     @Transactional
-    public BoardCreateResponse create(BoardCreateRequest req, int categoryId, User user) {
+    public BoardCreateResponse createBoard(BoardCreateRequest req, int categoryId, User user) {
         List<Image> images = req.getImages().stream().map(i -> new Image(i.getOriginalFilename())).collect(toList());
         Category category = categoryRepository.findById(categoryId).orElseThrow(CategoryNotFoundException::new);
         Board board = boardRepository.save(new Board(req.getTitle(), req.getContent(), user, category, images));
@@ -141,7 +138,7 @@ public class BoardService {
     }
 
     @Transactional(readOnly = true)
-    public List<BoardSimpleDto> search(String keyword, Pageable pageable) {
+    public List<BoardSimpleDto> searchBoard(String keyword, Pageable pageable) {
         Page<Board> boards = boardRepository.findByTitleContaining(keyword, pageable);
         List<BoardSimpleDto> boardSimpleDtoList = new ArrayList<>();
         boards.stream().forEach(i -> boardSimpleDtoList.add(new BoardSimpleDto().toDto(i)));

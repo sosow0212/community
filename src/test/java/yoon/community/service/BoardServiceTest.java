@@ -11,9 +11,7 @@ import org.springframework.mock.web.MockMultipartFile;
 import yoon.community.dto.board.BoardCreateRequest;
 import yoon.community.dto.board.BoardCreateResponse;
 import yoon.community.dto.board.BoardDto;
-import yoon.community.dto.board.BoardUpdateRequest;
 import yoon.community.entity.board.Board;
-import yoon.community.entity.board.Image;
 import yoon.community.entity.user.User;
 import yoon.community.repository.board.BoardRepository;
 import yoon.community.repository.board.FavoriteRepository;
@@ -23,7 +21,6 @@ import yoon.community.repository.user.UserRepository;
 import yoon.community.service.board.BoardService;
 import yoon.community.service.file.FileService;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.IntStream;
@@ -37,7 +34,6 @@ import static yoon.community.factory.BoardFactory.createBoard;
 import static yoon.community.factory.BoardFactory.createBoardWithImages;
 import static yoon.community.factory.CategoryFactory.createCategory;
 import static yoon.community.factory.ImageFactory.createImage;
-import static yoon.community.factory.ImageFactory.createImageWithIdAndOriginName;
 import static yoon.community.factory.UserFactory.createUser;
 
 @ExtendWith(MockitoExtension.class)
@@ -60,8 +56,8 @@ public class BoardServiceTest {
 
 
     @Test
-    @DisplayName("create 서비스 테스트")
-    void createTest() {
+    @DisplayName("createBoard 서비스 테스트")
+    void createBoardTest() {
         // given
         BoardCreateRequest req = new BoardCreateRequest("title", "content", List.of(
                 new MockMultipartFile("test1", "test1.PNG", MediaType.IMAGE_PNG_VALUE, "test1".getBytes()),
@@ -78,7 +74,7 @@ public class BoardServiceTest {
         );
 
         // when
-        BoardCreateResponse result = boardService.create(req, categoryId, user);
+        BoardCreateResponse result = boardService.createBoard(req, categoryId, user);
 
         // then
         assertThat(result.getTitle()).isEqualTo("title");
