@@ -34,7 +34,7 @@ public class BoardController {
     @ApiOperation(value = "게시글 생성", notes = "게시글을 작성합니다.")
     @PostMapping("/boards")
     @ResponseStatus(HttpStatus.CREATED)
-    public Response create(@Valid @ModelAttribute BoardCreateRequest req,
+    public Response createBoard(@Valid @ModelAttribute BoardCreateRequest req,
                            @RequestParam(value = "category", defaultValue = "1") int categoryId) {
         // http://localhost:8080/api/boards?category=3
         User user = getPrincipal();
@@ -85,7 +85,7 @@ public class BoardController {
     @ApiOperation(value = "인기글 조회", notes = "추천수 10이상 게시글을 조회합니다.")
     @GetMapping("/boards/best")
     @ResponseStatus(HttpStatus.OK)
-    public Response bestBoards(
+    public Response getBestBoards(
             @PageableDefault(size = 5, sort = "liked", direction = Sort.Direction.DESC) Pageable pageable) {
         return Response.success(boardService.findBestBoards(pageable));
     }
@@ -103,7 +103,7 @@ public class BoardController {
     @ApiOperation(value = "게시글 검색", notes = "게시글을 검색합니다.")
     @GetMapping("/boards/search")
     @ResponseStatus(HttpStatus.OK)
-    public Response search(String keyword,
+    public Response searchBoard(String keyword,
                            @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
         // ex) http://localhost:8080/api/boards/search?page=0
         return Response.success(boardService.search(keyword, pageable));

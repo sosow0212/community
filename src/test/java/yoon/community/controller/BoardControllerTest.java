@@ -66,7 +66,7 @@ public class BoardControllerTest {
 
     @Test
     @DisplayName("게시글 작성")
-    public void createTest() throws Exception {
+    public void createBoardTest() throws Exception {
         // given
         ArgumentCaptor<BoardCreateRequest> boardCreateRequestArgumentCaptor = ArgumentCaptor.forClass(BoardCreateRequest.class);
         List<MultipartFile> images = new ArrayList<>();
@@ -101,7 +101,7 @@ public class BoardControllerTest {
 
     @Test
     @DisplayName("게시물 검색")
-    public void searchTest() throws Exception {
+    public void searchBoardTest() throws Exception {
         // given
         Pageable pageable = PageRequest.of(0, 5, Sort.Direction.DESC, "id");
         Page<Board> result = boardRepository.findByTitleContaining("keyword", pageable);
@@ -143,7 +143,7 @@ public class BoardControllerTest {
 
     @Test
     @DisplayName("추천글 조회")
-    public void bestBoardsTest() throws Exception {
+    public void getBestBoardsTest() throws Exception {
         // given
         Pageable pageable = PageRequest.of(0, 5, Sort.Direction.DESC, "id");
         Page<Board> result = boardRepository.findByLikedGreaterThanEqual(pageable, 3);
