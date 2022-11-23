@@ -20,14 +20,18 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Service
 public class CategoryService {
-
     private final CategoryRepository categoryRepository;
-    private final UserRepository userRepository;
 
     @Transactional(readOnly = true)
     public List<CategoryDto> findAll() {
         List<Category> categories = categoryRepository.findAllOrderByParentIdAscNullsFirstCategoryIdAsc();
         return CategoryDto.toDtoList(categories);
+    }
+
+    @Transactional
+    public void createAtFirst() {
+        Category category = new Category("Default", null);
+        categoryRepository.save(category);
     }
 
     @Transactional

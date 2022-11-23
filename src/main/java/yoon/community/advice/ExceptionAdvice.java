@@ -84,6 +84,14 @@ public class ExceptionAdvice {
         return Response.failure(404, "요청한 회원을 찾을 수 없습니다.");
     }
 
+    // 404 응답
+    // 요청한 Favorite 찾을 수 없음
+    @ExceptionHandler(FavoriteNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Response favoriteNotFoundException() {
+        return Response.failure(404, "요청한 즐겨찾기를 찾을 수 없습니다.");
+    }
+
 
     // 404 응답
     // 요청한 자원을 찾을 수 없음
