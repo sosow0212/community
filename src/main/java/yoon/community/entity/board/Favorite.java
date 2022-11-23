@@ -48,6 +48,6 @@ public class Favorite {
 
     public void unFavoriteBoard(Board board) {
         this.status = false;
-        board.setFavorited(board.getFavorited() - 1);
+        board.processUnFavorite();
     }
 }

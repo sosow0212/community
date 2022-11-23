@@ -123,6 +123,22 @@ public class Board {
         return this.reported;
     }
 
+    public void processLiked() {
+        this.liked += 1;
+    }
+
+    public void processUnLiked() {
+        this.liked -= 1;
+    }
+
+    public void processFavorite() {
+        this.favorited += 1;
+    }
+
+    public void processUnFavorite() {
+        this.favorited -= 1;
+    }
+
     @Getter
     @AllArgsConstructor
     public static class ImageUpdatedResult {
