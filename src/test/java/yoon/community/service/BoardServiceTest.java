@@ -19,13 +19,12 @@ import yoon.community.repository.board.BoardRepository;
 import yoon.community.repository.board.FavoriteRepository;
 import yoon.community.repository.board.LikeBoardRepository;
 import yoon.community.repository.category.CategoryRepository;
-import yoon.community.repository.user.UserRepository;
 import yoon.community.service.board.BoardService;
-import yoon.community.service.file.FileService;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.IntStream;
+import yoon.community.service.file.FileService;
 
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -57,6 +56,8 @@ public class BoardServiceTest {
     FavoriteRepository favoriteRepository;
     @Mock
     CategoryRepository categoryRepository;
+    @Mock
+    FileService fileService;
 
 
     @Test
@@ -129,11 +130,10 @@ public class BoardServiceTest {
         Board board = createBoard();
 
         // when
-        String result = boardService.processUserLikeBoard(board, user);
+        String result = boardService.createLikeBoard(board, user);
 
         // then
         assertThat(result).isEqualTo(PROCESS_LIKE_BOARD);
-        assertThat(board.getLiked()).isEqualTo(1);
         verify(likeBoardRepository).save(any());
     }
 
@@ -148,11 +148,10 @@ public class BoardServiceTest {
         given(likeBoardRepository.findByBoardAndUser(board, user)).willReturn(likeBoard);
 
         // when
-        String result = boardService.processUserUnlikeBoard(board, user);
+        String result = boardService.removeLikeBoard(board, user);
 
         // then
         assertThat(result).isEqualTo(PROCESS_UNLIKE_BOARD);
-        assertThat(board.getLiked()).isEqualTo(0);
         verify(likeBoardRepository).delete(likeBoard);
     }
 
@@ -166,10 +165,10 @@ public class BoardServiceTest {
         given(likeBoardRepository.findByBoardAndUser(board, user)).willReturn(likeBoard);
 
         // when
-        boolean result = boardService.didUserClickLikeAlready(board, user);
+        boolean result = boardService.canUserClickLike(board, user);
 
         // then
-        assertThat(result).isEqualTo(true);
+        assertThat(result).isEqualTo(false);
     }
 
 
@@ -182,11 +181,10 @@ public class BoardServiceTest {
         board.setFavorited(0);
 
         // when
-        String result = boardService.processUserFavoriteBoard(board, user);
+        String result = boardService.createFavoriteBoard(board, user);
 
         // then
         assertThat(result).isEqualTo(PROCESS_FAVORITE_BOARD);
-        assertThat(board.getFavorited()).isEqualTo(1);
         verify(favoriteRepository).save(any());
     }
 
@@ -201,11 +199,10 @@ public class BoardServiceTest {
         given(favoriteRepository.findByBoardAndUser(board, user)).willReturn(Optional.of(favorite));
 
         // when
-        String result = boardService.processUserUnFavoriteBoard(board, user);
+        String result = boardService.removeFavoriteBoard(board, user);
 
         // then
         assertThat(result).isEqualTo(PROCESS_UNFAVORITE_BOARD);
-        assertThat(board.getFavorited()).isEqualTo(0);
         verify(favoriteRepository).delete(any());
     }
 
@@ -219,10 +216,10 @@ public class BoardServiceTest {
         given(favoriteRepository.findByBoardAndUser(board, user)).willReturn(Optional.of(favorite));
 
         // when
-        boolean result = boardService.didUserClickFavoriteAlready(board, user);
+        boolean result = boardService.canUserClickFavorite(board, user);
 
         // then
-        assertThat(result).isEqualTo(true);
+        assertThat(result).isEqualTo(false);
     }
 
 

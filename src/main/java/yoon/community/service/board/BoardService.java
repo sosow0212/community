@@ -68,65 +68,63 @@ public class BoardService {
     }
 
     @Transactional
-    public String likeBoard(int id, User user) {
+    public String updateLikeOfBoard(int id, User user) {
         Board board = boardRepository.findById(id).orElseThrow(BoardNotFoundException::new);
-        if (didUserClickLikeAlready(board, user)) {
-            return processUserUnlikeBoard(board, user);
+        if (!canUserClickLike(board, user)) {
+            board.processUnLiked();
+            return removeLikeBoard(board, user);
         }
-        return processUserLikeBoard(board, user);
+        board.processLiked();
+        return createLikeBoard(board, user);
     }
 
-    public String processUserLikeBoard(Board board, User user) {
-        board.processLiked();
+    public String createLikeBoard(Board board, User user) {
         LikeBoard likeBoard = new LikeBoard(board, user); // true 처리
         likeBoardRepository.save(likeBoard);
         return PROCESS_LIKE_BOARD;
     }
 
-    public String processUserUnlikeBoard(Board board, User user) {
+    public String removeLikeBoard(Board board, User user) {
         LikeBoard likeBoard = likeBoardRepository.findByBoardAndUser(board, user);
-        likeBoard.unLikeBoard(board);
         likeBoardRepository.delete(likeBoard);
         return PROCESS_UNLIKE_BOARD;
     }
 
-    public boolean didUserClickLikeAlready(Board board, User user) {
+    public boolean canUserClickLike(Board board, User user) {
         if (likeBoardRepository.findByBoardAndUser(board, user) == null) {
-            return false;
+            return true;
         }
-        return true;
+        return false;
     }
 
     @Transactional
-    public String favoriteBoard(int id, User user) {
+    public String updateOfFavoriteBoard(int id, User user) {
         Board board = boardRepository.findById(id).orElseThrow(BoardNotFoundException::new);
-        System.out.println(didUserClickFavoriteAlready(board, user));
-        if (didUserClickFavoriteAlready(board, user)) {
-            return processUserUnFavoriteBoard(board, user);
+        if (!canUserClickFavorite(board, user)) {
+            board.processUnFavorite();
+            return removeFavoriteBoard(board, user);
         }
-        return processUserFavoriteBoard(board, user);
+        board.processFavorite();
+        return createFavoriteBoard(board, user);
     }
 
-    public String processUserFavoriteBoard(Board board, User user) {
-        board.processFavorite();
+    public String createFavoriteBoard(Board board, User user) {
         Favorite favorite = new Favorite(board, user); // true 처리
         favoriteRepository.save(favorite);
         return PROCESS_FAVORITE_BOARD;
     }
 
-    public String processUserUnFavoriteBoard(Board board, User user) {
-        Favorite favorite = favoriteRepository.findByBoardAndUser(board, user)
-                .orElseThrow(FavoriteNotFoundException::new);
-        favorite.unFavoriteBoard(board);
+    public String removeFavoriteBoard(Board board, User user) {
+        Favorite favorite = favoriteRepository.findByBoardAndUser(board, user).orElseThrow(FavoriteNotFoundException::new);
         favoriteRepository.delete(favorite);
         return PROCESS_UNFAVORITE_BOARD;
     }
 
-    public boolean didUserClickFavoriteAlready(Board board, User user) {
+    public boolean canUserClickFavorite(Board board, User user) {
         if (favoriteRepository.findByBoardAndUser(board, user).isEmpty()) {
-            return false;
+            return true;
         }
-        return true;
+        return false;
     }
 
 

@@ -170,7 +170,7 @@ public class BoardControllerTest {
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
-        verify(boardService).likeBoard(id, user);
+        verify(boardService).updateLikeOfBoard(id, user);
     }
 
 
@@ -192,7 +192,7 @@ public class BoardControllerTest {
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
-        verify(boardService).favoriteBoard(id, user);
+        verify(boardService).updateOfFavoriteBoard(id, user);
     }
 
 

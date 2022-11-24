@@ -71,7 +71,7 @@ public class BoardController {
     @ResponseStatus(HttpStatus.OK)
     public Response likeBoard(@ApiParam(value = "게시글 id", required = true) @PathVariable int id) {
         User user = getPrincipal();
-        return Response.success(boardService.likeBoard(id, user));
+        return Response.success(boardService.updateLikeOfBoard(id, user));
     }
 
     @ApiOperation(value = "게시글 즐겨찾기", notes = "사용자가 게시글 즐겨찾기를 누릅니다.")
@@ -79,7 +79,7 @@ public class BoardController {
     @ResponseStatus(HttpStatus.OK)
     public Response favoriteBoard(@ApiParam(value = "게시글 id", required = true) @PathVariable int id) {
         User user = getPrincipal();
-        return Response.success(boardService.favoriteBoard(id, user));
+        return Response.success(boardService.updateOfFavoriteBoard(id, user));
     }
 
     @ApiOperation(value = "인기글 조회", notes = "추천수 10이상 게시글을 조회합니다.")
