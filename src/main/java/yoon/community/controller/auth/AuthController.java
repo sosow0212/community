@@ -20,7 +20,6 @@ import static yoon.community.response.Response.success;
 @RestController
 @RequestMapping("/api")
 public class AuthController {
-
     private final AuthService authService;
 
     @ApiOperation(value = "회원가입", notes = "회원가입 진행")
@@ -38,12 +37,10 @@ public class AuthController {
         return success(authService.signIn(req));
     }
 
-
     @ApiOperation(value = "토큰 재발급", notes = "토큰 재발급 요청")
     @ResponseStatus(HttpStatus.OK)
     @PostMapping("/reissue")
     public Response reissue(@RequestBody TokenRequestDto tokenRequestDto) {
         return success(authService.reissue(tokenRequestDto));
     }
-
 }

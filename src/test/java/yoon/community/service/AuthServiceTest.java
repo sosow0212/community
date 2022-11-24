@@ -12,6 +12,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import yoon.community.config.jwt.TokenProvider;
 import yoon.community.dto.sign.*;
+import yoon.community.entity.user.User;
+import yoon.community.exception.LoginFailureException;
 import yoon.community.repository.refreshToken.RefreshTokenRepository;
 import yoon.community.repository.user.UserRepository;
 import yoon.community.service.auth.AuthService;
@@ -20,10 +22,12 @@ import yoon.community.service.redis.RedisService;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
+import static yoon.community.factory.UserFactory.createUser;
 import static yoon.community.factory.UserFactory.createUserWithAdminRole;
 
 @ExtendWith(MockitoExtension.class)
@@ -46,12 +50,9 @@ public class AuthServiceTest {
     @Mock
     RefreshTokenRepository refreshTokenRepository;
 
-    @Mock
-    RedisService redisService;
-
     @BeforeEach
     void beforeEach() {
-        authService = new AuthService(authenticationManagerBuilder, userRepository, passwordEncoder, tokenProvider, refreshTokenRepository, redisService);
+        authService = new AuthService(authenticationManagerBuilder, userRepository, passwordEncoder, tokenProvider, refreshTokenRepository);
     }
 
     @Test
@@ -68,28 +69,28 @@ public class AuthServiceTest {
         verify(userRepository).save(any());
     }
 
+    @Test
+    @DisplayName("로그인 실패 테스트")
+    void signInExceptionByNoneMemberTest() {
+        // given
+        given(userRepository.findByUsername(any())).willReturn(Optional.of(createUser()));
 
-//    @Test
-//    @DisplayName("signIn 서비스 테스트")
-//    void signInTest() {
-//        // given
-//        LoginRequestDto req = new LoginRequestDto("username", "password");
-//        UsernamePasswordAuthenticationToken authenticationToken = req.toAuthentication();
-//        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
-//        TokenDto tokenDto = tokenProvider.generateTokenDto(authentication);
-//
-//        given(userRepository.findByUsername(any())).willReturn(Optional.of(createUserWithAdminRole()));
-//        given(passwordEncoder.matches(anyString(), anyString())).willReturn(true);
-//        given(tokenProvider.generateTokenDto(any())).willReturn(tokenDto);
-//
-//        // when
-//        TokenResponseDto res = authService.signIn(req);
-//
-//        // then
-//        assertThat(res.getAccessToken()).isEqualTo("access");
-//        assertThat(res.getRefreshToken()).isEqualTo("refresh");
-//
-//    }
+        // when, then
+        assertThatThrownBy(() -> authService.signIn(new LoginRequestDto("email", "password")))
+                .isInstanceOf(LoginFailureException.class);
+    }
+
+    @Test
+    @DisplayName("패스워드 검증 테스트")
+    void signInExceptionByInvalidPasswordTest() {
+        // given
+        given(userRepository.findByUsername(any())).willReturn(Optional.of(createUser()));
+        given(passwordEncoder.matches(anyString(), anyString())).willReturn(false);
+
+        // when, then
+        assertThatThrownBy(() -> authService.signIn(new LoginRequestDto("username", "password")))
+                .isInstanceOf(LoginFailureException.class);
+    }
 
 
 }
