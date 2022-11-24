@@ -45,9 +45,4 @@ public class Favorite {
         this.user = user;
         this.status = true;
     }
-
-    public void unFavoriteBoard(Board board) {
-        this.status = false;
-        board.processUnFavorite();
-    }
 }
