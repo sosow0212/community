@@ -1,5 +1,6 @@
 package yoon.community.dto.report;
 
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,14 +16,14 @@ public class BoardReportResponse {
     private int id;
     private int reportedBoardId;
     private String content;
-    private LocalDate createdAt;
+    private LocalDateTime createdAt;
 
     public BoardReportResponse toDto(BoardReport boardReport) {
         return new BoardReportResponse(
                 boardReport.getId(),
                 boardReport.getReportedBoardId(),
                 boardReport.getContent(),
-                boardReport.getCreateDate()
+                boardReport.getCreatedAt()
         );
     }
 }

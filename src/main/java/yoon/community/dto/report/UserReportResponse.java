@@ -1,5 +1,6 @@
 package yoon.community.dto.report;
 
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,7 +17,7 @@ public class UserReportResponse {
     private int id;
     private UserDto reportedUser;
     private String content;
-    private LocalDate createdAt;
+    private LocalDateTime createdAt;
 
 
     public UserReportResponse toDto(UserReport userReport, User reportedUser) {
@@ -24,7 +25,7 @@ public class UserReportResponse {
                 userReport.getId(),
                 UserDto.toDto(reportedUser),
                 userReport.getContent(),
-                userReport.getCreateDate()
+                userReport.getCreatedAt()
         );
     }
 }

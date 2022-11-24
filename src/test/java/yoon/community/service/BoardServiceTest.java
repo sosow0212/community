@@ -144,7 +144,7 @@ public class BoardServiceTest {
         User user = createUser();
         Board board = createBoard();
         board.setLiked(1);
-        LikeBoard likeBoard = new LikeBoard(1, board, user, true, null);
+        LikeBoard likeBoard = new LikeBoard(1, board, user, true);
         given(likeBoardRepository.findByBoardAndUser(board, user)).willReturn(likeBoard);
 
         // when
@@ -161,7 +161,7 @@ public class BoardServiceTest {
         // given
         Board board = createBoard();
         User user = createUser();
-        LikeBoard likeBoard = new LikeBoard(1, board, user, true, null);
+        LikeBoard likeBoard = new LikeBoard(1, board, user, true);
         given(likeBoardRepository.findByBoardAndUser(board, user)).willReturn(likeBoard);
 
         // when

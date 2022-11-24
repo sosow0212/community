@@ -6,10 +6,10 @@ import yoon.community.entity.user.User;
 
 public class FavoriteFactory {
     public static Favorite createFavoriteWithNotFavorite(Board board, User user) {
-        return new Favorite(1, board, user, false, null);
+        return new Favorite(1, board, user, false);
     }
 
     public static Favorite createFavoriteWithFavorite(Board board, User user) {
-        return new Favorite(1, board, user, true, null);
+        return new Favorite(1, board, user, true);
     }
 }

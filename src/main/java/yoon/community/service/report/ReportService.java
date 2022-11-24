@@ -51,7 +51,7 @@ public class ReportService {
                 reportedUser.setReported(true);
             }
 
-            UserReportResponse res = new UserReportResponse(userReport.getId(), UserDto.toDto(reportedUser), req.getContent(), userReport.getCreateDate());
+            UserReportResponse res = new UserReportResponse(userReport.getId(), UserDto.toDto(reportedUser), req.getContent(), userReport.getCreatedAt());
             return res;
         } else {
             // 이미 신고를 했다면 리턴
@@ -78,7 +78,7 @@ public class ReportService {
                 reportedBoard.setReported(true);
             }
 
-            BoardReportResponse res = new BoardReportResponse(boardReport.getId(), req.getReportedBoardId(), req.getContent(), boardReport.getCreateDate());
+            BoardReportResponse res = new BoardReportResponse(boardReport.getId(), req.getReportedBoardId(), req.getContent(), boardReport.getCreatedAt());
             return res;
         } else {
             throw new AlreadyReportException();

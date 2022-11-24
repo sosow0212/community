@@ -3,14 +3,13 @@ package yoon.community.entity.board;
 import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
 import yoon.community.dto.board.BoardUpdateRequest;
 import yoon.community.entity.category.Category;
+import yoon.community.entity.common.EntityDate;
 import yoon.community.entity.user.User;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -22,7 +21,7 @@ import static java.util.stream.Collectors.toList;
 @Data
 @Builder
 @Entity
-public class Board {
+public class Board extends EntityDate {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -56,14 +55,6 @@ public class Board {
     @Column(nullable = false)
     private boolean reported;
 
-    @DateTimeFormat(pattern = "yyyy-mm-dd")
-    private LocalDate createDate; // 날짜
-
-    @PrePersist // DB에 INSERT 되기 직전에 실행. 즉 DB에 값을 넣으면 자동으로 실행됨
-    public void createDate() {
-        this.createDate = LocalDate.now();
-    }
-
     public Board(String title, String content, User user, Category category, List<Image> images) {
         this.title = title;
         this.content = content;
@@ -75,7 +66,6 @@ public class Board {
         this.images = new ArrayList<>();
         addImages(images);
     }
-
 
     public ImageUpdatedResult update(BoardUpdateRequest req) {
         this.title = req.getTitle();

@@ -1,5 +1,6 @@
 package yoon.community.dto.board;
 
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,7 +23,7 @@ public class BoardDto {
     private int liked;
     private int favorited;
     private List<ImageDto> images;
-    private LocalDate createdAt;
+    private LocalDateTime createdAt;
 
     public static BoardDto toDto(Board board) {
         return new BoardDto(
@@ -33,7 +34,7 @@ public class BoardDto {
                 board.getLiked(),
                 board.getFavorited(),
                 board.getImages().stream().map(i -> ImageDto.toDto(i)).collect(toList()),
-                board.getCreateDate()
+                board.getCreatedAt()
         );
     }
 }
