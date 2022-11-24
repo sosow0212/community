@@ -78,6 +78,81 @@ public class BoardService {
         return createLikeBoard(board, user);
     }
 
+    @Transactional
+    public String updateOfFavoriteBoard(int id, User user) {
+        Board board = boardRepository.findById(id).orElseThrow(BoardNotFoundException::new);
+        if (!canUserClickFavorite(board, user)) {
+            board.processUnFavorite();
+            return removeFavoriteBoard(board, user);
+        }
+        board.processFavorite();
+        return createFavoriteBoard(board, user);
+    }
+
+    @Transactional(readOnly = true)
+    public List<BoardSimpleDto> findBestBoards(Pageable pageable) {
+        // 10 이상은 추천글
+        Page<Board> boards = boardRepository.findByLikedGreaterThanEqual(pageable, 10);
+        List<BoardSimpleDto> boardSimpleDtoList = new ArrayList<>();
+        boards.stream().forEach(i -> boardSimpleDtoList.add(new BoardSimpleDto().toDto(i)));
+        return boardSimpleDtoList;
+    }
+
+    @Transactional
+    public BoardDto editBoard(int id, BoardUpdateRequest req, User user) {
+        Board board = boardRepository.findById(id).orElseThrow(BoardNotFoundException::new);
+        validateBoardOwner(user, board);
+        Board.ImageUpdatedResult result = board.update(req);
+        uploadImages(result.getAddedImages(), result.getAddedImageFiles());
+        deleteImages(result.getDeletedImages());
+        return BoardDto.toDto(board);
+    }
+
+    @Transactional
+    public void deleteBoard(int id, User user) {
+        Board board = boardRepository.findById(id).orElseThrow(BoardNotFoundException::new);
+        validateBoardOwner(user, board);
+        boardRepository.delete(board);
+    }
+
+    @Transactional(readOnly = true)
+    public List<BoardSimpleDto> searchBoard(String keyword, Pageable pageable) {
+        Page<Board> boards = boardRepository.findByTitleContaining(keyword, pageable);
+        List<BoardSimpleDto> boardSimpleDtoList = new ArrayList<>();
+        boards.stream().map(i -> boardSimpleDtoList.add(new BoardSimpleDto().toDto(i)));
+        return boardSimpleDtoList;
+    }
+
+
+    private void uploadImages(List<Image> images, List<MultipartFile> fileImages) {
+        IntStream.range(0, images.size())
+                .forEach(i -> fileService.upload(fileImages.get(i), images.get(i).getUniqueName()));
+    }
+
+    private void deleteImages(List<Image> images) {
+        images.stream().forEach(i -> fileService.delete(i.getUniqueName()));
+    }
+
+    public String createFavoriteBoard(Board board, User user) {
+        Favorite favorite = new Favorite(board, user); // true 처리
+        favoriteRepository.save(favorite);
+        return PROCESS_FAVORITE_BOARD;
+    }
+
+    public String removeFavoriteBoard(Board board, User user) {
+        Favorite favorite = favoriteRepository.findByBoardAndUser(board, user)
+                .orElseThrow(FavoriteNotFoundException::new);
+        favoriteRepository.delete(favorite);
+        return PROCESS_UNFAVORITE_BOARD;
+    }
+
+    public boolean canUserClickFavorite(Board board, User user) {
+        if (favoriteRepository.findByBoardAndUser(board, user).isEmpty()) {
+            return true;
+        }
+        return false;
+    }
+
     public String createLikeBoard(Board board, User user) {
         LikeBoard likeBoard = new LikeBoard(board, user); // true 처리
         likeBoardRepository.save(likeBoard);
@@ -97,87 +172,10 @@ public class BoardService {
         return false;
     }
 
-    @Transactional
-    public String updateOfFavoriteBoard(int id, User user) {
-        Board board = boardRepository.findById(id).orElseThrow(BoardNotFoundException::new);
-        if (!canUserClickFavorite(board, user)) {
-            board.processUnFavorite();
-            return removeFavoriteBoard(board, user);
-        }
-        board.processFavorite();
-        return createFavoriteBoard(board, user);
-    }
-
-    public String createFavoriteBoard(Board board, User user) {
-        Favorite favorite = new Favorite(board, user); // true 처리
-        favoriteRepository.save(favorite);
-        return PROCESS_FAVORITE_BOARD;
-    }
-
-    public String removeFavoriteBoard(Board board, User user) {
-        Favorite favorite = favoriteRepository.findByBoardAndUser(board, user).orElseThrow(FavoriteNotFoundException::new);
-        favoriteRepository.delete(favorite);
-        return PROCESS_UNFAVORITE_BOARD;
-    }
-
-    public boolean canUserClickFavorite(Board board, User user) {
-        if (favoriteRepository.findByBoardAndUser(board, user).isEmpty()) {
-            return true;
-        }
-        return false;
-    }
-
-
-    @Transactional(readOnly = true)
-    public List<BoardSimpleDto> findBestBoards(Pageable pageable) {
-        // 10 이상은 추천글
-        Page<Board> boards = boardRepository.findByLikedGreaterThanEqual(pageable, 10);
-        List<BoardSimpleDto> boardSimpleDtoList = new ArrayList<>();
-        boards.stream().forEach(i -> boardSimpleDtoList.add(new BoardSimpleDto().toDto(i)));
-        return boardSimpleDtoList;
-    }
-
-    @Transactional
-    public BoardDto editBoard(int id, BoardUpdateRequest req, User user) {
-        Board board = boardRepository.findById(id).orElseThrow(BoardNotFoundException::new);
-
+    public void validateBoardOwner(User user, Board board) {
         if (!user.equals(board.getUser())) {
             throw new MemberNotEqualsException();
         }
-
-        Board.ImageUpdatedResult result = board.update(req);
-        uploadImages(result.getAddedImages(), result.getAddedImageFiles());
-        deleteImages(result.getDeletedImages());
-        return BoardDto.toDto(board);
-    }
-
-    @Transactional
-    public void deleteBoard(int id, User user) {
-        Board board = boardRepository.findById(id).orElseThrow(BoardNotFoundException::new);
-
-        if (!user.equals(board.getUser())) {
-            throw new MemberNotEqualsException();
-        }
-
-        boardRepository.delete(board);
-    }
-
-    @Transactional(readOnly = true)
-    public List<BoardSimpleDto> searchBoard(String keyword, Pageable pageable) {
-        Page<Board> boards = boardRepository.findByTitleContaining(keyword, pageable);
-        List<BoardSimpleDto> boardSimpleDtoList = new ArrayList<>();
-        boards.stream().forEach(i -> boardSimpleDtoList.add(new BoardSimpleDto().toDto(i)));
-        return boardSimpleDtoList;
-    }
-
-
-    private void uploadImages(List<Image> images, List<MultipartFile> fileImages) {
-        IntStream.range(0, images.size())
-                .forEach(i -> fileService.upload(fileImages.get(i), images.get(i).getUniqueName()));
-    }
-
-    private void deleteImages(List<Image> images) {
-        images.stream().forEach(i -> fileService.delete(i.getUniqueName()));
     }
 }
 
