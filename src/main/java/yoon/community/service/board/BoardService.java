@@ -21,7 +21,6 @@ import yoon.community.repository.board.BoardRepository;
 import yoon.community.repository.board.FavoriteRepository;
 import yoon.community.repository.board.LikeBoardRepository;
 import yoon.community.repository.category.CategoryRepository;
-import yoon.community.repository.user.UserRepository;
 import yoon.community.service.file.FileService;
 
 import java.util.ArrayList;
@@ -33,10 +32,10 @@ import static java.util.stream.Collectors.toList;
 @RequiredArgsConstructor
 @Service
 public class BoardService {
-    private final static String PROCESS_LIKE_BOARD = "좋아요 처리 완료";
-    private final static String PROCESS_UNLIKE_BOARD = "좋아요 취소 완료";
-    private final static String PROCESS_FAVORITE_BOARD = "즐겨찾기 처리 완료";
-    private final static String PROCESS_UNFAVORITE_BOARD = "즐겨찾기 취소 완료";
+    private final static String SUCCESS_LIKE_BOARD = "좋아요 처리 완료";
+    private final static String SUCCESS_UNLIKE_BOARD = "좋아요 취소 완료";
+    private final static String SUCCESS_FAVORITE_BOARD = "즐겨찾기 처리 완료";
+    private final static String SUCCESS_UNFAVORITE_BOARD = "즐겨찾기 취소 완료";
 
     private final BoardRepository boardRepository;
     private final FileService fileService;
@@ -70,23 +69,23 @@ public class BoardService {
     @Transactional
     public String updateLikeOfBoard(int id, User user) {
         Board board = boardRepository.findById(id).orElseThrow(BoardNotFoundException::new);
-        if (!canUserClickLike(board, user)) {
-            board.processUnLiked();
-            return removeLikeBoard(board, user);
+        if (!hasLikeBoard(board, user)) {
+            board.increaseLikeCount();
+            return createLikeBoard(board, user);
         }
-        board.processLiked();
-        return createLikeBoard(board, user);
+        board.decreaseLikeCount();
+        return removeLikeBoard(board, user);
     }
 
     @Transactional
     public String updateOfFavoriteBoard(int id, User user) {
         Board board = boardRepository.findById(id).orElseThrow(BoardNotFoundException::new);
-        if (!canUserClickFavorite(board, user)) {
-            board.processUnFavorite();
-            return removeFavoriteBoard(board, user);
+        if (!hasFavoriteBoard(board, user)) {
+            board.increaseFavoriteCount();
+            return createFavoriteBoard(board, user);
         }
-        board.processFavorite();
-        return createFavoriteBoard(board, user);
+        board.decreaseFavoriteCount();
+        return removeFavoriteBoard(board, user);
     }
 
     @Transactional(readOnly = true)
@@ -123,7 +122,6 @@ public class BoardService {
         return boardSimpleDtoList;
     }
 
-
     private void uploadImages(List<Image> images, List<MultipartFile> fileImages) {
         IntStream.range(0, images.size())
                 .forEach(i -> fileService.upload(fileImages.get(i), images.get(i).getUniqueName()));
@@ -133,49 +131,50 @@ public class BoardService {
         images.stream().forEach(i -> fileService.delete(i.getUniqueName()));
     }
 
+
+    public void validateBoardOwner(User user, Board board) {
+        if (!user.equals(board.getUser())) {
+            throw new MemberNotEqualsException();
+        }
+    }
+
+    public String createLikeBoard(Board board, User user) {
+        LikeBoard likeBoard = new LikeBoard(board, user); // true 처리
+        likeBoardRepository.save(likeBoard);
+        return SUCCESS_LIKE_BOARD;
+    }
+
+    public String removeLikeBoard(Board board, User user) {
+        LikeBoard likeBoard = likeBoardRepository.findByBoardAndUser(board, user).get();
+        likeBoardRepository.delete(likeBoard);
+        return SUCCESS_UNLIKE_BOARD;
+    }
+
+    public boolean hasLikeBoard(Board board, User user) {
+        if (likeBoardRepository.findByBoardAndUser(board, user).isEmpty()) {
+            return false;
+        }
+        return true;
+    }
+
     public String createFavoriteBoard(Board board, User user) {
         Favorite favorite = new Favorite(board, user); // true 처리
         favoriteRepository.save(favorite);
-        return PROCESS_FAVORITE_BOARD;
+        return SUCCESS_FAVORITE_BOARD;
     }
 
     public String removeFavoriteBoard(Board board, User user) {
         Favorite favorite = favoriteRepository.findByBoardAndUser(board, user)
                 .orElseThrow(FavoriteNotFoundException::new);
         favoriteRepository.delete(favorite);
-        return PROCESS_UNFAVORITE_BOARD;
+        return SUCCESS_UNFAVORITE_BOARD;
     }
 
-    public boolean canUserClickFavorite(Board board, User user) {
+    public boolean hasFavoriteBoard(Board board, User user) {
         if (favoriteRepository.findByBoardAndUser(board, user).isEmpty()) {
-            return true;
+            return false;
         }
-        return false;
-    }
-
-    public String createLikeBoard(Board board, User user) {
-        LikeBoard likeBoard = new LikeBoard(board, user); // true 처리
-        likeBoardRepository.save(likeBoard);
-        return PROCESS_LIKE_BOARD;
-    }
-
-    public String removeLikeBoard(Board board, User user) {
-        LikeBoard likeBoard = likeBoardRepository.findByBoardAndUser(board, user);
-        likeBoardRepository.delete(likeBoard);
-        return PROCESS_UNLIKE_BOARD;
-    }
-
-    public boolean canUserClickLike(Board board, User user) {
-        if (likeBoardRepository.findByBoardAndUser(board, user) == null) {
-            return true;
-        }
-        return false;
-    }
-
-    public void validateBoardOwner(User user, Board board) {
-        if (!user.equals(board.getUser())) {
-            throw new MemberNotEqualsException();
-        }
+        return true;
     }
 }
 

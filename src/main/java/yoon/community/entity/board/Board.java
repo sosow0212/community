@@ -113,19 +113,19 @@ public class Board extends EntityDate {
         return this.reported;
     }
 
-    public void processLiked() {
+    public void increaseLikeCount() {
         this.liked += 1;
     }
 
-    public void processUnLiked() {
+    public void decreaseLikeCount() {
         this.liked -= 1;
     }
 
-    public void processFavorite() {
+    public void increaseFavoriteCount() {
         this.favorited += 1;
     }
 
-    public void processUnFavorite() {
+    public void decreaseFavoriteCount() {
         this.favorited -= 1;
     }
 

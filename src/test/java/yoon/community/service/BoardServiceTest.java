@@ -145,7 +145,7 @@ public class BoardServiceTest {
         Board board = createBoard();
         board.setLiked(1);
         LikeBoard likeBoard = new LikeBoard(1, board, user, true);
-        given(likeBoardRepository.findByBoardAndUser(board, user)).willReturn(likeBoard);
+        given(likeBoardRepository.findByBoardAndUser(board, user)).willReturn(Optional.of(likeBoard));
 
         // when
         String result = boardService.removeLikeBoard(board, user);
@@ -162,13 +162,13 @@ public class BoardServiceTest {
         Board board = createBoard();
         User user = createUser();
         LikeBoard likeBoard = new LikeBoard(1, board, user, true);
-        given(likeBoardRepository.findByBoardAndUser(board, user)).willReturn(likeBoard);
+        given(likeBoardRepository.findByBoardAndUser(board, user)).willReturn(Optional.of(likeBoard));
 
         // when
-        boolean result = boardService.canUserClickLike(board, user);
+        boolean result = boardService.hasLikeBoard(board, user);
 
         // then
-        assertThat(result).isEqualTo(false);
+        assertThat(result).isEqualTo(true);
     }
 
 
@@ -216,10 +216,10 @@ public class BoardServiceTest {
         given(favoriteRepository.findByBoardAndUser(board, user)).willReturn(Optional.of(favorite));
 
         // when
-        boolean result = boardService.canUserClickFavorite(board, user);
+        boolean result = boardService.hasFavoriteBoard(board, user);
 
         // then
-        assertThat(result).isEqualTo(false);
+        assertThat(result).isEqualTo(true);
     }
 
 
