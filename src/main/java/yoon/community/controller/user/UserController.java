@@ -4,14 +4,11 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-import yoon.community.dto.user.UserDto;
+import yoon.community.dto.user.UserEditRequestDto;
 import yoon.community.entity.user.User;
 import yoon.community.exception.MemberNotFoundException;
 import yoon.community.repository.user.UserRepository;
@@ -43,19 +40,18 @@ public class UserController {
 
     @ApiOperation(value = "회원 정보 수정", notes = "회원의 정보를 수정")
     @ResponseStatus(HttpStatus.OK)
-    @PutMapping("/users/{id}")
-    public Response editUserInfo(@ApiParam(value = "User ID", required = true) @PathVariable int id, @RequestBody UserDto userDto) {
-        return Response.success(userService.editUserInfo(id, userDto));
+    @PutMapping("/users")
+    public Response editUserInfo(@RequestBody UserEditRequestDto userEditRequestDto) {
+        User user = getPrincipal();
+        return Response.success(userService.editUserInfo(user, userEditRequestDto));
     }
 
     @ApiOperation(value = "회원 탈퇴", notes = "회원을 탈퇴 시킴")
     @ResponseStatus(HttpStatus.OK)
-    @DeleteMapping("/users/{id}")
-    public Response deleteUserInfo(@ApiParam(value = "User ID", required = true) @PathVariable int id) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = userRepository.findByUsername(authentication.getName()).orElseThrow(MemberNotFoundException::new);
-
-        userService.deleteUserInfo(user, id);
+    @DeleteMapping("/users")
+    public Response deleteUserInfo() {
+        User user = getPrincipal();
+        userService.deleteUserInfo(user);
         return Response.success();
     }
 
@@ -63,10 +59,13 @@ public class UserController {
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/users/favorites")
     public Response findFavorites() {
-//        @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable
+        User user = getPrincipal();
+        return Response.success(userService.findFavorites(user));
+    }
+
+    public User getPrincipal() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = userRepository.findByUsername(authentication.getName()).orElseThrow(MemberNotFoundException::new);
-
-        return Response.success(userService.findFavorites(user));
+        return user;
     }
 }

@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import yoon.community.dto.user.UserEditRequestDto;
 import yoon.community.entity.common.EntityDate;
 
 @Data
@@ -52,4 +53,8 @@ public class User extends EntityDate {
         return this.reported;
     }
 
+    public void editUser(UserEditRequestDto req) {
+        name = req.getName();
+        nickname = req.getNickname();
+    }
 }

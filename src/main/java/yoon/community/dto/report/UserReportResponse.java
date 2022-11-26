@@ -4,18 +4,16 @@ import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import yoon.community.dto.user.UserDto;
+import yoon.community.dto.user.UserEditRequestDto;
 import yoon.community.entity.report.UserReport;
 import yoon.community.entity.user.User;
-
-import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserReportResponse {
     private int id;
-    private UserDto reportedUser;
+    private UserEditRequestDto reportedUser;
     private String content;
     private LocalDateTime createdAt;
 
@@ -23,7 +21,7 @@ public class UserReportResponse {
     public UserReportResponse toDto(UserReport userReport, User reportedUser) {
         return new UserReportResponse(
                 userReport.getId(),
-                UserDto.toDto(reportedUser),
+                UserEditRequestDto.toDto(reportedUser),
                 userReport.getContent(),
                 userReport.getCreatedAt()
         );
