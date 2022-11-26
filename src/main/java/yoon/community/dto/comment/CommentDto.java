@@ -5,10 +5,8 @@ import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import yoon.community.dto.user.UserDto;
+import yoon.community.dto.user.UserEditRequestDto;
 import yoon.community.entity.comment.Comment;
-import java.time.LocalDate;
-import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Data
@@ -18,14 +16,14 @@ public class CommentDto {
 
     private int id;
     private String content;
-    private UserDto userDto;
+    private UserEditRequestDto userEditRequestDto;
     private LocalDateTime createdAt;
 
     public CommentDto toDto(Comment comment) {
         return new CommentDto(
                 comment.getId(),
                 comment.getContent(),
-                UserDto.toDto(comment.getUser()),
+                UserEditRequestDto.toDto(comment.getUser()),
                 comment.getCreatedAt()
         );
     }

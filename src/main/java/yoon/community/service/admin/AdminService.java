@@ -3,11 +3,9 @@ package yoon.community.service.admin;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import yoon.community.dto.board.BoardDto;
 import yoon.community.dto.board.BoardSimpleDto;
-import yoon.community.dto.user.UserDto;
+import yoon.community.dto.user.UserEditRequestDto;
 import yoon.community.entity.board.Board;
-import yoon.community.entity.report.UserReport;
 import yoon.community.entity.user.User;
 import yoon.community.exception.BoardNotFoundException;
 import yoon.community.exception.MemberNotEqualsException;
@@ -16,7 +14,6 @@ import yoon.community.repository.board.BoardRepository;
 import yoon.community.repository.report.BoardReportRepository;
 import yoon.community.repository.report.UserReportRepository;
 import yoon.community.repository.user.UserRepository;
-import yoon.community.service.user.UserService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,22 +27,22 @@ public class AdminService {
     private final BoardReportRepository boardReportRepository;
 
     @Transactional(readOnly = true)
-    public List<UserDto> manageReportedUser() {
+    public List<UserEditRequestDto> manageReportedUser() {
         List<User> users = userRepository.findByReportedIsTrue();
-        List<UserDto> usersDto = new ArrayList<>();
-        users.stream().forEach(i -> usersDto.add(new UserDto().toDto(i)));
+        List<UserEditRequestDto> usersDto = new ArrayList<>();
+        users.stream().forEach(i -> usersDto.add(new UserEditRequestDto().toDto(i)));
         return usersDto;
     }
 
     @Transactional
-    public UserDto unlockUser(int id) {
+    public UserEditRequestDto unlockUser(int id) {
         User user = userRepository.findById(id).orElseThrow(MemberNotEqualsException::new);
         if(!user.isReported()) {
             throw new NotReportedException();
         }
         user.setReported(false);
         userReportRepository.deleteAllByReportedUserId(id);
-        return UserDto.toDto(user);
+        return UserEditRequestDto.toDto(user);
     }
 
 

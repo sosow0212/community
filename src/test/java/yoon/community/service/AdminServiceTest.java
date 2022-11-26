@@ -6,9 +6,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import yoon.community.dto.board.BoardDto;
 import yoon.community.dto.board.BoardSimpleDto;
-import yoon.community.dto.user.UserDto;
+import yoon.community.dto.user.UserEditRequestDto;
 import yoon.community.entity.board.Board;
 import yoon.community.entity.user.User;
 import yoon.community.repository.board.BoardRepository;
@@ -53,7 +52,7 @@ public class AdminServiceTest {
         given(userRepository.findByReportedIsTrue()).willReturn(users);
 
         // when
-        List<UserDto> result = adminService.manageReportedUser();
+        List<UserEditRequestDto> result = adminService.manageReportedUser();
 
         // then
         assertThat(result.size()).isEqualTo(1);
@@ -68,7 +67,7 @@ public class AdminServiceTest {
         given(userRepository.findById(anyInt())).willReturn(Optional.of(user));
 
         // when
-        UserDto result = adminService.unlockUser(anyInt());
+        UserEditRequestDto result = adminService.unlockUser(anyInt());
 
         // then
         verify(userReportRepository).deleteAllByReportedUserId(anyInt());

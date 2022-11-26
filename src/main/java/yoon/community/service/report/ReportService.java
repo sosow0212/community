@@ -1,15 +1,13 @@
 package yoon.community.service.report;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import yoon.community.dto.report.BoardReportRequest;
 import yoon.community.dto.report.BoardReportResponse;
 import yoon.community.dto.report.UserReportRequest;
 import yoon.community.dto.report.UserReportResponse;
-import yoon.community.dto.user.UserDto;
+import yoon.community.dto.user.UserEditRequestDto;
 import yoon.community.entity.board.Board;
 import yoon.community.entity.report.BoardReport;
 import yoon.community.entity.report.UserReport;
@@ -51,7 +49,7 @@ public class ReportService {
                 reportedUser.setReported(true);
             }
 
-            UserReportResponse res = new UserReportResponse(userReport.getId(), UserDto.toDto(reportedUser), req.getContent(), userReport.getCreatedAt());
+            UserReportResponse res = new UserReportResponse(userReport.getId(), UserEditRequestDto.toDto(reportedUser), req.getContent(), userReport.getCreatedAt());
             return res;
         } else {
             // 이미 신고를 했다면 리턴
