@@ -15,7 +15,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import yoon.community.controller.user.UserController;
-import yoon.community.dto.user.UserDto;
+import yoon.community.dto.user.UserEditRequestDto;
 import yoon.community.entity.user.User;
 import yoon.community.repository.user.UserRepository;
 import yoon.community.service.user.UserService;
@@ -52,7 +52,7 @@ public class UserControllerTest {
     @DisplayName("전체 회원 조회")
     public void findAllUsersTest() throws Exception {
         mockMvc.perform(
-                get("/api/users"))
+                        get("/api/users"))
                 .andExpect(status().isOk());
         verify(userService).findAllUsers();
     }
@@ -65,40 +65,47 @@ public class UserControllerTest {
 
         //when, then
         mockMvc.perform(
-                get("/api/users/{id}", id))
+                        get("/api/users/{id}", id))
                 .andExpect(status().isOk());
         verify(userService).findUser(id);
     }
 
-//    @Test
-//    @DisplayName("즐겨찾기 조회")
-//    public void findFavoritesTest() throws Exception {
-//        // given
-//        User user = createUserWithAdminRole();
-//
-//        // when, then
-//        mockMvc.perform(
-//                get("/api/users/favorites"))
-//                .andExpect(status().isOk());
-//        verify(userService).findFavorites(user);
-//    }
+    @Test
+    @DisplayName("즐겨찾기 조회")
+    public void findFavoritesTest() throws Exception {
+        // given
+        User user = createUserWithAdminRole();
+        Authentication authentication = new UsernamePasswordAuthenticationToken(user.getId(), "", Collections.emptyList());
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        given(userRepository.findByUsername(authentication.getName())).willReturn(Optional.of(user));
+
+        // when, then
+        mockMvc.perform(
+                        get("/api/users/favorites"))
+                .andExpect(status().isOk());
+        verify(userService).findFavorites(user);
+    }
 
     @Test
     @DisplayName("회원 정보 수정")
     public void editUserInfoTest() throws Exception {
         // given
-        int id = 1;
-        UserDto userDto = new UserDto(1, "username", "name", "nickname");
+        UserEditRequestDto userEditRequestDto = new UserEditRequestDto("name", "nickname");
+        User user = createUserWithAdminRole();
+        Authentication authentication = new UsernamePasswordAuthenticationToken(user.getId(), "",
+                Collections.emptyList());
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        given(userRepository.findByUsername(authentication.getName())).willReturn(Optional.of(user));
 
         // when, then
         mockMvc.perform(
-                put("/api/users/{id}", id)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(userDto)))
+                        put("/api/users")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(userEditRequestDto)))
                 .andExpect(status().isOk());
 
-        verify(userService).editUserInfo(id, userDto);
-        assertThat(userDto.getName()).isEqualTo("name");
+        verify(userService).editUserInfo(user, userEditRequestDto);
+        assertThat(userEditRequestDto.getName()).isEqualTo("name");
 
     }
 
@@ -106,19 +113,18 @@ public class UserControllerTest {
     @DisplayName("회원 탈퇴")
     public void deleteUserInfoTest() throws Exception {
         // given
-        int id = 1;
-
         User user = createUserWithAdminRole();
-        Authentication authentication = new UsernamePasswordAuthenticationToken(user.getId(), "", Collections.emptyList());
+        Authentication authentication = new UsernamePasswordAuthenticationToken(user.getId(), "",
+                Collections.emptyList());
         SecurityContextHolder.getContext().setAuthentication(authentication);
         given(userRepository.findByUsername(authentication.getName())).willReturn(Optional.of(user));
 
         // when then
         mockMvc.perform(
-                delete("/api/users/{id}", id))
+                        delete("/api/users"))
                 .andExpect(status().isOk());
 
-        verify(userService).deleteUserInfo(user, id);
+        verify(userService).deleteUserInfo(user);
 
     }
 }

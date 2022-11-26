@@ -1,25 +1,18 @@
 package yoon.community.service;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.test.context.support.WithMockUser;
-import yoon.community.dto.user.UserDto;
+import yoon.community.dto.user.UserEditRequestDto;
 import yoon.community.entity.user.Authority;
 import yoon.community.entity.user.User;
-import yoon.community.exception.MemberNotEqualsException;
 import yoon.community.exception.MemberNotFoundException;
 import yoon.community.repository.user.UserRepository;
 import yoon.community.service.user.UserService;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -29,7 +22,6 @@ import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static yoon.community.factory.UserFactory.createUser;
-import static yoon.community.factory.UserFactory.createUserWithAdminRole;
 
 @ExtendWith(MockitoExtension.class)
 public class UserServiceTest {
@@ -50,7 +42,7 @@ public class UserServiceTest {
         given(userRepository.findById(anyInt())).willReturn(Optional.of(user));
 
         // when
-        UserDto result = userService.findUser(1);
+        UserEditRequestDto result = userService.findUser(1);
 
         // then
         assertThat(result.getName()).isEqualTo(user.getName());
@@ -66,18 +58,17 @@ public class UserServiceTest {
         assertThatThrownBy(() -> userService.findUser(1)).isInstanceOf(MemberNotFoundException.class);
     }
 
-
     @Test
     @DisplayName("deleteUserInfo() 서비스 테스트")
     void deleteUserInfoTest() {
         // given
-        given(userRepository.findById(anyInt())).willReturn(Optional.of(createUser()));
+        User user = createUser();
 
         // when
-        userService.deleteUserInfo(createUser(), anyInt());
+        userService.deleteUserInfo(user);
 
         // then
-        verify(userRepository).deleteById(anyInt());
+        verify(userRepository).delete(user);
 
     }
 }
