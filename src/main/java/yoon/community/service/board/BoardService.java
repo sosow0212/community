@@ -56,14 +56,16 @@ public class BoardService {
     @Transactional(readOnly = true)
     public List<BoardSimpleDto> findAllBoards(Pageable pageable, int categoryId) {
         Page<Board> boards = boardRepository.findAllByCategoryId(pageable, categoryId);
-        List<BoardSimpleDto> boardSimpleDtoList = new ArrayList<>();
-        boards.stream().map(i -> boardSimpleDtoList.add(new BoardSimpleDto().toDto(i)));
+        List<BoardSimpleDto> boardSimpleDtoList = boards.stream().map(i -> new BoardSimpleDto().toDto(i))
+                .collect(toList());
         return boardSimpleDtoList;
     }
 
     @Transactional(readOnly = true)
-    public BoardDto findBoard(int id) {
-        return BoardDto.toDto(boardRepository.findById(id).orElseThrow(BoardNotFoundException::new));
+    public BoardResponseDto findBoard(int id) {
+        Board board = boardRepository.findById(id).orElseThrow(BoardNotFoundException::new);
+        User user = board.getUser();
+        return BoardResponseDto.toDto(board, user.getNickname());
     }
 
     @Transactional
@@ -98,13 +100,13 @@ public class BoardService {
     }
 
     @Transactional
-    public BoardDto editBoard(int id, BoardUpdateRequest req, User user) {
+    public BoardResponseDto editBoard(int id, BoardUpdateRequest req, User user) {
         Board board = boardRepository.findById(id).orElseThrow(BoardNotFoundException::new);
         validateBoardOwner(user, board);
         Board.ImageUpdatedResult result = board.update(req);
         uploadImages(result.getAddedImages(), result.getAddedImageFiles());
         deleteImages(result.getDeletedImages());
-        return BoardDto.toDto(board);
+        return BoardResponseDto.toDto(board, user.getNickname());
     }
 
     @Transactional
@@ -117,8 +119,7 @@ public class BoardService {
     @Transactional(readOnly = true)
     public List<BoardSimpleDto> searchBoard(String keyword, Pageable pageable) {
         Page<Board> boards = boardRepository.findByTitleContaining(keyword, pageable);
-        List<BoardSimpleDto> boardSimpleDtoList = new ArrayList<>();
-        boards.stream().map(i -> boardSimpleDtoList.add(new BoardSimpleDto().toDto(i)));
+        List<BoardSimpleDto> boardSimpleDtoList = boards.stream().map(i -> new BoardSimpleDto().toDto(i)).collect(toList());
         return boardSimpleDtoList;
     }
 
@@ -128,7 +129,7 @@ public class BoardService {
     }
 
     private void deleteImages(List<Image> images) {
-        images.stream().forEach(i -> fileService.delete(i.getUniqueName()));
+        images.forEach(i -> fileService.delete(i.getUniqueName()));
     }
 
 
@@ -145,16 +146,15 @@ public class BoardService {
     }
 
     public String removeLikeBoard(Board board, User user) {
-        LikeBoard likeBoard = likeBoardRepository.findByBoardAndUser(board, user).get();
+        LikeBoard likeBoard = likeBoardRepository.findByBoardAndUser(board, user).orElseThrow(() -> {
+            throw new IllegalArgumentException("'좋아요' 기록을 찾을 수 없습니다.");
+        });
         likeBoardRepository.delete(likeBoard);
         return SUCCESS_UNLIKE_BOARD;
     }
 
     public boolean hasLikeBoard(Board board, User user) {
-        if (likeBoardRepository.findByBoardAndUser(board, user).isEmpty()) {
-            return false;
-        }
-        return true;
+        return likeBoardRepository.findByBoardAndUser(board, user).isPresent();
     }
 
     public String createFavoriteBoard(Board board, User user) {
@@ -171,10 +171,7 @@ public class BoardService {
     }
 
     public boolean hasFavoriteBoard(Board board, User user) {
-        if (favoriteRepository.findByBoardAndUser(board, user).isEmpty()) {
-            return false;
-        }
-        return true;
+        return favoriteRepository.findByBoardAndUser(board, user).isPresent();
     }
 }
 
