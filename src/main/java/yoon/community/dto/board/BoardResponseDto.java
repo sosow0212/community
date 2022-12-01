@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import yoon.community.dto.user.UserEditRequestDto;
 import yoon.community.entity.board.Board;
 
 import java.util.List;
@@ -14,22 +13,22 @@ import static java.util.stream.Collectors.toList;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class BoardDto {
+public class BoardResponseDto {
     private int id;
+    private String writer_nickname;
     private String title;
     private String content;
-    private UserEditRequestDto userEditRequestDto;
-    private int liked;
-    private int favorited;
+    private int likeCount;
+    private int favoriteCount;
     private List<ImageDto> images;
     private LocalDateTime createdAt;
 
-    public static BoardDto toDto(Board board) {
-        return new BoardDto(
+    public static BoardResponseDto toDto(Board board, String writer_nickname) {
+        return new BoardResponseDto(
                 board.getId(),
+                writer_nickname,
                 board.getTitle(),
                 board.getContent(),
-                UserEditRequestDto.toDto(board.getUser()),
                 board.getLiked(),
                 board.getFavorited(),
                 board.getImages().stream().map(i -> ImageDto.toDto(i)).collect(toList()),

@@ -4,10 +4,7 @@ import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import yoon.community.dto.board.BoardDto;
 import yoon.community.entity.report.BoardReport;
-
-import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor
