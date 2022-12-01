@@ -10,7 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import yoon.community.dto.board.BoardCreateRequest;
 import yoon.community.dto.board.BoardCreateResponse;
-import yoon.community.dto.board.BoardDto;
+import yoon.community.dto.board.BoardResponseDto;
 import yoon.community.entity.board.Board;
 import yoon.community.entity.board.Favorite;
 import yoon.community.entity.board.LikeBoard;
@@ -115,7 +115,7 @@ public class BoardServiceTest {
         given(boardRepository.findById(anyInt())).willReturn(Optional.of(board));
 
         // when
-        BoardDto result = boardService.findBoard(id);
+        BoardResponseDto result = boardService.findBoard(id);
 
         // then
         assertThat(result.getTitle()).isEqualTo("title");
