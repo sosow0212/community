@@ -31,8 +31,9 @@ public class UserService {
     @Transactional(readOnly = true)
     public List<UserEditRequestDto> findAllUsers() {
         List<User> users = userRepository.findAll();
-        List<UserEditRequestDto> result = new ArrayList<>();
-        users.stream().map(user -> result.add(UserEditRequestDto.toDto(user))).collect(Collectors.toList());
+        List<UserEditRequestDto> result = users.stream()
+                .map(user -> UserEditRequestDto.toDto(user))
+                .collect(Collectors.toList());
         return result;
     }
 
