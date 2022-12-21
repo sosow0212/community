@@ -7,6 +7,7 @@ import yoon.community.entity.board.Image;
 
 import java.util.ArrayList;
 import java.util.List;
+import yoon.community.entity.user.User;
 
 import static yoon.community.factory.CategoryFactory.createCategory;
 import static yoon.community.factory.ImageFactory.createImage;
@@ -22,6 +23,14 @@ public class BoardFactory {
         List<Image> images = new ArrayList<>();
         images.add(createImage());
         Board board = new Board("title", "content", createUser(), createCategory(), images);
+        board.setLiked(0);
+        return board;
+    }
+
+    public static Board createBoard(User user) {
+        List<Image> images = new ArrayList<>();
+        images.add(createImage());
+        Board board = new Board("title", "content", user, createCategory(), images);
         board.setLiked(0);
         return board;
     }
