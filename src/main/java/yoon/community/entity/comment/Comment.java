@@ -39,4 +39,8 @@ public class Comment extends EntityDate {
         this.user = user;
         this.board = board;
     }
+
+    public boolean isOwnComment(User user) {
+        return this.user.equals(user);
+    }
 }

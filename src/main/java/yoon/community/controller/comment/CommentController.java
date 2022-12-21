@@ -30,7 +30,7 @@ public class CommentController {
     @GetMapping("/comments")
     @ResponseStatus(HttpStatus.OK)
     public Response findAll(@Valid CommentReadCondition condition) {
-        return Response.success(commentService.findAll(condition));
+        return Response.success(commentService.findAllComments(condition));
     }
 
     @ApiOperation(value = "댓글 작성", notes = "댓글을 작성 합니다.")
@@ -38,7 +38,7 @@ public class CommentController {
     @ResponseStatus(HttpStatus.CREATED)
     public Response create(@Valid @RequestBody CommentCreateRequest req) {
         User user = getPrincipal();
-        return Response.success(commentService.create(req, user));
+        return Response.success(commentService.createComment(req, user));
     }
 
     @ApiOperation(value = "댓글 삭제", notes = "댓글을 삭제 합니다.")
@@ -46,7 +46,7 @@ public class CommentController {
     @ResponseStatus(HttpStatus.OK)
     public Response delete(@ApiParam(value = "댓글 id", required = true) @PathVariable int id) {
         User user = getPrincipal();
-        commentService.delete(id, user);
+        commentService.deleteComment(id, user);
         return Response.success();
     }
 
