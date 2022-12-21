@@ -87,7 +87,8 @@ public class Board extends EntityDate {
         deleted.stream().forEach(di -> this.images.remove(di));
     }
 
-    private ImageUpdatedResult findImageUpdatedResult(List<MultipartFile> addedImageFiles, List<Integer> deletedImageIds) {
+    private ImageUpdatedResult findImageUpdatedResult(List<MultipartFile> addedImageFiles,
+                                                      List<Integer> deletedImageIds) {
         List<Image> addedImages = convertImageFilesToImages(addedImageFiles);
         List<Image> deletedImages = convertImageIdsToImages(deletedImageIds);
         return new ImageUpdatedResult(addedImageFiles, addedImages, deletedImages);
@@ -127,6 +128,10 @@ public class Board extends EntityDate {
 
     public void decreaseFavoriteCount() {
         this.favorited -= 1;
+    }
+
+    public void setStatusIsBeingReported() {
+        this.reported = true;
     }
 
     @Getter

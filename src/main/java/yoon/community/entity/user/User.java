@@ -57,4 +57,12 @@ public class User extends EntityDate {
         name = req.getName();
         nickname = req.getNickname();
     }
+
+    public boolean isReportMySelf(int id) {
+        return this.id == id;
+    }
+
+    public void setStatusIsBeingReported() {
+        this.reported = true;
+    }
 }

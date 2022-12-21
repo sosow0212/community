@@ -23,7 +23,6 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("/api")
 public class ReportController {
-
     private final ReportService reportService;
     private final UserRepository userRepository;
 
@@ -31,32 +30,16 @@ public class ReportController {
     @ResponseStatus(HttpStatus.OK)
     @PostMapping("/reports/users")
     public Response reportUser(@Valid @RequestBody UserReportRequest userReportRequest) {
-        User user = getPrincipal();
-        return Response.success(reportService.reportUser(user, userReportRequest));
+        return Response.success(reportService.reportUser(getPrincipal(), userReportRequest));
     }
 
     @ApiOperation(value = "게시글 신고", notes = "게시글을 신고합니다.")
     @ResponseStatus(HttpStatus.OK)
     @PostMapping("/reports/boards")
     public Response reportBoard(@Valid @RequestBody BoardReportRequest boardReportRequest) {
-        User user = getPrincipal();
-        return Response.success(reportService.reportBoard(user, boardReportRequest));
+        return Response.success(reportService.reportBoard(getPrincipal(), boardReportRequest));
     }
 
-
-//    @ApiOperation(value = "게시글 신고 해제", notes = "게시글을 신고 해제합니다.")
-//    @ResponseStatus(HttpStatus.OK)
-//    @GetMapping("/reports/boards/{id}")
-//    public Response unReportBoard(@ApiParam(value = "게시글 id", required = true) @PathVariable int id) {
-//        return Response.success();
-//    }
-//
-//    @ApiOperation(value = "유저 신고 해제", notes = "유저를 신고 해제합니다.")
-//    @ResponseStatus(HttpStatus.OK)
-//    @PostMapping("/reports/users/{id}")
-//    public Response unReportUser(@ApiParam(value = "유저 id", required = true) @PathVariable int id) {
-//        return Response.success();
-//    }
 
     private User getPrincipal() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

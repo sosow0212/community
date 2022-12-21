@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import yoon.community.entity.report.BoardReport;
+import yoon.community.entity.report.BoardReportHistory;
 
 @Data
 @NoArgsConstructor
@@ -15,12 +15,12 @@ public class BoardReportResponse {
     private String content;
     private LocalDateTime createdAt;
 
-    public BoardReportResponse toDto(BoardReport boardReport) {
+    public BoardReportResponse toDto(BoardReportHistory boardReportHistory) {
         return new BoardReportResponse(
-                boardReport.getId(),
-                boardReport.getReportedBoardId(),
-                boardReport.getContent(),
-                boardReport.getCreatedAt()
+                boardReportHistory.getId(),
+                boardReportHistory.getReportedBoardId(),
+                boardReportHistory.getContent(),
+                boardReportHistory.getCreatedAt()
         );
     }
 }

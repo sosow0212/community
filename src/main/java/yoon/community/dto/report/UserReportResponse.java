@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import yoon.community.dto.user.UserEditRequestDto;
-import yoon.community.entity.report.UserReport;
+import yoon.community.entity.report.UserReportHistory;
 import yoon.community.entity.user.User;
 
 @Data
@@ -18,12 +18,12 @@ public class UserReportResponse {
     private LocalDateTime createdAt;
 
 
-    public UserReportResponse toDto(UserReport userReport, User reportedUser) {
+    public UserReportResponse toDto(UserReportHistory userReportHistory, User reportedUser) {
         return new UserReportResponse(
-                userReport.getId(),
+                userReportHistory.getId(),
                 UserEditRequestDto.toDto(reportedUser),
-                userReport.getContent(),
-                userReport.getCreatedAt()
+                userReportHistory.getContent(),
+                userReportHistory.getCreatedAt()
         );
     }
 }

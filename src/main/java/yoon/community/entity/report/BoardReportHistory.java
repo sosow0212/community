@@ -4,7 +4,6 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import javax.persistence.*;
 import yoon.community.entity.common.EntityDate;
 
@@ -12,7 +11,8 @@ import yoon.community.entity.common.EntityDate;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Data
 @Entity
-public class UserReport extends EntityDate {
+public class BoardReportHistory extends EntityDate {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     int id;
@@ -21,14 +21,14 @@ public class UserReport extends EntityDate {
     private int reporterId;
 
     @Column(nullable = false)
-    private int reportedUserId;
+    private int reportedBoardId;
 
     @Column(nullable = false)
     private String content;
 
-    public UserReport(int reporterId, int reportedUserId, String content) {
+    public BoardReportHistory(int reporterId, int reportedBoardId, String content) {
         this.reporterId = reporterId;
-        this.reportedUserId = reportedUserId;
+        this.reportedBoardId = reportedBoardId;
         this.content = content;
     }
 }
