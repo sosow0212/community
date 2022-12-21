@@ -35,7 +35,7 @@ public class ReportService {
     public UserReportResponse reportUser(User reporter, UserReportRequest req) {
         validateUserReportRequest(reporter, req);
         User reportedUser = userRepository.findById(req.getReportedUserId()).orElseThrow(MemberNotFoundException::new);
-        UserReportHistory userReportHistory = createUserReport(reporter, reportedUser, req);
+        UserReportHistory userReportHistory = createUserReportHistory(reporter, reportedUser, req);
         checkUserStatusIsBeingReported(reportedUser, req);
         return new UserReportResponse(userReportHistory.getId(), UserEditRequestDto.toDto(reportedUser),
                 req.getContent(),
@@ -49,7 +49,7 @@ public class ReportService {
         }
     }
 
-    private UserReportHistory createUserReport(User reporter, User reportedUser, UserReportRequest req) {
+    private UserReportHistory createUserReportHistory(User reporter, User reportedUser, UserReportRequest req) {
         UserReportHistory userReportHistory = new UserReportHistory(reporter.getId(), reportedUser.getId(),
                 req.getContent());
         userReportHistoryRepository.save(userReportHistory);
@@ -72,7 +72,7 @@ public class ReportService {
         Board reportedBoard = boardRepository.findById(req.getReportedBoardId())
                 .orElseThrow(BoardNotFoundException::new);
         validateBoard(reporter, reportedBoard, req);
-        BoardReportHistory boardReportHistory = createBoardReport(reporter, reportedBoard, req);
+        BoardReportHistory boardReportHistory = createBoardReportHistory(reporter, reportedBoard, req);
         checkBoardStatusIsBeingReported(reportedBoard, req);
         return new BoardReportResponse(boardReportHistory.getId(), req.getReportedBoardId(),
                 req.getContent(), boardReportHistory.getCreatedAt());
@@ -85,7 +85,7 @@ public class ReportService {
         }
     }
 
-    private BoardReportHistory createBoardReport(User reporter, Board reportedBoard, BoardReportRequest req) {
+    private BoardReportHistory createBoardReportHistory(User reporter, Board reportedBoard, BoardReportRequest req) {
         BoardReportHistory boardReportHistory = new BoardReportHistory(reporter.getId(), reportedBoard.getId(),
                 req.getContent());
         boardReportHistoryRepository.save(boardReportHistory);
