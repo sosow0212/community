@@ -1,7 +1,6 @@
 package yoon.community.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.aspectj.lang.annotation.Before;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,7 +12,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import yoon.community.controller.comment.CommentController;
@@ -69,7 +67,7 @@ public class CommentControllerTest {
                                 .content(objectMapper.writeValueAsString(req)))
                 .andExpect(status().isCreated());
 
-        verify(commentService).create(req, user);
+        verify(commentService).createComment(req, user);
     }
 
 
@@ -86,7 +84,7 @@ public class CommentControllerTest {
                                 .contentType(MediaType.MULTIPART_FORM_DATA))
                 .andExpect(status().isOk());
 
-        verify(commentService).findAll(commentReadCondition);
+        verify(commentService).findAllComments(commentReadCondition);
     }
 
     @Test
@@ -104,6 +102,6 @@ public class CommentControllerTest {
         mockMvc.perform(
                         delete("/api/comments/{id}", id))
                 .andExpect(status().isOk());
-        verify(commentService).delete(id, user);
+        verify(commentService).deleteComment(id, user);
     }
 }

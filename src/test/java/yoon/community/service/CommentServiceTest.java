@@ -56,7 +56,7 @@ public class CommentServiceTest {
         given(commentRepository.findByBoardId(commentReadCondition.getBoardId())).willReturn(commentList);
 
         // when
-        List<CommentDto> result = commentService.findAll(commentReadCondition);
+        List<CommentDto> result = commentService.findAllComments(commentReadCondition);
 
         // then
         assertThat(result.size()).isEqualTo(1);
@@ -72,7 +72,7 @@ public class CommentServiceTest {
         Comment comment = createComment();
 
         // when
-        CommentDto result = commentService.create(req, createUser());
+        CommentDto result = commentService.createComment(req, createUser());
 
         // then
         verify(commentRepository).save(any());
@@ -83,11 +83,11 @@ public class CommentServiceTest {
     void deleteTest() {
         // given
         User user = createUser();
-        given(commentRepository.findById(anyInt())).willReturn(Optional.of(createComment()));
-        given(boardRepository.findById(anyInt())).willReturn(Optional.of(createBoard()));
+        Comment comment = createComment(user);
+        given(commentRepository.findById(anyInt())).willReturn(Optional.of(comment));
 
         // when
-        commentService.delete(anyInt(), user);
+        commentService.deleteComment(anyInt(), user);
 
         // then
         verify(commentRepository).delete(any());
