@@ -8,26 +8,15 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import yoon.community.controller.admin.AdminController;
-import yoon.community.entity.user.Authority;
-import yoon.community.entity.user.User;
-import yoon.community.exception.MemberNotFoundException;
 import yoon.community.service.admin.AdminService;
-
-import java.util.Collections;
-import java.util.List;
 
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static yoon.community.factory.UserFactory.createUserWithAdminRole;
 
 @ExtendWith(MockitoExtension.class)
 public class AdminControllerTest {
@@ -56,7 +45,7 @@ public class AdminControllerTest {
         mockMvc.perform(
                 get("/api/admin/manages/users"))
                 .andExpect(status().isOk());
-        verify(adminService).manageReportedUser();
+        verify(adminService).findReportedUsers();
     }
 
     @Test
@@ -68,7 +57,7 @@ public class AdminControllerTest {
         mockMvc.perform(
                         get("/api/admin/manages/boards"))
                 .andExpect(status().isOk());
-        verify(adminService).manageReportedBoards();
+        verify(adminService).findReportedBoards();
     }
 
     @Test
@@ -81,7 +70,7 @@ public class AdminControllerTest {
         mockMvc.perform(
                         post("/api/admin/manages/users/{id}", id))
                 .andExpect(status().isOk());
-        verify(adminService).unlockUser(id);
+        verify(adminService).processUnlockUser(id);
     }
 
     @Test
@@ -94,7 +83,7 @@ public class AdminControllerTest {
         mockMvc.perform(
                         post("/api/admin/manages/boards/{id}", id))
                 .andExpect(status().isOk());
-        verify(adminService).unlockBoard(id);
+        verify(adminService).processUnlockBoard(id);
     }
 
 }

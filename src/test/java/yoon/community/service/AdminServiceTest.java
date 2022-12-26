@@ -52,7 +52,7 @@ public class AdminServiceTest {
         given(userRepository.findByReportedIsTrue()).willReturn(users);
 
         // when
-        List<UserEditRequestDto> result = adminService.manageReportedUser();
+        List<UserEditRequestDto> result = adminService.findReportedUsers();
 
         // then
         assertThat(result.size()).isEqualTo(1);
@@ -67,7 +67,7 @@ public class AdminServiceTest {
         given(userRepository.findById(anyInt())).willReturn(Optional.of(user));
 
         // when
-        UserEditRequestDto result = adminService.unlockUser(anyInt());
+        UserEditRequestDto result = adminService.processUnlockUser(anyInt());
 
         // then
         verify(userReportRepository).deleteAllByReportedUserId(anyInt());
@@ -82,7 +82,7 @@ public class AdminServiceTest {
         given(boardRepository.findByReportedIsTrue()).willReturn(boards);
 
         // when
-        List<BoardSimpleDto> result = adminService.manageReportedBoards();
+        List<BoardSimpleDto> result = adminService.findReportedBoards();
 
         // then
         assertThat(result.size()).isEqualTo(1);
@@ -97,7 +97,7 @@ public class AdminServiceTest {
         given(boardRepository.findById(anyInt())).willReturn(Optional.of(board));
 
         // when
-        BoardSimpleDto result = adminService.unlockBoard(anyInt());
+        BoardSimpleDto result = adminService.processUnlockBoard(anyInt());
 
         // then
         assertThat(result.getTitle()).isEqualTo("title");
