@@ -134,6 +134,10 @@ public class Board extends EntityDate {
         this.reported = true;
     }
 
+    public void unReportedBoard() {
+        this.reported = false;
+    }
+
     @Getter
     @AllArgsConstructor
     public static class ImageUpdatedResult {

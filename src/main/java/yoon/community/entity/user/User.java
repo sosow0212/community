@@ -58,6 +58,10 @@ public class User extends EntityDate {
         nickname = req.getNickname();
     }
 
+    public void unlockReport() {
+        this.reported = false;
+    }
+
     public boolean isReportMySelf(int id) {
         return this.id == id;
     }

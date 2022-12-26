@@ -20,21 +20,21 @@ public class AdminController {
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/admin/manages/users")
     public Response manageReportedUser() {
-        return Response.success(adminService.manageReportedUser());
+        return Response.success(adminService.findReportedUsers());
     }
 
     @ApiOperation(value = "신고된 유저 정지 해제", notes = "신고된 유저를 정지 해제시킵니다.")
     @ResponseStatus(HttpStatus.OK)
     @PostMapping("/admin/manages/users/{id}")
     public Response unlockUser(@PathVariable int id) {
-        return Response.success(adminService.unlockUser(id));
+        return Response.success(adminService.processUnlockUser(id));
     }
 
     @ApiOperation(value = "게시판 관리", notes = "게시판을 관리합니다.")
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/admin/manages/boards")
     public Response manageReportedBoards() {
-        return Response.success(adminService.manageReportedBoards());
+        return Response.success(adminService.findReportedBoards());
     }
 
 
@@ -42,11 +42,8 @@ public class AdminController {
     @ResponseStatus(HttpStatus.OK)
     @PostMapping("/admin/manages/boards/{id}")
     public Response unlockBoard(@PathVariable int id) {
-        return Response.success(adminService.unlockBoard(id));
+        return Response.success(adminService.processUnlockBoard(id));
     }
-
-
-    // 밑에서부터 7월 7일 비행기 작업 (포스트맨 테스트 이후, 커밋 필요)
 
     @ApiOperation(value = "카테고리 관리", notes = "카테고리를 관리합니다.")
     @ResponseStatus(HttpStatus.OK)
@@ -68,10 +65,4 @@ public class AdminController {
     public Response manageBoardsCount() {
         return null;
     }
-
-
-
-    //
-
-
 }
