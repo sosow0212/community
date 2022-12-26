@@ -18,7 +18,8 @@ import static java.util.stream.Collectors.toList;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-@Data
+@Getter
+@Setter
 @Builder
 @Entity
 public class Board extends EntityDate {
