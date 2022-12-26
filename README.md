@@ -3,17 +3,30 @@
 <hr>
 
 ### 진행 사항
-- 2022.11.28 - 현재 클린코드 적용과 리팩토링 작업 중입니다. 리팩토링 작업 후 Filter를 이용해서 Authentication을 다룰 예정입니다.
+
+- 기본적인 API 설계 완료 (2022.08)
+- 레거시 프로젝트 클린코드 적용과 리팩토링 작업 시작 (2022.11.28)
+- 1차 클린코드 리팩토링 작업 완료 & 도메인 메서드 분리 작업 (Done 22.12.26)
+- 남은 도메인 단위 테스트 작성 (Done 22.12.26)
+
+- 도메인 기본키 타입 Long으로 변환 작업 (Not done)
+- Filter 이용한 유저 인증 리팩토링 작업 (Not done)
+- Redis를 이용한 공지사항, 포인트 랭킹 API 추가 (Not done)
+- 기존에 해결한 N+1 문제 다른 방식으로 해결하기 (Not done)
+- Jenkins 적용 (Not done)
+- AWS HTTPS 배포 (Not done)
 
 ### 프로젝트 설명
+
 - 커뮤니티 API 서버 제작 개인 프로젝트입니다.
 - 성능 튜닝을 위해 JPA 설계와 테이블 설계에 집중했습니다.
 - 여러가지 기술 적용으로 역량 상승을 위해 제작한 프로젝트입니다.
 
 ### Skills
+
 - Spring Web
 - JPA
-- JUnit5
+- JUnit5 Test
 - Spring Security
 - JWT
 - MySQL Driver
@@ -22,15 +35,14 @@
 - Redis
 - Docker, Docker-compose
 
-
 ### Git Convention
+
 - feat : 기능추가
 - fix : 버그 수정
 - refactor : 리팩토링, 기능은 그대로 두고 코드를 수정
 - style : formatting, 세미콜론 추가 / 코드 변경은 없음
 - chore : 라이브러리 설치, 빌드 작업 업데이트
 - docs : 주석 추가 삭제, 문서 변경
-
 
 ### API 설명
 
@@ -45,10 +57,9 @@
 
 <img width="1217" alt="image" src="https://user-images.githubusercontent.com/63213487/186867100-8983c4f6-98cf-414f-b9b6-df5ab0c05624.png">
 
-
-
 ### JUnit5 테스트 코드
-- Junit5 를 이용해서 컨트롤러 및 서비스 레이어의 단위테스트를 진행했습니다.
+
+- Junit5 를 이용해서 Controller, Service, Domain 레이어의 단위테스트를 진행했습니다.
 
 <img width="323" alt="image" src="https://user-images.githubusercontent.com/63213487/186866768-4e091e48-e3ee-43c1-86db-aa5c81069227.png"> 
 <img width="316" alt="image" src="https://user-images.githubusercontent.com/63213487/186866894-e44c50e7-572b-4298-ad84-3e1323ce5373.png">
