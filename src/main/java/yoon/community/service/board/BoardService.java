@@ -36,6 +36,7 @@ public class BoardService {
     private final static String SUCCESS_UNLIKE_BOARD = "좋아요 취소 완료";
     private final static String SUCCESS_FAVORITE_BOARD = "즐겨찾기 처리 완료";
     private final static String SUCCESS_UNFAVORITE_BOARD = "즐겨찾기 취소 완료";
+    private final static int RECOMMEND_SET_COUNT = 10;
 
     private final BoardRepository boardRepository;
     private final FileService fileService;
@@ -45,10 +46,11 @@ public class BoardService {
 
     @Transactional
     public BoardCreateResponse createBoard(BoardCreateRequest req, int categoryId, User user) {
-        List<Image> images = req.getImages().stream().map(i -> new Image(i.getOriginalFilename())).collect(toList());
+        List<Image> images = req.getImages().stream()
+                .map(i -> new Image(i.getOriginalFilename()))
+                .collect(toList());
         Category category = categoryRepository.findById(categoryId).orElseThrow(CategoryNotFoundException::new);
         Board board = boardRepository.save(new Board(req.getTitle(), req.getContent(), user, category, images));
-
         uploadImages(board.getImages(), req.getImages());
         return new BoardCreateResponse(board.getId(), board.getTitle(), board.getContent());
     }
@@ -56,7 +58,8 @@ public class BoardService {
     @Transactional(readOnly = true)
     public List<BoardSimpleDto> findAllBoards(Pageable pageable, int categoryId) {
         Page<Board> boards = boardRepository.findAllByCategoryId(pageable, categoryId);
-        List<BoardSimpleDto> boardSimpleDtoList = boards.stream().map(i -> new BoardSimpleDto().toDto(i))
+        List<BoardSimpleDto> boardSimpleDtoList = boards.stream()
+                .map(i -> new BoardSimpleDto().toDto(i))
                 .collect(toList());
         return boardSimpleDtoList;
     }
@@ -92,8 +95,7 @@ public class BoardService {
 
     @Transactional(readOnly = true)
     public List<BoardSimpleDto> findBestBoards(Pageable pageable) {
-        // 10 이상은 추천글
-        Page<Board> boards = boardRepository.findByLikedGreaterThanEqual(pageable, 10);
+        Page<Board> boards = boardRepository.findByLikedGreaterThanEqual(pageable, RECOMMEND_SET_COUNT);
         List<BoardSimpleDto> boardSimpleDtoList = new ArrayList<>();
         boards.stream().forEach(i -> boardSimpleDtoList.add(new BoardSimpleDto().toDto(i)));
         return boardSimpleDtoList;
@@ -119,7 +121,8 @@ public class BoardService {
     @Transactional(readOnly = true)
     public List<BoardSimpleDto> searchBoard(String keyword, Pageable pageable) {
         Page<Board> boards = boardRepository.findByTitleContaining(keyword, pageable);
-        List<BoardSimpleDto> boardSimpleDtoList = boards.stream().map(i -> new BoardSimpleDto().toDto(i))
+        List<BoardSimpleDto> boardSimpleDtoList = boards.stream()
+                .map(i -> new BoardSimpleDto().toDto(i))
                 .collect(toList());
         return boardSimpleDtoList;
     }
@@ -132,7 +135,6 @@ public class BoardService {
     private void deleteImages(List<Image> images) {
         images.forEach(i -> fileService.delete(i.getUniqueName()));
     }
-
 
     public void validateBoardOwner(User user, Board board) {
         if (!user.equals(board.getUser())) {
