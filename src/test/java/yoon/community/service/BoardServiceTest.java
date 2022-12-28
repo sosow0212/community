@@ -247,10 +247,11 @@ public class BoardServiceTest {
     void deleteBoardTest() {
         // given
         User user = createUser();
-        given(boardRepository.findById(anyInt())).willReturn(Optional.of(createBoard()));
+        Board board = createBoard(user);
+        given(boardRepository.findById(anyInt())).willReturn(Optional.of(board));
 
         // when
-        boardService.deleteBoard(anyInt(), createUser());
+        boardService.deleteBoard(anyInt(), user);
 
         // then
         verify(boardRepository).delete(any());

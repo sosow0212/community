@@ -58,24 +58,6 @@ public class MessageServiceTest {
     }
 
     @Test
-    @DisplayName("receiveMessages 서비스 테스트")
-    void receiveMessagesTest() {
-        // given
-        List<Message> list = new ArrayList<>();
-        list.add(createMessage());
-        list.add(createMessage());
-
-        given(messageRepository.findAllByReceiverAndDeletedByReceiverFalseOrderByIdDesc(createUser())).willReturn(list);
-
-        // when
-        List<MessageDto> result = messageService.receiveMessages(createUser());
-
-
-        // then
-        assertThat(result.size()).isEqualTo(2);
-    }
-
-    @Test
     @DisplayName("receiveMessage 서비스 테스트")
     void receiveMessageTest() {
         // given
@@ -86,7 +68,6 @@ public class MessageServiceTest {
 
         // when
         MessageDto result = messageService.receiveMessage(anyInt(), user);
-
 
         // then
         assertThat(result.getTitle()).isEqualTo("title");
@@ -99,12 +80,10 @@ public class MessageServiceTest {
         List<Message> list = new ArrayList<>();
         list.add(createMessage());
         list.add(createMessage());
-
-        given(messageRepository.findAllBySenderAndDeletedBySenderFalseOrderByIdDesc(createUser())).willReturn(list);
+        given(messageRepository.findAllBySenderAndDeletedBySenderFalseOrderByIdDesc(any())).willReturn(list);
 
         // when
         List<MessageDto> result = messageService.sendMessages(createUser());
-
 
         // then
         assertThat(result.size()).isEqualTo(2);
@@ -121,7 +100,6 @@ public class MessageServiceTest {
 
         // when
         MessageDto result = messageService.sendMessage(anyInt(), user);
-
 
         // then
         assertThat(result.getTitle()).isEqualTo("title");
