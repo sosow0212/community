@@ -20,6 +20,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Service
 public class CategoryService {
+    private final static String DEFAULT_CATEGORY = "Default";
     private final CategoryRepository categoryRepository;
 
     @Transactional(readOnly = true)
@@ -30,7 +31,7 @@ public class CategoryService {
 
     @Transactional
     public void createAtFirst() {
-        Category category = new Category("Default", null);
+        Category category = new Category(DEFAULT_CATEGORY, null);
         categoryRepository.save(category);
     }
 
