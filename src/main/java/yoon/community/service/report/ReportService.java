@@ -15,7 +15,7 @@ import yoon.community.entity.user.User;
 import yoon.community.exception.AlreadyReportException;
 import yoon.community.exception.BoardNotFoundException;
 import yoon.community.exception.MemberNotFoundException;
-import yoon.community.exception.type.NotSelfReportException;
+import yoon.community.exception.NotSelfReportException;
 import yoon.community.repository.board.BoardRepository;
 import yoon.community.repository.report.BoardReportRepository;
 import yoon.community.repository.report.UserReportRepository;

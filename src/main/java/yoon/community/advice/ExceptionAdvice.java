@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import yoon.community.exception.*;
-import yoon.community.exception.type.NotSelfReportException;
+import yoon.community.exception.NotSelfReportException;
 import yoon.community.response.Response;
 
 import javax.management.relation.RoleNotFoundException;
