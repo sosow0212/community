@@ -2,7 +2,9 @@ package yoon.community.entity.message;
 
 import lombok.AccessLevel;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import yoon.community.entity.common.EntityDate;
@@ -10,7 +12,8 @@ import yoon.community.entity.user.User;
 
 import javax.persistence.*;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class Message extends EntityDate {

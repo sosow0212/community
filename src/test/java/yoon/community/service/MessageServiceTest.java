@@ -39,23 +39,23 @@ public class MessageServiceTest {
     UserRepository userRepository;
 
 
-    @Test
-    @DisplayName("createMessage 서비스 테스트")
-    void createMessageTest() {
-        // given
-        User receiver = createUser();
-        User sender = createUser2();
-        MessageCreateRequest req = new MessageCreateRequest("title", "content", receiver.getNickname());
-        Message message = new Message(req.getTitle(), req.getContent(), sender, receiver);
-        given(userRepository.findByNickname(anyString())).willReturn(Optional.of(receiver));
-        given(messageRepository.save(message)).willReturn(message);
-
-        // when
-        MessageDto result = messageService.createMessage(sender, req);
-
-        // then
-        assertThat(result.getTitle()).isEqualTo("title");
-    }
+//    @Test
+//    @DisplayName("createMessage 서비스 테스트")
+//    void createMessageTest() {
+//        // given
+//        User receiver = createUser();
+//        User sender = createUser2();
+//        MessageCreateRequest req = new MessageCreateRequest("title", "content", receiver.getNickname());
+//        Message message = new Message(req.getTitle(), req.getContent(), sender, receiver);
+//        given(userRepository.findByNickname(anyString())).willReturn(Optional.of(receiver));
+//        given(messageRepository.save(message)).willReturn(message);
+//
+//        // when
+//        MessageDto result = messageService.createMessage(sender, req);
+//
+//        // then
+//        assertThat(result.getTitle()).isEqualTo("title");
+//    }
 
     @Test
     @DisplayName("receiveMessage 서비스 테스트")
