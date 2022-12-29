@@ -41,9 +41,9 @@ public class AuthService {
         User user = userRepository.findByUsername(req.getUsername()).orElseThrow(() -> {
             throw new LoginFailureException();
         });
+
         validatePassword(req, user);
-        UsernamePasswordAuthenticationToken authenticationToken = req.toAuthentication();
-        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+        Authentication authentication = getUserAuthentication(req);
 
         TokenDto tokenDto = tokenProvider.generateTokenDto(authentication);
 
@@ -52,8 +52,13 @@ public class AuthService {
                 .value(tokenDto.getRefreshToken())
                 .build();
         refreshTokenRepository.save(refreshToken);
-        TokenResponseDto tokenResponseDto = new TokenResponseDto(tokenDto.getAccessToken(), tokenDto.getRefreshToken());
-        return tokenResponseDto;
+        return new TokenResponseDto(tokenDto.getAccessToken(), tokenDto.getRefreshToken());
+    }
+
+    private Authentication getUserAuthentication(LoginRequestDto req) {
+        UsernamePasswordAuthenticationToken authenticationToken = req.toAuthentication();
+        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+        return authentication;
     }
 
 
