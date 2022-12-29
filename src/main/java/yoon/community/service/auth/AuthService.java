@@ -44,15 +44,17 @@ public class AuthService {
 
         validatePassword(req, user);
         Authentication authentication = getUserAuthentication(req);
-
         TokenDto tokenDto = tokenProvider.generateTokenDto(authentication);
+        RefreshToken refreshToken = buildRefreshToken(authentication, tokenDto);
+        refreshTokenRepository.save(refreshToken);
+        return new TokenResponseDto(tokenDto.getAccessToken(), tokenDto.getRefreshToken());
+    }
 
-        RefreshToken refreshToken = RefreshToken.builder()
+    private RefreshToken buildRefreshToken(Authentication authentication, TokenDto tokenDto) {
+        return RefreshToken.builder()
                 .key(authentication.getName())
                 .value(tokenDto.getRefreshToken())
                 .build();
-        refreshTokenRepository.save(refreshToken);
-        return new TokenResponseDto(tokenDto.getAccessToken(), tokenDto.getRefreshToken());
     }
 
     private Authentication getUserAuthentication(LoginRequestDto req) {
