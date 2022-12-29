@@ -2,6 +2,7 @@ package yoon.community.service.file;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import yoon.community.exception.FileUploadFailureException;
@@ -12,10 +13,11 @@ import java.io.IOException;
 
 @Service
 @Slf4j
+@PropertySource("classpath:secure.properties")
 public class LocalFileService implements FileService{
 
-//    @Value("${upload.image.location}")
-    private String location = "/Users/yoon/Desktop/image/";
+    @Value("${upload.image.location}")
+    private String location;
 
     @PostConstruct
     void postConstruct() {
