@@ -58,7 +58,7 @@
 
 <img width="1217" alt="image" src="https://user-images.githubusercontent.com/63213487/186867100-8983c4f6-98cf-414f-b9b6-df5ab0c05624.png">
 
-### JUnit5 테스트 코드
+### JUnit5 테스트
 
 - Junit5 를 이용해서 Controller, Service, Domain 레이어의 단위테스트를 진행했습니다.
 
