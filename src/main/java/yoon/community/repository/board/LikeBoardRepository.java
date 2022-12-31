@@ -6,7 +6,7 @@ import yoon.community.entity.board.Board;
 import yoon.community.entity.board.LikeBoard;
 import yoon.community.entity.user.User;
 
-public interface LikeBoardRepository extends JpaRepository<LikeBoard, Integer> {
+public interface LikeBoardRepository extends JpaRepository<LikeBoard, Long> {
 
     Optional<LikeBoard> findByBoardAndUser(Board board, User user);
 }

@@ -22,6 +22,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static yoon.community.factory.BoardFactory.createBoard;
@@ -64,13 +65,13 @@ public class AdminServiceTest {
         // given
         User user = createUser();
         user.setReported(true);
-        given(userRepository.findById(anyInt())).willReturn(Optional.of(user));
+        given(userRepository.findById(anyLong())).willReturn(Optional.of(user));
 
         // when
-        UserEditRequestDto result = adminService.processUnlockUser(anyInt());
+        UserEditRequestDto result = adminService.processUnlockUser(anyLong());
 
         // then
-        verify(userReportRepository).deleteAllByReportedUserId(anyInt());
+        verify(userReportRepository).deleteAllByReportedUserId(anyLong());
     }
 
     @Test
@@ -94,10 +95,10 @@ public class AdminServiceTest {
         // given
         Board board = createBoard();
         board.setReported(true);
-        given(boardRepository.findById(anyInt())).willReturn(Optional.of(board));
+        given(boardRepository.findById(anyLong())).willReturn(Optional.of(board));
 
         // when
-        BoardSimpleDto result = adminService.processUnlockBoard(anyInt());
+        BoardSimpleDto result = adminService.processUnlockBoard(anyLong());
 
         // then
         assertThat(result.getTitle()).isEqualTo("title");

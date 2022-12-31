@@ -55,7 +55,7 @@ public class ReportControllerTest {
     @DisplayName("유저 신고 하기")
     public void reportUserTest() throws Exception {
         // given
-        UserReportRequest req = new UserReportRequest(1, "내용");
+        UserReportRequest req = new UserReportRequest(1L, "내용");
 
         User user = createUserWithAdminRole();
         Authentication authentication = new UsernamePasswordAuthenticationToken(user.getId(), "", Collections.emptyList());
@@ -77,7 +77,7 @@ public class ReportControllerTest {
     @DisplayName("게시판 신고 하기")
     public void reportBoardTest() throws Exception {
         // given
-        BoardReportRequest req = new BoardReportRequest(1, "내용");
+        BoardReportRequest req = new BoardReportRequest(1L, "내용");
 
         User user = createUserWithAdminRole();
         Authentication authentication = new UsernamePasswordAuthenticationToken(user.getId(), "", Collections.emptyList());

@@ -61,7 +61,7 @@ public class UserControllerTest {
     @DisplayName("개별 회원 조회")
     public void findUserTest() throws Exception {
         //given
-        int id = 1;
+        Long id = 1L;
 
         //when, then
         mockMvc.perform(

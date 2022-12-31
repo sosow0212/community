@@ -36,7 +36,7 @@ public class AdminService {
     }
 
     @Transactional
-    public UserEditRequestDto processUnlockUser(int id) {
+    public UserEditRequestDto processUnlockUser(Long id) {
         User user = userRepository.findById(id).orElseThrow(MemberNotEqualsException::new);
         validateUnlockUser(user);
         deleteUnlockUser(user, id);
@@ -49,7 +49,7 @@ public class AdminService {
         }
     }
 
-    private void deleteUnlockUser(User user, int id) {
+    private void deleteUnlockUser(User user, Long id) {
         user.unlockReport();
         userReportRepository.deleteAllByReportedUserId(id);
     }
@@ -65,14 +65,14 @@ public class AdminService {
     }
 
     @Transactional(readOnly = true)
-    public BoardSimpleDto processUnlockBoard(int id) {
+    public BoardSimpleDto processUnlockBoard(Long id) {
         Board board = boardRepository.findById(id).orElseThrow(BoardNotFoundException::new);
         validateUnlockBoard(board);
         deleteUnlockBoard(board, id);
         return new BoardSimpleDto().toDto(board);
     }
 
-    private void deleteUnlockBoard(Board board, int id) {
+    private void deleteUnlockBoard(Board board, Long id) {
         board.unReportedBoard();
         boardReportRepository.deleteAllByReportedBoardId(id);
     }

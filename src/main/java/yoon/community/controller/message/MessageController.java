@@ -45,7 +45,7 @@ public class MessageController {
     @ApiOperation(value = "받은 쪽지 중 한 개 확인", notes = "받은 편지 중 하나를 확인")
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/messages/receiver/{id}")
-    public Response receiveMessage(@ApiParam(value = "쪽지 id", required = true) @PathVariable int id) {
+    public Response receiveMessage(@ApiParam(value = "쪽지 id", required = true) @PathVariable Long id) {
         User user = getPrincipal();
         return Response.success(messageService.receiveMessage(id, user));
     }
@@ -61,7 +61,7 @@ public class MessageController {
     @ApiOperation(value = "보낸 쪽지 중 한 개 확인", notes = "보낸 쪽지 중 하나를 확인")
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/messages/sender/{id}")
-    public Response sendMessage(@ApiParam(value = "쪽지 id", required = true) @PathVariable int id) {
+    public Response sendMessage(@ApiParam(value = "쪽지 id", required = true) @PathVariable Long id) {
         User user = getPrincipal();
         return Response.success(messageService.sendMessage(id, user));
     }
@@ -69,7 +69,7 @@ public class MessageController {
     @ApiOperation(value = "받은 쪽지 삭제", notes = "받은 쪽지 삭제하기")
     @ResponseStatus(HttpStatus.OK)
     @DeleteMapping("/messages/receiver/{id}")
-    public Response deleteReceiveMessage(@ApiParam(value = "쪽지 id", required = true) @PathVariable int id) {
+    public Response deleteReceiveMessage(@ApiParam(value = "쪽지 id", required = true) @PathVariable Long id) {
         User user = getPrincipal();
         messageService.deleteMessageByReceiver(id, user);
         return Response.success();
@@ -78,7 +78,7 @@ public class MessageController {
     @ApiOperation(value = "보낸 쪽지 삭제", notes = "보낸 쪽지 삭제하기")
     @ResponseStatus(HttpStatus.OK)
     @DeleteMapping("/messages/sender/{id}")
-    public Response deleteSendMessage(@ApiParam(value = "쪽지 id", required = true) @PathVariable int id) {
+    public Response deleteSendMessage(@ApiParam(value = "쪽지 id", required = true) @PathVariable Long id) {
         User user = getPrincipal();
         messageService.deleteMessageBySender(id, user);
         return Response.success();

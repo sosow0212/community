@@ -18,18 +18,18 @@ public class BoardReportHistory extends EntityDate {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int id;
+    private Long id;
 
     @Column(nullable = false)
-    private int reporterId;
+    private Long reporterId;
 
     @Column(nullable = false)
-    private int reportedBoardId;
+    private Long reportedBoardId;
 
     @Column(nullable = false)
     private String content;
 
-    public BoardReportHistory(int reporterId, int reportedBoardId, String content) {
+    public BoardReportHistory(Long reporterId, Long reportedBoardId, String content) {
         this.reporterId = reporterId;
         this.reportedBoardId = reportedBoardId;
         this.content = content;

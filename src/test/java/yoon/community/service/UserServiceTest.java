@@ -19,6 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static yoon.community.factory.UserFactory.createUser;
@@ -39,10 +40,10 @@ public class UserServiceTest {
         user.setName("yoon");
         user.setNickname("yoon");
 
-        given(userRepository.findById(anyInt())).willReturn(Optional.of(user));
+        given(userRepository.findById(anyLong())).willReturn(Optional.of(user));
 
         // when
-        UserEditRequestDto result = userService.findUser(1);
+        UserEditRequestDto result = userService.findUser(1L);
 
         // then
         assertThat(result.getName()).isEqualTo(user.getName());
@@ -55,7 +56,7 @@ public class UserServiceTest {
         given(userRepository.findById(any())).willReturn(Optional.empty());
 
         // when, then
-        assertThatThrownBy(() -> userService.findUser(1)).isInstanceOf(MemberNotFoundException.class);
+        assertThatThrownBy(() -> userService.findUser(1L)).isInstanceOf(MemberNotFoundException.class);
     }
 
     @Test

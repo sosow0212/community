@@ -9,7 +9,7 @@ import javax.validation.constraints.NotBlank;
 @AllArgsConstructor
 @NotBlank
 public class BoardCreateResponse {
-    private int id;
+    private Long id;
     private String title;
     private String content;
 

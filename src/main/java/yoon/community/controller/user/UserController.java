@@ -34,7 +34,7 @@ public class UserController {
     @ApiOperation(value = "개별 회원 조회", notes = "개별 회원을 조회")
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/users/{id}")
-    public Response findUser(@ApiParam(value = "User ID", required = true) @PathVariable int id) {
+    public Response findUser(@ApiParam(value = "User ID", required = true) @PathVariable Long id) {
         return Response.success(userService.findUser(id));
     }
 

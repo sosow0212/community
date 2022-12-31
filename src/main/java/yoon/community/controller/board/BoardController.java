@@ -44,7 +44,7 @@ public class BoardController {
     @ApiOperation(value = "게시글 목록 조회", notes = "게시글 목록을 조회합니다.")
     @GetMapping("/boards/all/{categoryId}")
     @ResponseStatus(HttpStatus.OK)
-    public Response findAllBoards(@ApiParam(value = "게시글 id", required = true) @PathVariable int categoryId,
+    public Response findAllBoards(@ApiParam(value = "카테고리 id", required = true) @PathVariable Long categoryId,
                                   @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
         // ex) http://localhost:8080/api/boards/all/{categoryId}/?page=0
         return Response.success(boardService.findAllBoards(pageable, categoryId));
@@ -53,14 +53,14 @@ public class BoardController {
     @ApiOperation(value = "게시글 단건 조회", notes = "게시글을 단건 조회합니다.")
     @GetMapping("/boards/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Response findBoard(@ApiParam(value = "게시글 id", required = true) @PathVariable int id) {
+    public Response findBoard(@ApiParam(value = "게시글 id", required = true) @PathVariable Long id) {
         return Response.success(boardService.findBoard(id));
     }
 
     @ApiOperation(value = "게시글 수정", notes = "게시글을 수정합니다.")
     @PutMapping("/boards/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Response editBoard(@ApiParam(value = "게시글 id", required = true) @PathVariable int id,
+    public Response editBoard(@ApiParam(value = "게시글 id", required = true) @PathVariable Long id,
                               @Valid @ModelAttribute BoardUpdateRequest req) {
         User user = getPrincipal();
         return Response.success(boardService.editBoard(id, req, user));
@@ -69,7 +69,7 @@ public class BoardController {
     @ApiOperation(value = "게시글 좋아요", notes = "사용자가 게시글 좋아요를 누릅니다.")
     @PostMapping("/boards/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Response likeBoard(@ApiParam(value = "게시글 id", required = true) @PathVariable int id) {
+    public Response likeBoard(@ApiParam(value = "게시글 id", required = true) @PathVariable Long id) {
         User user = getPrincipal();
         return Response.success(boardService.updateLikeOfBoard(id, user));
     }
@@ -77,7 +77,7 @@ public class BoardController {
     @ApiOperation(value = "게시글 즐겨찾기", notes = "사용자가 게시글 즐겨찾기를 누릅니다.")
     @PostMapping("/boards/{id}/favorites")
     @ResponseStatus(HttpStatus.OK)
-    public Response favoriteBoard(@ApiParam(value = "게시글 id", required = true) @PathVariable int id) {
+    public Response favoriteBoard(@ApiParam(value = "게시글 id", required = true) @PathVariable Long id) {
         User user = getPrincipal();
         return Response.success(boardService.updateOfFavoriteBoard(id, user));
     }
@@ -94,7 +94,7 @@ public class BoardController {
     @ApiOperation(value = "게시글 삭제", notes = "게시글을 삭제합니다.")
     @DeleteMapping("/boards/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Response deleteBoard(@ApiParam(value = "게시글 id", required = true) @PathVariable int id) {
+    public Response deleteBoard(@ApiParam(value = "게시글 id", required = true) @PathVariable Long id) {
         User user = getPrincipal();
         boardService.deleteBoard(id, user);
         return Response.success();

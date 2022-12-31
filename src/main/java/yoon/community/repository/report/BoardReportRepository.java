@@ -6,12 +6,12 @@ import yoon.community.entity.report.BoardReportHistory;
 
 import java.util.List;
 
-public interface BoardReportRepository extends JpaRepository<BoardReportHistory, Integer> {
-    Optional<BoardReportHistory> findByReporterIdAndReportedBoardId(int reporterId, int reportedBoardId);
+public interface BoardReportRepository extends JpaRepository<BoardReportHistory, Long> {
+    Optional<BoardReportHistory> findByReporterIdAndReportedBoardId(Long reporterId, Long reportedBoardId);
 
-    boolean existsByReporterIdAndReportedBoardId(int reporterId, int reportedBoardId);
+    boolean existsByReporterIdAndReportedBoardId(Long reporterId, Long reportedBoardId);
 
-    List<BoardReportHistory> findByReportedBoardId(int reportedBoardId);
+    List<BoardReportHistory> findByReportedBoardId(Long reportedBoardId);
 
-    void deleteAllByReportedBoardId(int id);
+    void deleteAllByReportedBoardId(Long id);
 }

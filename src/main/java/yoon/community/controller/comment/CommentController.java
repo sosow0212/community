@@ -44,7 +44,7 @@ public class CommentController {
     @ApiOperation(value = "댓글 삭제", notes = "댓글을 삭제 합니다.")
     @DeleteMapping("/comments/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Response delete(@ApiParam(value = "댓글 id", required = true) @PathVariable int id) {
+    public Response delete(@ApiParam(value = "댓글 id", required = true) @PathVariable Long id) {
         User user = getPrincipal();
         commentService.deleteComment(id, user);
         return Response.success();

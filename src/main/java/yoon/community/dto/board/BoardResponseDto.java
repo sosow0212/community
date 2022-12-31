@@ -14,7 +14,7 @@ import static java.util.stream.Collectors.toList;
 @AllArgsConstructor
 @NoArgsConstructor
 public class BoardResponseDto {
-    private int id;
+    private Long id;
     private String writer_nickname;
     private String title;
     private String content;

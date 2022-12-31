@@ -45,7 +45,7 @@ public class CategoryTest {
         // when, then
         mockMvc.perform(get("/api/categories"))
                 .andExpect(status().isOk());
-        verify(categoryService).findAll();
+        verify(categoryService).findAllCategory();
     }
 
     @Test
@@ -61,7 +61,7 @@ public class CategoryTest {
                         .content(objectMapper.writeValueAsString(req)))
                 .andExpect(status().isCreated());
 
-        verify(categoryService).create(req);
+        verify(categoryService).createCategory(req);
     }
 
     @Test
@@ -74,6 +74,6 @@ public class CategoryTest {
         mockMvc.perform(
                         delete("/api/categories/{id}", id))
                 .andExpect(status().isOk());
-        verify(categoryService).delete(id);
+        verify(categoryService).deleteCategory(id);
     }
 }

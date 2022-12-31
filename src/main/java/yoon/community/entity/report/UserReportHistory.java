@@ -18,18 +18,18 @@ import yoon.community.entity.common.EntityDate;
 public class UserReportHistory extends EntityDate {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int id;
+    private Long id;
 
     @Column(nullable = false)
-    private int reporterId;
+    private Long reporterId;
 
     @Column(nullable = false)
-    private int reportedUserId;
+    private Long reportedUserId;
 
     @Column(nullable = false)
     private String content;
 
-    public UserReportHistory(int reporterId, int reportedUserId, String content) {
+    public UserReportHistory(Long reporterId, Long reportedUserId, String content) {
         this.reporterId = reporterId;
         this.reportedUserId = reportedUserId;
         this.content = content;

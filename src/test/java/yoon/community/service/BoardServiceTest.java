@@ -109,10 +109,10 @@ public class BoardServiceTest {
     @DisplayName("findBoard 서비스 테스트")
     void findBoardTest() {
         // given
-        int id = 1;
+        Long id = 1L;
         Board board = createBoard();
 
-        given(boardRepository.findById(anyInt())).willReturn(Optional.of(board));
+        given(boardRepository.findById(anyLong())).willReturn(Optional.of(board));
 
         // when
         BoardResponseDto result = boardService.findBoard(id);
@@ -144,7 +144,7 @@ public class BoardServiceTest {
         User user = createUser();
         Board board = createBoard();
         board.setLiked(1);
-        LikeBoard likeBoard = new LikeBoard(1, board, user, true);
+        LikeBoard likeBoard = new LikeBoard(1L, board, user, true);
         given(likeBoardRepository.findByBoardAndUser(board, user)).willReturn(Optional.of(likeBoard));
 
         // when
@@ -161,7 +161,7 @@ public class BoardServiceTest {
         // given
         Board board = createBoard();
         User user = createUser();
-        LikeBoard likeBoard = new LikeBoard(1, board, user, true);
+        LikeBoard likeBoard = new LikeBoard(1L, board, user, true);
         given(likeBoardRepository.findByBoardAndUser(board, user)).willReturn(Optional.of(likeBoard));
 
         // when
@@ -248,10 +248,10 @@ public class BoardServiceTest {
         // given
         User user = createUser();
         Board board = createBoard(user);
-        given(boardRepository.findById(anyInt())).willReturn(Optional.of(board));
+        given(boardRepository.findById(anyLong())).willReturn(Optional.of(board));
 
         // when
-        boardService.deleteBoard(anyInt(), user);
+        boardService.deleteBoard(anyLong(), user);
 
         // then
         verify(boardRepository).delete(any());

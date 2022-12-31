@@ -60,7 +60,8 @@ public class MessageControllerTest {
 
         // 테스트 코드 진행시 SecurityContext에 유저 정보 미리 담아두기
         User user = createUserWithAdminRole();
-        Authentication authentication = new UsernamePasswordAuthenticationToken(user.getId(), "", Collections.emptyList());
+        Authentication authentication = new UsernamePasswordAuthenticationToken(user.getId(), "",
+                Collections.emptyList());
         SecurityContextHolder.getContext().setAuthentication(authentication);
         given(userRepository.findByUsername(authentication.getName())).willReturn(Optional.of(user));
 
@@ -82,7 +83,8 @@ public class MessageControllerTest {
 
         // 테스트 코드 진행시 SecurityContext에 유저 정보 미리 담아두기
         User user = createUserWithAdminRole();
-        Authentication authentication = new UsernamePasswordAuthenticationToken(user.getId(), "", Collections.emptyList());
+        Authentication authentication = new UsernamePasswordAuthenticationToken(user.getId(), "",
+                Collections.emptyList());
         SecurityContextHolder.getContext().setAuthentication(authentication);
         given(userRepository.findByUsername(authentication.getName())).willReturn(Optional.of(user));
 
@@ -97,11 +99,12 @@ public class MessageControllerTest {
     @DisplayName("받은 쪽지 개별 확인")
     public void receiveMessageTest() throws Exception {
         // given
-        int id = 1;
+        Long id = 1L;
 
         // 테스트 코드 진행시 SecurityContext에 유저 정보 미리 담아두기
         User user = createUserWithAdminRole();
-        Authentication authentication = new UsernamePasswordAuthenticationToken(user.getId(), "", Collections.emptyList());
+        Authentication authentication = new UsernamePasswordAuthenticationToken(user.getId(), "",
+                Collections.emptyList());
         SecurityContextHolder.getContext().setAuthentication(authentication);
         given(userRepository.findByUsername(authentication.getName())).willReturn(Optional.of(user));
 
@@ -118,7 +121,8 @@ public class MessageControllerTest {
         // given
         // 테스트 코드 진행시 SecurityContext에 유저 정보 미리 담아두기
         User user = createUserWithAdminRole();
-        Authentication authentication = new UsernamePasswordAuthenticationToken(user.getId(), "", Collections.emptyList());
+        Authentication authentication = new UsernamePasswordAuthenticationToken(user.getId(), "",
+                Collections.emptyList());
         SecurityContextHolder.getContext().setAuthentication(authentication);
         given(userRepository.findByUsername(authentication.getName())).willReturn(Optional.of(user));
 
@@ -133,11 +137,12 @@ public class MessageControllerTest {
     @DisplayName("보낸 쪽지 개별 확인")
     public void sendMessageTest() throws Exception {
         // given
-        int id = 1;
+        Long id = 1L;
 
         // 테스트 코드 진행시 SecurityContext에 유저 정보 미리 담아두기
         User user = createUserWithAdminRole();
-        Authentication authentication = new UsernamePasswordAuthenticationToken(user.getId(), "", Collections.emptyList());
+        Authentication authentication = new UsernamePasswordAuthenticationToken(user.getId(), "",
+                Collections.emptyList());
         SecurityContextHolder.getContext().setAuthentication(authentication);
         given(userRepository.findByUsername(authentication.getName())).willReturn(Optional.of(user));
 
@@ -152,11 +157,12 @@ public class MessageControllerTest {
     @DisplayName("받은 쪽지 삭제")
     public void deleteReceiveMessageTest() throws Exception {
         // given
-        int id = 1;
+        Long id = 1L;
 
         // 테스트 코드 진행시 SecurityContext에 유저 정보 미리 담아두기
         User user = createUserWithAdminRole();
-        Authentication authentication = new UsernamePasswordAuthenticationToken(user.getId(), "", Collections.emptyList());
+        Authentication authentication = new UsernamePasswordAuthenticationToken(user.getId(), "",
+                Collections.emptyList());
         SecurityContextHolder.getContext().setAuthentication(authentication);
         given(userRepository.findByUsername(authentication.getName())).willReturn(Optional.of(user));
 
@@ -171,11 +177,12 @@ public class MessageControllerTest {
     @DisplayName("보낸 쪽지 삭제")
     public void deleteSenderMessageTest() throws Exception {
         // given
-        int id = 1;
+        Long id = 1L;
 
         // 테스트 코드 진행시 SecurityContext에 유저 정보 미리 담아두기
         User user = createUserWithAdminRole();
-        Authentication authentication = new UsernamePasswordAuthenticationToken(user.getId(), "", Collections.emptyList());
+        Authentication authentication = new UsernamePasswordAuthenticationToken(user.getId(), "",
+                Collections.emptyList());
         SecurityContextHolder.getContext().setAuthentication(authentication);
         given(userRepository.findByUsername(authentication.getName())).willReturn(Optional.of(user));
 

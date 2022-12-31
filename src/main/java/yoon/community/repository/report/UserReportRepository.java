@@ -5,10 +5,10 @@ import yoon.community.entity.report.UserReportHistory;
 
 import java.util.List;
 
-public interface UserReportRepository extends JpaRepository<UserReportHistory, Integer> {
-    boolean existsByReporterIdAndReportedUserId(int reporterId, int reportedUserId);
+public interface UserReportRepository extends JpaRepository<UserReportHistory, Long> {
+    boolean existsByReporterIdAndReportedUserId(Long reporterId, Long reportedUserId);
 
-    List<UserReportHistory> findByReportedUserId(int reportedId);
+    List<UserReportHistory> findByReportedUserId(Long reportedId);
 
-    void deleteAllByReportedUserId(int id);
+    void deleteAllByReportedUserId(Long id);
 }

@@ -56,7 +56,7 @@ public class BoardService {
     }
 
     @Transactional(readOnly = true)
-    public List<BoardSimpleDto> findAllBoards(Pageable pageable, int categoryId) {
+    public List<BoardSimpleDto> findAllBoards(Pageable pageable, Long categoryId) {
         Page<Board> boards = boardRepository.findAllByCategoryId(pageable, categoryId);
         List<BoardSimpleDto> boardSimpleDtoList = boards.stream()
                 .map(i -> new BoardSimpleDto().toDto(i))
@@ -65,14 +65,14 @@ public class BoardService {
     }
 
     @Transactional(readOnly = true)
-    public BoardResponseDto findBoard(int id) {
+    public BoardResponseDto findBoard(Long id) {
         Board board = boardRepository.findById(id).orElseThrow(BoardNotFoundException::new);
         User user = board.getUser();
         return BoardResponseDto.toDto(board, user.getNickname());
     }
 
     @Transactional
-    public String updateLikeOfBoard(int id, User user) {
+    public String updateLikeOfBoard(Long id, User user) {
         Board board = boardRepository.findById(id).orElseThrow(BoardNotFoundException::new);
         if (!hasLikeBoard(board, user)) {
             board.increaseLikeCount();
@@ -83,7 +83,7 @@ public class BoardService {
     }
 
     @Transactional
-    public String updateOfFavoriteBoard(int id, User user) {
+    public String updateOfFavoriteBoard(Long id, User user) {
         Board board = boardRepository.findById(id).orElseThrow(BoardNotFoundException::new);
         if (!hasFavoriteBoard(board, user)) {
             board.increaseFavoriteCount();
@@ -102,7 +102,7 @@ public class BoardService {
     }
 
     @Transactional
-    public BoardResponseDto editBoard(int id, BoardUpdateRequest req, User user) {
+    public BoardResponseDto editBoard(Long id, BoardUpdateRequest req, User user) {
         Board board = boardRepository.findById(id).orElseThrow(BoardNotFoundException::new);
         validateBoardOwner(user, board);
         Board.ImageUpdatedResult result = board.update(req);
@@ -112,7 +112,7 @@ public class BoardService {
     }
 
     @Transactional
-    public void deleteBoard(int id, User user) {
+    public void deleteBoard(Long id, User user) {
         Board board = boardRepository.findById(id).orElseThrow(BoardNotFoundException::new);
         validateBoardOwner(user, board);
         boardRepository.delete(board);

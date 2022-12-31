@@ -20,6 +20,7 @@ import java.util.Optional;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static yoon.community.factory.CategoryFactory.createCategory;
@@ -46,7 +47,7 @@ public class CategoryServiceTest {
         given(categoryRepository.findAllOrderByParentIdAscNullsFirstCategoryIdAsc()).willReturn(categories);
 
         // when
-        List<CategoryDto> result = categoryService.findAll();
+        List<CategoryDto> result = categoryService.findAllCategory();
 
         // then
         assertThat(result.size()).isEqualTo(1);
@@ -60,7 +61,7 @@ public class CategoryServiceTest {
         given(categoryRepository.findById(anyInt())).willReturn(Optional.of(createCategory()));
 
         // when
-        categoryService.create(req);
+        categoryService.createCategory(req);
 
         // then
         verify(categoryRepository).save(any());
@@ -73,7 +74,7 @@ public class CategoryServiceTest {
         given(categoryRepository.findById(anyInt())).willReturn(Optional.of(createCategory()));
 
         // when
-        categoryService.delete(anyInt());
+        categoryService.deleteCategory(anyInt());
 
         // then
         verify(categoryRepository).delete(any());

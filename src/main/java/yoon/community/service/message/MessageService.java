@@ -45,7 +45,7 @@ public class MessageService {
 
 
     @Transactional(readOnly = true)
-    public MessageDto receiveMessage(int id, User user) {
+    public MessageDto receiveMessage(Long id, User user) {
         Message message = messageRepository.findById(id).orElseThrow(MessageNotFoundException::new);
         validateReceiveMessage(user, message);
         return MessageDto.toDto(message);
@@ -70,7 +70,7 @@ public class MessageService {
     }
 
     @Transactional(readOnly = true)
-    public MessageDto sendMessage(int id, User user) {
+    public MessageDto sendMessage(Long id, User user) {
         Message message = messageRepository.findById(id).orElseThrow(MessageNotFoundException::new);
         validateSendMessage(user, message);
         return MessageDto.toDto(message);
@@ -86,7 +86,7 @@ public class MessageService {
     }
 
     @Transactional
-    public void deleteMessageByReceiver(int id, User user) {
+    public void deleteMessageByReceiver(Long id, User user) {
         Message message = messageRepository.findById(id).orElseThrow(MessageNotFoundException::new);
         processDeleteReceiverMessage(user, message);
         checkIsMessageDeletedBySenderAndReceiver(message);
@@ -107,7 +107,7 @@ public class MessageService {
     }
 
     @Transactional
-    public void deleteMessageBySender(int id, User user) {
+    public void deleteMessageBySender(Long id, User user) {
         Message message = messageRepository.findById(id).orElseThrow(MessageNotFoundException::new);
         processDeleteSenderMessage(user, message);
         checkIsMessageDeletedBySenderAndReceiver(message);

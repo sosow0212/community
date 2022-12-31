@@ -6,7 +6,7 @@ import yoon.community.entity.user.User;
 import java.util.List;
 import java.util.Optional;
 
-public interface UserRepository extends JpaRepository<User, Integer> {
+public interface UserRepository extends JpaRepository<User, Long> {
 
     User findByUsernameAndPassword(String username, String password);
     Optional<User> findByNickname(String nickname);

@@ -10,8 +10,8 @@ import yoon.community.entity.report.BoardReportHistory;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BoardReportResponse {
-    private int id;
-    private int reportedBoardId;
+    private Long id;
+    private Long reportedBoardId;
     private String content;
     private LocalDateTime createdAt;
 

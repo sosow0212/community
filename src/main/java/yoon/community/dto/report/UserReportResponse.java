@@ -12,7 +12,7 @@ import yoon.community.entity.user.User;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserReportResponse {
-    private int id;
+    private Long id;
     private UserEditRequestDto reportedUser;
     private String content;
     private LocalDateTime createdAt;

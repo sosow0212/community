@@ -26,7 +26,7 @@ public class AdminController {
     @ApiOperation(value = "신고된 유저 정지 해제", notes = "신고된 유저를 정지 해제시킵니다.")
     @ResponseStatus(HttpStatus.OK)
     @PostMapping("/admin/manages/users/{id}")
-    public Response unlockUser(@PathVariable int id) {
+    public Response unlockUser(@PathVariable Long id) {
         return Response.success(adminService.processUnlockUser(id));
     }
 
@@ -41,7 +41,7 @@ public class AdminController {
     @ApiOperation(value = "신고된 게시물 관리", notes = "신고된 게시물을 관리합니다.")
     @ResponseStatus(HttpStatus.OK)
     @PostMapping("/admin/manages/boards/{id}")
-    public Response unlockBoard(@PathVariable int id) {
+    public Response unlockBoard(@PathVariable Long id) {
         return Response.success(adminService.processUnlockBoard(id));
     }
 

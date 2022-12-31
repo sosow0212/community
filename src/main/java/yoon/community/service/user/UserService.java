@@ -38,7 +38,7 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public UserEditRequestDto findUser(int id) {
+    public UserEditRequestDto findUser(Long id) {
         return UserEditRequestDto.toDto(userRepository.findById(id).orElseThrow(MemberNotFoundException::new));
     }
 

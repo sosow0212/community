@@ -5,7 +5,7 @@ import yoon.community.entity.comment.Comment;
 
 import java.util.List;
 
-public interface CommentRepository extends JpaRepository<Comment, Integer> {
+public interface CommentRepository extends JpaRepository<Comment, Long> {
 
-    List<Comment> findByBoardId(int boardId);
+    List<Comment> findByBoardId(Long boardId);
 }

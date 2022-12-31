@@ -7,7 +7,7 @@ import yoon.community.entity.user.User;
 import java.util.List;
 import java.util.Optional;
 
-public interface MessageRepository extends JpaRepository<Message, Integer> {
+public interface MessageRepository extends JpaRepository<Message, Long> {
     List<Message> findAllByReceiverAndDeletedByReceiverFalseOrderByIdDesc(User user);
     List<Message> findAllBySenderAndDeletedBySenderFalseOrderByIdDesc(User user);
 }

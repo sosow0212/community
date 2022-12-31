@@ -24,6 +24,7 @@ import java.util.Optional;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static yoon.community.factory.BoardFactory.createBoard;
@@ -52,7 +53,7 @@ public class CommentServiceTest {
         // given
         List<Comment> commentList = new ArrayList<>();
         commentList.add(createComment());
-        CommentReadCondition commentReadCondition = new CommentReadCondition(anyInt());
+        CommentReadCondition commentReadCondition = new CommentReadCondition(anyLong());
         given(commentRepository.findByBoardId(commentReadCondition.getBoardId())).willReturn(commentList);
 
         // when
@@ -67,15 +68,15 @@ public class CommentServiceTest {
     void createTest() {
         // given
         Board board = createBoard();
-        CommentCreateRequest req = new CommentCreateRequest("content", board.getId());
-        given(boardRepository.findById(anyInt())).willReturn(Optional.of(board));
-        Comment comment = createComment();
+        board.setId(1L);
+        CommentCreateRequest req = new CommentCreateRequest(board.getId(), "content");
+        given(boardRepository.findById(anyLong())).willReturn(Optional.of(board));
 
         // when
         CommentDto result = commentService.createComment(req, createUser());
 
         // then
-        verify(commentRepository).save(any());
+        assertThat(result.getContent()).isEqualTo(req.getContent());
     }
 
     @Test
@@ -84,10 +85,10 @@ public class CommentServiceTest {
         // given
         User user = createUser();
         Comment comment = createComment(user);
-        given(commentRepository.findById(anyInt())).willReturn(Optional.of(comment));
+        given(commentRepository.findById(anyLong())).willReturn(Optional.of(comment));
 
         // when
-        commentService.deleteComment(anyInt(), user);
+        commentService.deleteComment(anyLong(), user);
 
         // then
         verify(commentRepository).delete(any());

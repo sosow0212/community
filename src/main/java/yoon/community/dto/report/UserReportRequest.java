@@ -13,13 +13,9 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserReportRequest {
-
-    // NotBlank 는 String형에서 사용할 수 있고,
-    // NotNull 은 정수형에 쓸 수 있다.
-
     @ApiModelProperty(value = "신고 당하는 사람 아이디", notes = "신고 당하는 사람 아이디를 입력해주세요.", required = true, example = "3")
     @NotNull(message = "신고할 유저의 아이디 입력해주세요.")
-    private int reportedUserId;
+    private Long reportedUserId;
 
     @ApiModelProperty(value = "신고 사유", notes = "신고 사유를 입력해주세요.", required = true, example = "Insulting")
     @NotBlank(message = "신고 사유를 입력하세요.")

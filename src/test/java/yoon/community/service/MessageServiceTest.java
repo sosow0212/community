@@ -64,10 +64,10 @@ public class MessageServiceTest {
         User user = createUser();
         Message message = createMessage();
         message.setReceiver(user);
-        given(messageRepository.findById(anyInt())).willReturn(Optional.of(message));
+        given(messageRepository.findById(anyLong())).willReturn(Optional.of(message));
 
         // when
-        MessageDto result = messageService.receiveMessage(anyInt(), user);
+        MessageDto result = messageService.receiveMessage(anyLong(), user);
 
         // then
         assertThat(result.getTitle()).isEqualTo("title");
@@ -96,10 +96,10 @@ public class MessageServiceTest {
         User user = createUser();
         Message message = createMessage();
         message.setSender(user);
-        given(messageRepository.findById(anyInt())).willReturn(Optional.of(message));
+        given(messageRepository.findById(anyLong())).willReturn(Optional.of(message));
 
         // when
-        MessageDto result = messageService.sendMessage(anyInt(), user);
+        MessageDto result = messageService.sendMessage(anyLong(), user);
 
         // then
         assertThat(result.getTitle()).isEqualTo("title");
@@ -112,10 +112,10 @@ public class MessageServiceTest {
         Message message = createMessage();
         User user = createUser();
         message.setReceiver(user);
-        given(messageRepository.findById(anyInt())).willReturn(Optional.of(message));
+        given(messageRepository.findById(anyLong())).willReturn(Optional.of(message));
 
         // when
-        messageService.deleteMessageByReceiver(anyInt(), user);
+        messageService.deleteMessageByReceiver(anyLong(), user);
 
         // then
         verify(messageRepository, never()).delete(any(Message.class));
@@ -128,10 +128,10 @@ public class MessageServiceTest {
         Message message = createMessage();
         User user = createUser();
         message.setSender(user);
-        given(messageRepository.findById(anyInt())).willReturn(Optional.of(message));
+        given(messageRepository.findById(anyLong())).willReturn(Optional.of(message));
 
         // when
-        messageService.deleteMessageBySender(anyInt(), user);
+        messageService.deleteMessageBySender(anyLong(), user);
 
         // then
         verify(messageRepository, never()).delete(any(Message.class));
@@ -147,10 +147,10 @@ public class MessageServiceTest {
         message.setSender(sender);
         message.setReceiver(receiver);
         message.setDeletedBySender(true);
-        given(messageRepository.findById(anyInt())).willReturn(Optional.of(message));
+        given(messageRepository.findById(anyLong())).willReturn(Optional.of(message));
 
         // when
-        messageService.deleteMessageByReceiver(anyInt(), receiver);
+        messageService.deleteMessageByReceiver(anyLong(), receiver);
 
         // then
         verify(messageRepository).delete(any(Message.class));

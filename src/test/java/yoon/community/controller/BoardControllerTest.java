@@ -130,7 +130,7 @@ public class BoardControllerTest {
     @DisplayName("개시물 단건 조회")
     public void findBoardTest() throws Exception {
         // given
-        int id = 1;
+        Long id = 1L;
 
         // when, then
         mockMvc.perform(
@@ -156,7 +156,7 @@ public class BoardControllerTest {
     @DisplayName("게시글 좋아요 및 취소")
     public void likeBoardTest() throws Exception {
         // given
-        int id = 1;
+        Long id = 1L;
 
         User user = createUserWithAdminRole();
         Authentication authentication = new UsernamePasswordAuthenticationToken(user.getId(), "", Collections.emptyList());
@@ -178,7 +178,7 @@ public class BoardControllerTest {
     @DisplayName("즐겨찾기 등록 및 취소")
     public void favoriteBoardTest() throws Exception {
         // given
-        int id = 1;
+        Long id = 1L;
 
         User user = createUserWithAdminRole();
         Authentication authentication = new UsernamePasswordAuthenticationToken(user.getId(), "", Collections.emptyList());

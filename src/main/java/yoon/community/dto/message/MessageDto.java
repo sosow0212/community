@@ -9,7 +9,7 @@ import yoon.community.entity.message.Message;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MessageDto {
-    private int id;
+    private Long id;
     private String title;
     private String content;
     private String senderName;

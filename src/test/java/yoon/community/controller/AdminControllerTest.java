@@ -64,7 +64,7 @@ public class AdminControllerTest {
     @DisplayName("신고된 유저 정지 해제")
     public void unlockUser() throws Exception {
         // given
-        int id = 1;
+        Long id = 1L;
 
         // when, then
         mockMvc.perform(
@@ -77,7 +77,7 @@ public class AdminControllerTest {
     @DisplayName("신고된 게시글 정지 해제")
     public void unlockBoard() throws Exception {
         // given
-        int id = 1;
+        Long id = 1L;
 
         // when, then
         mockMvc.perform(

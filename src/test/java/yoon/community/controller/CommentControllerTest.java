@@ -53,10 +53,11 @@ public class CommentControllerTest {
     @DisplayName("댓글 작성")
     public void createCommentTest() throws Exception {
         // given
-        CommentCreateRequest req = new CommentCreateRequest("content", 1);
+        CommentCreateRequest req = new CommentCreateRequest(1L, "content");
 
         User user = createUserWithAdminRole();
-        Authentication authentication = new UsernamePasswordAuthenticationToken(user.getId(), "", Collections.emptyList());
+        Authentication authentication = new UsernamePasswordAuthenticationToken(user.getId(), "",
+                Collections.emptyList());
         SecurityContextHolder.getContext().setAuthentication(authentication);
         given(userRepository.findByUsername(authentication.getName())).willReturn(Optional.of(user));
 
@@ -75,7 +76,7 @@ public class CommentControllerTest {
     @DisplayName("댓글 조회")
     public void findAllTest() throws Exception {
         // given
-        CommentReadCondition commentReadCondition = new CommentReadCondition(1);
+        CommentReadCondition commentReadCondition = new CommentReadCondition(1L);
 
         // when, then
         mockMvc.perform(
@@ -91,10 +92,11 @@ public class CommentControllerTest {
     @DisplayName("댓글 삭제")
     public void deleteTest() throws Exception {
         // given
-        int id = 1;
+        Long id = 1L;
 
         User user = createUserWithAdminRole();
-        Authentication authentication = new UsernamePasswordAuthenticationToken(user.getId(), "", Collections.emptyList());
+        Authentication authentication = new UsernamePasswordAuthenticationToken(user.getId(), "",
+                Collections.emptyList());
         SecurityContextHolder.getContext().setAuthentication(authentication);
         given(userRepository.findByUsername(authentication.getName())).willReturn(Optional.of(user));
 

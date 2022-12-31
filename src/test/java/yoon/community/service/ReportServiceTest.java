@@ -55,11 +55,11 @@ public class ReportServiceTest {
     void reportUserTest() {
         // given
         User reporter = createUser();
-        reporter.setId(1);
+        reporter.setId(1L);
         User reportedUser = createUser2();
-        reportedUser.setId(2);
+        reportedUser.setId(2L);
         UserReportRequest req = new UserReportRequest(reportedUser.getId(), "별로입니다.");
-        UserReportHistory userReportHistory = new UserReportHistory(1, reporter.getId(), reportedUser.getId(),
+        UserReportHistory userReportHistory = new UserReportHistory(1L, reporter.getId(), reportedUser.getId(),
                 req.getContent());
 
         given(userReportRepository.existsByReporterIdAndReportedUserId(reporter.getId(),
@@ -82,12 +82,12 @@ public class ReportServiceTest {
     void reportBoardTest() {
         // given
         User reporter = createUser();
-        reporter.setId(1);
+        reporter.setId(1L);
         User reportedBoardOwner = createUser2();
-        reportedBoardOwner.setId(2);
+        reportedBoardOwner.setId(2L);
         Board reportedBoard = createBoard(reportedBoardOwner);
         BoardReportRequest req = new BoardReportRequest(reportedBoard.getId(), "별로입니다.");
-        BoardReportHistory boardReportHistory = new BoardReportHistory(1, reporter.getId(), reportedBoard.getId(),
+        BoardReportHistory boardReportHistory = new BoardReportHistory(1L, reporter.getId(), reportedBoard.getId(),
                 "content");
 
         given(boardRepository.findById(req.getReportedBoardId())).willReturn(Optional.of(reportedBoard));
