@@ -21,7 +21,7 @@ import yoon.community.entity.common.EntityDate;
 public class User extends EntityDate {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     @Column(nullable = false, unique = true)
     private String username;
@@ -65,7 +65,7 @@ public class User extends EntityDate {
         this.reported = false;
     }
 
-    public boolean isReportMySelf(int id) {
+    public boolean isReportMySelf(Long id) {
         return this.id == id;
     }
 

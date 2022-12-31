@@ -19,7 +19,7 @@ public class Comment extends EntityDate {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     @Column(nullable = false)
     @Lob

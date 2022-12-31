@@ -25,7 +25,7 @@ import static java.util.stream.Collectors.toList;
 public class Board extends EntityDate {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     @Column(nullable = false)
     private String title;

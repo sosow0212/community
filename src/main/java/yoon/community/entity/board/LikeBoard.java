@@ -20,7 +20,7 @@ import java.time.LocalDate;
 public class LikeBoard extends EntityDate {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "board_id", nullable = false)
