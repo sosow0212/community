@@ -8,11 +8,11 @@ import static yoon.community.factory.UserFactory.createUser2;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import yoon.community.entity.message.Message;
-import yoon.community.entity.user.User;
+import yoon.community.entity.member.Member;
 
 public class MessageTest {
-    User sender = createUser();
-    User receiver = createUser2();
+    Member sender = createUser();
+    Member receiver = createUser2();
 
     @Test
     @DisplayName("deleteBySender 테스트")

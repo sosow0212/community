@@ -7,7 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 import yoon.community.dto.board.BoardUpdateRequest;
 import yoon.community.entity.category.Category;
 import yoon.community.entity.common.EntityDate;
-import yoon.community.entity.user.User;
+import yoon.community.entity.member.Member;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -37,7 +37,7 @@ public class Board extends EntityDate {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    private User user;
+    private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", nullable = false)
@@ -56,10 +56,10 @@ public class Board extends EntityDate {
     @Column(nullable = false)
     private boolean reported;
 
-    public Board(String title, String content, User user, Category category, List<Image> images) {
+    public Board(String title, String content, Member member, Category category, List<Image> images) {
         this.title = title;
         this.content = content;
-        this.user = user;
+        this.member = member;
         this.liked = 0;
         this.favorited = 0;
         this.reported = false;

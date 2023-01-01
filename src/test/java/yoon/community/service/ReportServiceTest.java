@@ -9,17 +9,16 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import yoon.community.dto.report.BoardReportRequest;
 import yoon.community.dto.report.BoardReportResponse;
-import yoon.community.dto.report.UserReportRequest;
-import yoon.community.dto.report.UserReportResponse;
+import yoon.community.dto.report.MemberReportRequestDto;
+import yoon.community.dto.report.MemberReportResponseDto;
 import yoon.community.entity.board.Board;
 import yoon.community.entity.report.BoardReportHistory;
-import yoon.community.entity.report.UserReportHistory;
-import yoon.community.entity.user.Authority;
-import yoon.community.entity.user.User;
+import yoon.community.entity.report.MemberReportHistory;
+import yoon.community.entity.member.Member;
 import yoon.community.repository.board.BoardRepository;
 import yoon.community.repository.report.BoardReportRepository;
-import yoon.community.repository.report.UserReportRepository;
-import yoon.community.repository.user.UserRepository;
+import yoon.community.repository.report.MemberReportRepository;
+import yoon.community.repository.member.MemberRepository;
 import yoon.community.service.report.ReportService;
 
 import java.util.List;
@@ -27,7 +26,6 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.BDDMockito.given;
 import static yoon.community.factory.BoardFactory.createBoard;
 import static yoon.community.factory.UserFactory.createUser;
@@ -42,9 +40,9 @@ public class ReportServiceTest {
     @Mock
     BoardReportRepository boardReportRepository;
     @Mock
-    UserReportRepository userReportRepository;
+    MemberReportRepository memberReportRepository;
     @Mock
-    UserRepository userRepository;
+    MemberRepository memberRepository;
     @Mock
     BoardRepository boardRepository;
 
@@ -54,25 +52,25 @@ public class ReportServiceTest {
     @DisplayName("reportUser 서비스 테스트")
     void reportUserTest() {
         // given
-        User reporter = createUser();
+        Member reporter = createUser();
         reporter.setId(1L);
-        User reportedUser = createUser2();
-        reportedUser.setId(2L);
-        UserReportRequest req = new UserReportRequest(reportedUser.getId(), "별로입니다.");
-        UserReportHistory userReportHistory = new UserReportHistory(1L, reporter.getId(), reportedUser.getId(),
+        Member reportedMember = createUser2();
+        reportedMember.setId(2L);
+        MemberReportRequestDto req = new MemberReportRequestDto(reportedMember.getId(), "별로입니다.");
+        MemberReportHistory memberReportHistory = new MemberReportHistory(1L, reporter.getId(), reportedMember.getId(),
                 req.getContent());
 
-        given(userReportRepository.existsByReporterIdAndReportedUserId(reporter.getId(),
+        given(memberReportRepository.existsByReporterIdAndReportedUserId(reporter.getId(),
                 req.getReportedUserId())).willReturn(false);
-        given(userRepository.findById(req.getReportedUserId())).willReturn(Optional.of(reportedUser));
-        given(userReportRepository.findByReportedUserId(req.getReportedUserId())).willReturn(
-                List.of(userReportHistory));
+        given(memberRepository.findById(req.getReportedUserId())).willReturn(Optional.of(reportedMember));
+        given(memberReportRepository.findByReportedUserId(req.getReportedUserId())).willReturn(
+                List.of(memberReportHistory));
 
         // when
-        UserReportResponse result = reportService.reportUser(reporter, req);
+        MemberReportResponseDto result = reportService.reportUser(reporter, req);
 
         // then
-        assertThat(result.getReportedUser().getName()).isEqualTo(reportedUser.getName());
+        assertThat(result.getReportedUser().getName()).isEqualTo(reportedMember.getName());
 
     }
 
@@ -81,9 +79,9 @@ public class ReportServiceTest {
     @DisplayName("reportBoard 서비스 테스트")
     void reportBoardTest() {
         // given
-        User reporter = createUser();
+        Member reporter = createUser();
         reporter.setId(1L);
-        User reportedBoardOwner = createUser2();
+        Member reportedBoardOwner = createUser2();
         reportedBoardOwner.setId(2L);
         Board reportedBoard = createBoard(reportedBoardOwner);
         BoardReportRequest req = new BoardReportRequest(reportedBoard.getId(), "별로입니다.");

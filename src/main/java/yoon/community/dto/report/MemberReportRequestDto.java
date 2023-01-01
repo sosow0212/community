@@ -12,7 +12,7 @@ import javax.validation.constraints.NotNull;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserReportRequest {
+public class MemberReportRequestDto {
     @ApiModelProperty(value = "신고 당하는 사람 아이디", notes = "신고 당하는 사람 아이디를 입력해주세요.", required = true, example = "3")
     @NotNull(message = "신고할 유저의 아이디 입력해주세요.")
     private Long reportedUserId;

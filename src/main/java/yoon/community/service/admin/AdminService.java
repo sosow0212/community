@@ -5,53 +5,53 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import yoon.community.dto.board.BoardSimpleDto;
-import yoon.community.dto.user.UserEditRequestDto;
+import yoon.community.dto.member.MemberEditRequestDto;
 import yoon.community.entity.board.Board;
-import yoon.community.entity.user.User;
+import yoon.community.entity.member.Member;
 import yoon.community.exception.BoardNotFoundException;
 import yoon.community.exception.MemberNotEqualsException;
 import yoon.community.exception.NotReportedException;
 import yoon.community.repository.board.BoardRepository;
 import yoon.community.repository.report.BoardReportRepository;
-import yoon.community.repository.report.UserReportRepository;
-import yoon.community.repository.user.UserRepository;
+import yoon.community.repository.report.MemberReportRepository;
+import yoon.community.repository.member.MemberRepository;
 
 import java.util.List;
 
 @RequiredArgsConstructor
 @Service
 public class AdminService {
-    private final UserRepository userRepository;
+    private final MemberRepository memberRepository;
     private final BoardRepository boardRepository;
-    private final UserReportRepository userReportRepository;
+    private final MemberReportRepository memberReportRepository;
     private final BoardReportRepository boardReportRepository;
 
     @Transactional(readOnly = true)
-    public List<UserEditRequestDto> findReportedUsers() {
-        List<User> users = userRepository.findByReportedIsTrue();
-        List<UserEditRequestDto> usersDto = users.stream()
-                .map(user -> new UserEditRequestDto().toDto(user))
+    public List<MemberEditRequestDto> findReportedUsers() {
+        List<Member> members = memberRepository.findByReportedIsTrue();
+        List<MemberEditRequestDto> usersDto = members.stream()
+                .map(user -> new MemberEditRequestDto().toDto(user))
                 .collect(Collectors.toList());
         return usersDto;
     }
 
     @Transactional
-    public UserEditRequestDto processUnlockUser(Long id) {
-        User user = userRepository.findById(id).orElseThrow(MemberNotEqualsException::new);
-        validateUnlockUser(user);
-        deleteUnlockUser(user, id);
-        return UserEditRequestDto.toDto(user);
+    public MemberEditRequestDto processUnlockUser(Long id) {
+        Member member = memberRepository.findById(id).orElseThrow(MemberNotEqualsException::new);
+        validateUnlockUser(member);
+        deleteUnlockUser(member, id);
+        return MemberEditRequestDto.toDto(member);
     }
 
-    private void validateUnlockUser(User user) {
-        if (!user.isReported()) {
+    private void validateUnlockUser(Member member) {
+        if (!member.isReported()) {
             throw new NotReportedException();
         }
     }
 
-    private void deleteUnlockUser(User user, Long id) {
-        user.unlockReport();
-        userReportRepository.deleteAllByReportedUserId(id);
+    private void deleteUnlockUser(Member member, Long id) {
+        member.unlockReport();
+        memberReportRepository.deleteAllByReportedUserId(id);
     }
 
 

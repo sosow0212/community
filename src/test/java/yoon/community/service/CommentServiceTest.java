@@ -11,10 +11,10 @@ import yoon.community.dto.comment.CommentDto;
 import yoon.community.dto.comment.CommentReadCondition;
 import yoon.community.entity.board.Board;
 import yoon.community.entity.comment.Comment;
-import yoon.community.entity.user.User;
+import yoon.community.entity.member.Member;
 import yoon.community.repository.board.BoardRepository;
 import yoon.community.repository.commnet.CommentRepository;
-import yoon.community.repository.user.UserRepository;
+import yoon.community.repository.member.MemberRepository;
 import yoon.community.service.comment.CommentService;
 
 import java.util.ArrayList;
@@ -23,7 +23,6 @@ import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
@@ -41,7 +40,7 @@ public class CommentServiceTest {
     CommentRepository commentRepository;
 
     @Mock
-    UserRepository userRepository;
+    MemberRepository memberRepository;
 
     @Mock
     BoardRepository boardRepository;
@@ -83,12 +82,12 @@ public class CommentServiceTest {
     @DisplayName("delete 서비스 테스트")
     void deleteTest() {
         // given
-        User user = createUser();
-        Comment comment = createComment(user);
+        Member member = createUser();
+        Comment comment = createComment(member);
         given(commentRepository.findById(anyLong())).willReturn(Optional.of(comment));
 
         // when
-        commentService.deleteComment(anyLong(), user);
+        commentService.deleteComment(anyLong(), member);
 
         // then
         verify(commentRepository).delete(any());

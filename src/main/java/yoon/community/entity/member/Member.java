@@ -1,15 +1,14 @@
-package yoon.community.entity.user;
+package yoon.community.entity.member;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import lombok.Setter;
-import yoon.community.dto.user.UserEditRequestDto;
+import yoon.community.dto.member.MemberEditRequestDto;
 import yoon.community.entity.common.EntityDate;
 
 @Getter
@@ -18,7 +17,7 @@ import yoon.community.entity.common.EntityDate;
 @NoArgsConstructor
 @Entity
 @Builder
-public class User extends EntityDate {
+public class Member extends EntityDate {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -43,7 +42,7 @@ public class User extends EntityDate {
     private boolean reported;
 
     @Builder
-    public User(String username, String password, Authority authority) {
+    public Member(String username, String password, Authority authority) {
         this.username = username;
         this.password = password;
         this.name = name;
@@ -56,7 +55,7 @@ public class User extends EntityDate {
         return this.reported;
     }
 
-    public void editUser(UserEditRequestDto req) {
+    public void editUser(MemberEditRequestDto req) {
         name = req.getName();
         nickname = req.getNickname();
     }

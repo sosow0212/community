@@ -6,12 +6,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import yoon.community.dto.message.MessageCreateRequest;
 import yoon.community.dto.message.MessageDto;
 import yoon.community.entity.message.Message;
-import yoon.community.entity.user.User;
+import yoon.community.entity.member.Member;
 import yoon.community.repository.message.MessageRepository;
-import yoon.community.repository.user.UserRepository;
+import yoon.community.repository.member.MemberRepository;
 import yoon.community.service.message.MessageService;
 
 import java.util.ArrayList;
@@ -36,7 +35,7 @@ public class MessageServiceTest {
     MessageRepository messageRepository;
 
     @Mock
-    UserRepository userRepository;
+    MemberRepository memberRepository;
 
 
 //    @Test
@@ -61,13 +60,13 @@ public class MessageServiceTest {
     @DisplayName("receiveMessage 서비스 테스트")
     void receiveMessageTest() {
         // given
-        User user = createUser();
+        Member member = createUser();
         Message message = createMessage();
-        message.setReceiver(user);
+        message.setReceiver(member);
         given(messageRepository.findById(anyLong())).willReturn(Optional.of(message));
 
         // when
-        MessageDto result = messageService.receiveMessage(anyLong(), user);
+        MessageDto result = messageService.receiveMessage(anyLong(), member);
 
         // then
         assertThat(result.getTitle()).isEqualTo("title");
@@ -93,13 +92,13 @@ public class MessageServiceTest {
     @DisplayName("sendMessage 서비스 테스트")
     void sendMessageTest() {
         // given
-        User user = createUser();
+        Member member = createUser();
         Message message = createMessage();
-        message.setSender(user);
+        message.setSender(member);
         given(messageRepository.findById(anyLong())).willReturn(Optional.of(message));
 
         // when
-        MessageDto result = messageService.sendMessage(anyLong(), user);
+        MessageDto result = messageService.sendMessage(anyLong(), member);
 
         // then
         assertThat(result.getTitle()).isEqualTo("title");
@@ -110,12 +109,12 @@ public class MessageServiceTest {
     void deleteMessageByReceiverNotDeletableTest() {
         // given
         Message message = createMessage();
-        User user = createUser();
-        message.setReceiver(user);
+        Member member = createUser();
+        message.setReceiver(member);
         given(messageRepository.findById(anyLong())).willReturn(Optional.of(message));
 
         // when
-        messageService.deleteMessageByReceiver(anyLong(), user);
+        messageService.deleteMessageByReceiver(anyLong(), member);
 
         // then
         verify(messageRepository, never()).delete(any(Message.class));
@@ -126,12 +125,12 @@ public class MessageServiceTest {
     void deleteMessageBySenderNotDeletableTest() {
         // given
         Message message = createMessage();
-        User user = createUser();
-        message.setSender(user);
+        Member member = createUser();
+        message.setSender(member);
         given(messageRepository.findById(anyLong())).willReturn(Optional.of(message));
 
         // when
-        messageService.deleteMessageBySender(anyLong(), user);
+        messageService.deleteMessageBySender(anyLong(), member);
 
         // then
         verify(messageRepository, never()).delete(any(Message.class));
@@ -141,8 +140,8 @@ public class MessageServiceTest {
     @DisplayName("deleteMessage 서비스 테스트")
     void deleteMessageTest() {
         // given
-        User receiver = createUser();
-        User sender = createUser2();
+        Member receiver = createUser();
+        Member sender = createUser2();
         Message message = createMessage();
         message.setSender(sender);
         message.setReceiver(receiver);

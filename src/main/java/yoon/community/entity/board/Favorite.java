@@ -4,7 +4,7 @@ import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import yoon.community.entity.common.EntityDate;
-import yoon.community.entity.user.User;
+import yoon.community.entity.member.Member;
 
 import javax.persistence.*;
 
@@ -27,14 +27,14 @@ public class Favorite extends EntityDate {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    private User user;
+    private Member member;
 
     @Column(nullable = false)
     private boolean status; // true = 즐겨찾기, false = 즐겨찾기 취소
 
-    public Favorite(Board board, User user) {
+    public Favorite(Board board, Member member) {
         this.board = board;
-        this.user = user;
+        this.member = member;
         this.status = true;
     }
 }

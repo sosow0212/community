@@ -10,14 +10,13 @@ import yoon.community.dto.comment.CommentDto;
 import yoon.community.dto.comment.CommentReadCondition;
 import yoon.community.entity.board.Board;
 import yoon.community.entity.comment.Comment;
-import yoon.community.entity.user.User;
+import yoon.community.entity.member.Member;
 import yoon.community.exception.BoardNotFoundException;
 import yoon.community.exception.CommentNotFoundException;
 import yoon.community.exception.MemberNotEqualsException;
 import yoon.community.repository.board.BoardRepository;
 import yoon.community.repository.commnet.CommentRepository;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -37,22 +36,22 @@ public class CommentService {
     }
 
     @Transactional
-    public CommentDto createComment(CommentCreateRequest req, User user) {
+    public CommentDto createComment(CommentCreateRequest req, Member member) {
         Board board = boardRepository.findById(req.getBoardId()).orElseThrow(BoardNotFoundException::new);
-        Comment comment = new Comment(req.getContent(), user, board);
+        Comment comment = new Comment(req.getContent(), member, board);
         commentRepository.save(comment);
         return new CommentDto().toDto(comment);
     }
 
     @Transactional
-    public void deleteComment(Long id, User user) {
+    public void deleteComment(Long id, Member member) {
         Comment comment = commentRepository.findById(id).orElseThrow(CommentNotFoundException::new);
-        validateDeleteComment(comment, user);
+        validateDeleteComment(comment, member);
         commentRepository.delete(comment);
     }
 
-    private void validateDeleteComment(Comment comment, User user) {
-        if (!comment.isOwnComment(user)) {
+    private void validateDeleteComment(Comment comment, Member member) {
+        if (!comment.isOwnComment(member)) {
             throw new MemberNotEqualsException();
         }
     }

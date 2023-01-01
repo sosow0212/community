@@ -9,7 +9,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import yoon.community.repository.user.UserRepository;
+import yoon.community.entity.member.Member;
+import yoon.community.repository.member.MemberRepository;
 
 import java.util.Collections;
 
@@ -17,7 +18,7 @@ import java.util.Collections;
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
 
-    private final UserRepository memberRepository;
+    private final MemberRepository memberRepository;
 
     @Override
     @Transactional
@@ -28,7 +29,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     }
 
     // DB 에 User 값이 존재한다면 UserDetails 객체로 만들어서 리턴
-    private UserDetails createUserDetails(yoon.community.entity.user.User member) {
+    private UserDetails createUserDetails(Member member) {
         GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(member.getAuthority().toString());
 
         return new User(

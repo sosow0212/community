@@ -9,9 +9,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import yoon.community.dto.message.MessageCreateRequest;
-import yoon.community.entity.user.User;
+import yoon.community.entity.member.Member;
 import yoon.community.exception.MemberNotFoundException;
-import yoon.community.repository.user.UserRepository;
+import yoon.community.repository.member.MemberRepository;
 import yoon.community.response.Response;
 import yoon.community.service.message.MessageService;
 
@@ -24,13 +24,13 @@ import javax.validation.Valid;
 public class MessageController {
 
     private final MessageService messageService;
-    private final UserRepository userRepository;
+    private final MemberRepository memberRepository;
 
     @ApiOperation(value = "편지 작성", notes = "편지 보내기")
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/messages")
     public Response createMessage(@Valid @RequestBody MessageCreateRequest req) {
-        User sender = getPrincipal();
+        Member sender = getPrincipal();
         return Response.success(messageService.createMessage(sender, req));
     }
 
@@ -38,40 +38,40 @@ public class MessageController {
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/messages/receiver")
     public Response receiveMessages() {
-        User user = getPrincipal();
-        return Response.success(messageService.receiveMessages(user));
+        Member member = getPrincipal();
+        return Response.success(messageService.receiveMessages(member));
     }
 
     @ApiOperation(value = "받은 쪽지 중 한 개 확인", notes = "받은 편지 중 하나를 확인")
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/messages/receiver/{id}")
     public Response receiveMessage(@ApiParam(value = "쪽지 id", required = true) @PathVariable Long id) {
-        User user = getPrincipal();
-        return Response.success(messageService.receiveMessage(id, user));
+        Member member = getPrincipal();
+        return Response.success(messageService.receiveMessage(id, member));
     }
 
     @ApiOperation(value = "보낸 쪽지 전부 확인", notes = "보낸 쪽지함 확인")
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/messages/sender")
     public Response sendMessages() {
-        User user = getPrincipal();
-        return Response.success(messageService.sendMessages(user));
+        Member member = getPrincipal();
+        return Response.success(messageService.sendMessages(member));
     }
 
     @ApiOperation(value = "보낸 쪽지 중 한 개 확인", notes = "보낸 쪽지 중 하나를 확인")
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/messages/sender/{id}")
     public Response sendMessage(@ApiParam(value = "쪽지 id", required = true) @PathVariable Long id) {
-        User user = getPrincipal();
-        return Response.success(messageService.sendMessage(id, user));
+        Member member = getPrincipal();
+        return Response.success(messageService.sendMessage(id, member));
     }
 
     @ApiOperation(value = "받은 쪽지 삭제", notes = "받은 쪽지 삭제하기")
     @ResponseStatus(HttpStatus.OK)
     @DeleteMapping("/messages/receiver/{id}")
     public Response deleteReceiveMessage(@ApiParam(value = "쪽지 id", required = true) @PathVariable Long id) {
-        User user = getPrincipal();
-        messageService.deleteMessageByReceiver(id, user);
+        Member member = getPrincipal();
+        messageService.deleteMessageByReceiver(id, member);
         return Response.success();
     }
 
@@ -79,14 +79,14 @@ public class MessageController {
     @ResponseStatus(HttpStatus.OK)
     @DeleteMapping("/messages/sender/{id}")
     public Response deleteSendMessage(@ApiParam(value = "쪽지 id", required = true) @PathVariable Long id) {
-        User user = getPrincipal();
-        messageService.deleteMessageBySender(id, user);
+        Member member = getPrincipal();
+        messageService.deleteMessageBySender(id, member);
         return Response.success();
     }
 
-    private User getPrincipal() {
+    private Member getPrincipal() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = userRepository.findByUsername(authentication.getName()).orElseThrow(MemberNotFoundException::new);
-        return user;
+        Member member = memberRepository.findByUsername(authentication.getName()).orElseThrow(MemberNotFoundException::new);
+        return member;
     }
 }

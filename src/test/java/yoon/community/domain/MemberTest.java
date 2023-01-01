@@ -5,60 +5,60 @@ import static yoon.community.factory.UserFactory.createUser;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import yoon.community.dto.user.UserEditRequestDto;
-import yoon.community.entity.user.User;
+import yoon.community.dto.member.MemberEditRequestDto;
+import yoon.community.entity.member.Member;
 
-public class UserTest {
+public class MemberTest {
     @Test
     @DisplayName("신고처리 테스트")
     public void setStatusIsBeingReportedTest() {
         // given
-        User user = createUser();
+        Member member = createUser();
 
         // when
-        user.setStatusIsBeingReported();
+        member.setStatusIsBeingReported();
 
         // then
-        assertThat(user.isReported()).isEqualTo(true);
+        assertThat(member.isReported()).isEqualTo(true);
     }
 
     @Test
     @DisplayName("정지 해제 테스트")
     public void unlockReportTest() {
         // given
-        User user = createUser();
-        user.setStatusIsBeingReported();
+        Member member = createUser();
+        member.setStatusIsBeingReported();
 
         // when
-        user.unlockReport();
+        member.unlockReport();
 
         // then
-        assertThat(user.isReported()).isEqualTo(false);
+        assertThat(member.isReported()).isEqualTo(false);
     }
 
     @Test
     @DisplayName("유저 수정 테스트")
     public void editUserTest() {
         // given
-        User user = createUser();
-        User editedUser = createUser();
-        UserEditRequestDto req = new UserEditRequestDto("이름 수정", "닉네임 수정");
+        Member member = createUser();
+        Member editedMember = createUser();
+        MemberEditRequestDto req = new MemberEditRequestDto("이름 수정", "닉네임 수정");
 
         // when
-        editedUser.editUser(req);
+        editedMember.editUser(req);
 
         // then
-        assertThat(user.equals(editedUser)).isEqualTo(false);
+        assertThat(member.equals(editedMember)).isEqualTo(false);
     }
 
     @Test
     @DisplayName("셀프 신고 메서드 테스트")
     public void isReportMySelfTest() {
         // given
-        User user = createUser();
+        Member member = createUser();
 
         // when
-        boolean result = user.isReportMySelf(user.getId());
+        boolean result = member.isReportMySelf(member.getId());
 
         // then
         assertThat(result).isEqualTo(true);

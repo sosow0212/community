@@ -55,14 +55,14 @@ public class AdminController {
     @ApiOperation(value = "방문자 수 조회", notes = "방문자 수를 조회합니다.")
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/admin/manages/users/count")
-    public Response manageUserCount() {
+    public Response getMemberVisitedCount() {
         return null;
     }
 
     @ApiOperation(value = "게시글 조회수 관리", notes = "게시글 순위를 검색합니다.")
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/admin/manage/boards/count")
-    public Response manageBoardsCount() {
+    public Response getBoardVisitedCount() {
         return null;
     }
 }

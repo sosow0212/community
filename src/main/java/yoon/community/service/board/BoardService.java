@@ -12,7 +12,7 @@ import yoon.community.entity.board.Favorite;
 import yoon.community.entity.board.Image;
 import yoon.community.entity.board.LikeBoard;
 import yoon.community.entity.category.Category;
-import yoon.community.entity.user.User;
+import yoon.community.entity.member.Member;
 import yoon.community.exception.BoardNotFoundException;
 import yoon.community.exception.CategoryNotFoundException;
 import yoon.community.exception.FavoriteNotFoundException;
@@ -45,12 +45,12 @@ public class BoardService {
     private final CategoryRepository categoryRepository;
 
     @Transactional
-    public BoardCreateResponse createBoard(BoardCreateRequest req, int categoryId, User user) {
+    public BoardCreateResponse createBoard(BoardCreateRequest req, int categoryId, Member member) {
         List<Image> images = req.getImages().stream()
                 .map(i -> new Image(i.getOriginalFilename()))
                 .collect(toList());
         Category category = categoryRepository.findById(categoryId).orElseThrow(CategoryNotFoundException::new);
-        Board board = boardRepository.save(new Board(req.getTitle(), req.getContent(), user, category, images));
+        Board board = boardRepository.save(new Board(req.getTitle(), req.getContent(), member, category, images));
         uploadImages(board.getImages(), req.getImages());
         return new BoardCreateResponse(board.getId(), board.getTitle(), board.getContent());
     }
@@ -67,30 +67,30 @@ public class BoardService {
     @Transactional(readOnly = true)
     public BoardResponseDto findBoard(Long id) {
         Board board = boardRepository.findById(id).orElseThrow(BoardNotFoundException::new);
-        User user = board.getUser();
-        return BoardResponseDto.toDto(board, user.getNickname());
+        Member member = board.getMember();
+        return BoardResponseDto.toDto(board, member.getNickname());
     }
 
     @Transactional
-    public String updateLikeOfBoard(Long id, User user) {
+    public String updateLikeOfBoard(Long id, Member member) {
         Board board = boardRepository.findById(id).orElseThrow(BoardNotFoundException::new);
-        if (!hasLikeBoard(board, user)) {
+        if (!hasLikeBoard(board, member)) {
             board.increaseLikeCount();
-            return createLikeBoard(board, user);
+            return createLikeBoard(board, member);
         }
         board.decreaseLikeCount();
-        return removeLikeBoard(board, user);
+        return removeLikeBoard(board, member);
     }
 
     @Transactional
-    public String updateOfFavoriteBoard(Long id, User user) {
+    public String updateOfFavoriteBoard(Long id, Member member) {
         Board board = boardRepository.findById(id).orElseThrow(BoardNotFoundException::new);
-        if (!hasFavoriteBoard(board, user)) {
+        if (!hasFavoriteBoard(board, member)) {
             board.increaseFavoriteCount();
-            return createFavoriteBoard(board, user);
+            return createFavoriteBoard(board, member);
         }
         board.decreaseFavoriteCount();
-        return removeFavoriteBoard(board, user);
+        return removeFavoriteBoard(board, member);
     }
 
     @Transactional(readOnly = true)
@@ -102,19 +102,19 @@ public class BoardService {
     }
 
     @Transactional
-    public BoardResponseDto editBoard(Long id, BoardUpdateRequest req, User user) {
+    public BoardResponseDto editBoard(Long id, BoardUpdateRequest req, Member member) {
         Board board = boardRepository.findById(id).orElseThrow(BoardNotFoundException::new);
-        validateBoardOwner(user, board);
+        validateBoardOwner(member, board);
         Board.ImageUpdatedResult result = board.update(req);
         uploadImages(result.getAddedImages(), result.getAddedImageFiles());
         deleteImages(result.getDeletedImages());
-        return BoardResponseDto.toDto(board, user.getNickname());
+        return BoardResponseDto.toDto(board, member.getNickname());
     }
 
     @Transactional
-    public void deleteBoard(Long id, User user) {
+    public void deleteBoard(Long id, Member member) {
         Board board = boardRepository.findById(id).orElseThrow(BoardNotFoundException::new);
-        validateBoardOwner(user, board);
+        validateBoardOwner(member, board);
         boardRepository.delete(board);
     }
 
@@ -136,45 +136,45 @@ public class BoardService {
         images.forEach(i -> fileService.delete(i.getUniqueName()));
     }
 
-    public void validateBoardOwner(User user, Board board) {
-        if (!user.equals(board.getUser())) {
+    public void validateBoardOwner(Member member, Board board) {
+        if (!member.equals(board.getMember())) {
             throw new MemberNotEqualsException();
         }
     }
 
-    public String createLikeBoard(Board board, User user) {
-        LikeBoard likeBoard = new LikeBoard(board, user); // true 처리
+    public String createLikeBoard(Board board, Member member) {
+        LikeBoard likeBoard = new LikeBoard(board, member); // true 처리
         likeBoardRepository.save(likeBoard);
         return SUCCESS_LIKE_BOARD;
     }
 
-    public String removeLikeBoard(Board board, User user) {
-        LikeBoard likeBoard = likeBoardRepository.findByBoardAndUser(board, user).orElseThrow(() -> {
+    public String removeLikeBoard(Board board, Member member) {
+        LikeBoard likeBoard = likeBoardRepository.findByBoardAndUser(board, member).orElseThrow(() -> {
             throw new IllegalArgumentException("'좋아요' 기록을 찾을 수 없습니다.");
         });
         likeBoardRepository.delete(likeBoard);
         return SUCCESS_UNLIKE_BOARD;
     }
 
-    public boolean hasLikeBoard(Board board, User user) {
-        return likeBoardRepository.findByBoardAndUser(board, user).isPresent();
+    public boolean hasLikeBoard(Board board, Member member) {
+        return likeBoardRepository.findByBoardAndUser(board, member).isPresent();
     }
 
-    public String createFavoriteBoard(Board board, User user) {
-        Favorite favorite = new Favorite(board, user); // true 처리
+    public String createFavoriteBoard(Board board, Member member) {
+        Favorite favorite = new Favorite(board, member); // true 처리
         favoriteRepository.save(favorite);
         return SUCCESS_FAVORITE_BOARD;
     }
 
-    public String removeFavoriteBoard(Board board, User user) {
-        Favorite favorite = favoriteRepository.findByBoardAndUser(board, user)
+    public String removeFavoriteBoard(Board board, Member member) {
+        Favorite favorite = favoriteRepository.findByBoardAndUser(board, member)
                 .orElseThrow(FavoriteNotFoundException::new);
         favoriteRepository.delete(favorite);
         return SUCCESS_UNFAVORITE_BOARD;
     }
 
-    public boolean hasFavoriteBoard(Board board, User user) {
-        return favoriteRepository.findByBoardAndUser(board, user).isPresent();
+    public boolean hasFavoriteBoard(Board board, Member member) {
+        return favoriteRepository.findByBoardAndUser(board, member).isPresent();
     }
 }
 

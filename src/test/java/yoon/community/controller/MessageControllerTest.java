@@ -16,16 +16,13 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import yoon.community.controller.message.MessageController;
 import yoon.community.dto.message.MessageCreateRequest;
-import yoon.community.entity.user.User;
-import yoon.community.exception.MemberNotEqualsException;
-import yoon.community.exception.MemberNotFoundException;
-import yoon.community.repository.user.UserRepository;
+import yoon.community.entity.member.Member;
+import yoon.community.repository.member.MemberRepository;
 import yoon.community.service.message.MessageService;
 
 import java.util.Collections;
 import java.util.Optional;
 
-import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -43,7 +40,7 @@ public class MessageControllerTest {
     ObjectMapper objectMapper = new ObjectMapper();
 
     @Mock
-    UserRepository userRepository;
+    MemberRepository memberRepository;
 
     @BeforeEach
     public void beforeEach() {
@@ -59,11 +56,11 @@ public class MessageControllerTest {
         MessageCreateRequest req = new MessageCreateRequest("타이틀", "내용", "유저닉네임");
 
         // 테스트 코드 진행시 SecurityContext에 유저 정보 미리 담아두기
-        User user = createUserWithAdminRole();
-        Authentication authentication = new UsernamePasswordAuthenticationToken(user.getId(), "",
+        Member member = createUserWithAdminRole();
+        Authentication authentication = new UsernamePasswordAuthenticationToken(member.getId(), "",
                 Collections.emptyList());
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        given(userRepository.findByUsername(authentication.getName())).willReturn(Optional.of(user));
+        given(memberRepository.findByUsername(authentication.getName())).willReturn(Optional.of(member));
 
         // when, then
         mockMvc.perform(
@@ -73,7 +70,7 @@ public class MessageControllerTest {
 
                 .andExpect(status().isCreated());
 
-        verify(messageService).createMessage(user, req);
+        verify(messageService).createMessage(member, req);
     }
 
     @Test
@@ -82,17 +79,17 @@ public class MessageControllerTest {
         // given
 
         // 테스트 코드 진행시 SecurityContext에 유저 정보 미리 담아두기
-        User user = createUserWithAdminRole();
-        Authentication authentication = new UsernamePasswordAuthenticationToken(user.getId(), "",
+        Member member = createUserWithAdminRole();
+        Authentication authentication = new UsernamePasswordAuthenticationToken(member.getId(), "",
                 Collections.emptyList());
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        given(userRepository.findByUsername(authentication.getName())).willReturn(Optional.of(user));
+        given(memberRepository.findByUsername(authentication.getName())).willReturn(Optional.of(member));
 
         // when, then
         mockMvc.perform(
                         get("/api/messages/receiver"))
                 .andExpect(status().isOk());
-        verify(messageService).receiveMessages(user);
+        verify(messageService).receiveMessages(member);
     }
 
     @Test
@@ -102,17 +99,17 @@ public class MessageControllerTest {
         Long id = 1L;
 
         // 테스트 코드 진행시 SecurityContext에 유저 정보 미리 담아두기
-        User user = createUserWithAdminRole();
-        Authentication authentication = new UsernamePasswordAuthenticationToken(user.getId(), "",
+        Member member = createUserWithAdminRole();
+        Authentication authentication = new UsernamePasswordAuthenticationToken(member.getId(), "",
                 Collections.emptyList());
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        given(userRepository.findByUsername(authentication.getName())).willReturn(Optional.of(user));
+        given(memberRepository.findByUsername(authentication.getName())).willReturn(Optional.of(member));
 
         // when, then
         mockMvc.perform(
                         get("/api/messages/receiver/{id}", id))
                 .andExpect(status().isOk());
-        verify(messageService).receiveMessage(id, user);
+        verify(messageService).receiveMessage(id, member);
     }
 
     @Test
@@ -120,17 +117,17 @@ public class MessageControllerTest {
     public void sendMessagesTest() throws Exception {
         // given
         // 테스트 코드 진행시 SecurityContext에 유저 정보 미리 담아두기
-        User user = createUserWithAdminRole();
-        Authentication authentication = new UsernamePasswordAuthenticationToken(user.getId(), "",
+        Member member = createUserWithAdminRole();
+        Authentication authentication = new UsernamePasswordAuthenticationToken(member.getId(), "",
                 Collections.emptyList());
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        given(userRepository.findByUsername(authentication.getName())).willReturn(Optional.of(user));
+        given(memberRepository.findByUsername(authentication.getName())).willReturn(Optional.of(member));
 
         // when, then
         mockMvc.perform(
                         get("/api/messages/sender"))
                 .andExpect(status().isOk());
-        verify(messageService).sendMessages(user);
+        verify(messageService).sendMessages(member);
     }
 
     @Test
@@ -140,17 +137,17 @@ public class MessageControllerTest {
         Long id = 1L;
 
         // 테스트 코드 진행시 SecurityContext에 유저 정보 미리 담아두기
-        User user = createUserWithAdminRole();
-        Authentication authentication = new UsernamePasswordAuthenticationToken(user.getId(), "",
+        Member member = createUserWithAdminRole();
+        Authentication authentication = new UsernamePasswordAuthenticationToken(member.getId(), "",
                 Collections.emptyList());
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        given(userRepository.findByUsername(authentication.getName())).willReturn(Optional.of(user));
+        given(memberRepository.findByUsername(authentication.getName())).willReturn(Optional.of(member));
 
         // when, then
         mockMvc.perform(
                         get("/api/messages/sender/{id}", id))
                 .andExpect(status().isOk());
-        verify(messageService).sendMessage(id, user);
+        verify(messageService).sendMessage(id, member);
     }
 
     @Test
@@ -160,17 +157,17 @@ public class MessageControllerTest {
         Long id = 1L;
 
         // 테스트 코드 진행시 SecurityContext에 유저 정보 미리 담아두기
-        User user = createUserWithAdminRole();
-        Authentication authentication = new UsernamePasswordAuthenticationToken(user.getId(), "",
+        Member member = createUserWithAdminRole();
+        Authentication authentication = new UsernamePasswordAuthenticationToken(member.getId(), "",
                 Collections.emptyList());
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        given(userRepository.findByUsername(authentication.getName())).willReturn(Optional.of(user));
+        given(memberRepository.findByUsername(authentication.getName())).willReturn(Optional.of(member));
 
         // when, then
         mockMvc.perform(
                         delete("/api/messages/receiver/{id}", id))
                 .andExpect(status().isOk());
-        verify(messageService).deleteMessageByReceiver(id, user);
+        verify(messageService).deleteMessageByReceiver(id, member);
     }
 
     @Test
@@ -180,17 +177,17 @@ public class MessageControllerTest {
         Long id = 1L;
 
         // 테스트 코드 진행시 SecurityContext에 유저 정보 미리 담아두기
-        User user = createUserWithAdminRole();
-        Authentication authentication = new UsernamePasswordAuthenticationToken(user.getId(), "",
+        Member member = createUserWithAdminRole();
+        Authentication authentication = new UsernamePasswordAuthenticationToken(member.getId(), "",
                 Collections.emptyList());
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        given(userRepository.findByUsername(authentication.getName())).willReturn(Optional.of(user));
+        given(memberRepository.findByUsername(authentication.getName())).willReturn(Optional.of(member));
 
         // when, then
         mockMvc.perform(
                         delete("/api/messages/sender/{id}", id))
                 .andExpect(status().isOk());
-        verify(messageService).deleteMessageBySender(id, user);
+        verify(messageService).deleteMessageBySender(id, member);
     }
 
 }

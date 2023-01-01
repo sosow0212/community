@@ -56,12 +56,12 @@
 - Report : 유저 및 게시글 신고 관리 기능
 - Admin : 관리를 위한 백오피스 구현
 
-<img width="1217" alt="image" src="https://user-images.githubusercontent.com/63213487/186867100-8983c4f6-98cf-414f-b9b6-df5ab0c05624.png">
+<img width="1217" alt="image" src="https://member-images.githubusercontent.com/63213487/186867100-8983c4f6-98cf-414f-b9b6-df5ab0c05624.png">
 
 ### JUnit5 테스트
 
 - Junit5 를 이용해서 Controller, Service, Domain 레이어의 단위테스트를 진행했습니다.
 
-<img width="323" alt="image" src="https://user-images.githubusercontent.com/63213487/186866768-4e091e48-e3ee-43c1-86db-aa5c81069227.png"> 
-<img width="316" alt="image" src="https://user-images.githubusercontent.com/63213487/186866894-e44c50e7-572b-4298-ad84-3e1323ce5373.png">
+<img width="323" alt="image" src="https://member-images.githubusercontent.com/63213487/186866768-4e091e48-e3ee-43c1-86db-aa5c81069227.png"> 
+<img width="316" alt="image" src="https://member-images.githubusercontent.com/63213487/186866894-e44c50e7-572b-4298-ad84-3e1323ce5373.png">
 

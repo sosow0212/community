@@ -5,21 +5,21 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import yoon.community.dto.report.BoardReportRequest;
 import yoon.community.dto.report.BoardReportResponse;
-import yoon.community.dto.report.UserReportRequest;
-import yoon.community.dto.report.UserReportResponse;
-import yoon.community.dto.user.UserEditRequestDto;
+import yoon.community.dto.report.MemberReportRequestDto;
+import yoon.community.dto.report.MemberReportResponseDto;
+import yoon.community.dto.member.MemberEditRequestDto;
 import yoon.community.entity.board.Board;
 import yoon.community.entity.report.BoardReportHistory;
-import yoon.community.entity.report.UserReportHistory;
-import yoon.community.entity.user.User;
+import yoon.community.entity.report.MemberReportHistory;
+import yoon.community.entity.member.Member;
 import yoon.community.exception.AlreadyReportException;
 import yoon.community.exception.BoardNotFoundException;
 import yoon.community.exception.MemberNotFoundException;
 import yoon.community.exception.NotSelfReportException;
 import yoon.community.repository.board.BoardRepository;
 import yoon.community.repository.report.BoardReportRepository;
-import yoon.community.repository.report.UserReportRepository;
-import yoon.community.repository.user.UserRepository;
+import yoon.community.repository.report.MemberReportRepository;
+import yoon.community.repository.member.MemberRepository;
 
 @RequiredArgsConstructor
 @Service
@@ -27,36 +27,36 @@ public class ReportService {
     private final static int NORMAL_USER_REPORT_LIMIT_FOR_BEING_REPORTED = 3;
     private final static int NORMAL_BOARD_REPORT_LIMIT_FOR_BEING_REPORTED = 10;
     public final BoardReportRepository boardReportHistoryRepository;
-    public final UserReportRepository userReportHistoryRepository;
-    public final UserRepository userRepository;
+    public final MemberReportRepository userReportHistoryRepository;
+    public final MemberRepository memberRepository;
     public final BoardRepository boardRepository;
 
     @Transactional
-    public UserReportResponse reportUser(User reporter, UserReportRequest req) {
+    public MemberReportResponseDto reportUser(Member reporter, MemberReportRequestDto req) {
         validateUserReportRequest(reporter, req);
-        User reportedUser = userRepository.findById(req.getReportedUserId()).orElseThrow(MemberNotFoundException::new);
-        UserReportHistory userReportHistory = createUserReportHistory(reporter, reportedUser, req);
-        checkUserStatusIsBeingReported(reportedUser, req);
-        return new UserReportResponse(userReportHistory.getId(), UserEditRequestDto.toDto(reportedUser),
+        Member reportedMember = memberRepository.findById(req.getReportedUserId()).orElseThrow(MemberNotFoundException::new);
+        MemberReportHistory memberReportHistory = createUserReportHistory(reporter, reportedMember, req);
+        checkUserStatusIsBeingReported(reportedMember, req);
+        return new MemberReportResponseDto(memberReportHistory.getId(), MemberEditRequestDto.toDto(reportedMember),
                 req.getContent(),
-                userReportHistory.getCreatedAt());
+                memberReportHistory.getCreatedAt());
     }
 
-    private void checkUserStatusIsBeingReported(User reportedUser, UserReportRequest req) {
+    private void checkUserStatusIsBeingReported(Member reportedMember, MemberReportRequestDto req) {
         if (userReportHistoryRepository.findByReportedUserId(req.getReportedUserId()).size()
                 >= NORMAL_USER_REPORT_LIMIT_FOR_BEING_REPORTED) {
-            reportedUser.setStatusIsBeingReported();
+            reportedMember.setStatusIsBeingReported();
         }
     }
 
-    private UserReportHistory createUserReportHistory(User reporter, User reportedUser, UserReportRequest req) {
-        UserReportHistory userReportHistory = new UserReportHistory(reporter.getId(), reportedUser.getId(),
+    private MemberReportHistory createUserReportHistory(Member reporter, Member reportedMember, MemberReportRequestDto req) {
+        MemberReportHistory memberReportHistory = new MemberReportHistory(reporter.getId(), reportedMember.getId(),
                 req.getContent());
-        userReportHistoryRepository.save(userReportHistory);
-        return userReportHistory;
+        userReportHistoryRepository.save(memberReportHistory);
+        return memberReportHistory;
     }
 
-    private void validateUserReportRequest(User reporter, UserReportRequest req) {
+    private void validateUserReportRequest(Member reporter, MemberReportRequestDto req) {
         if (reporter.isReportMySelf(req.getReportedUserId())) {
             throw new NotSelfReportException();
         }
@@ -68,7 +68,7 @@ public class ReportService {
     }
 
     @Transactional
-    public BoardReportResponse reportBoard(User reporter, BoardReportRequest req) {
+    public BoardReportResponse reportBoard(Member reporter, BoardReportRequest req) {
         Board reportedBoard = boardRepository.findById(req.getReportedBoardId())
                 .orElseThrow(BoardNotFoundException::new);
         validateBoard(reporter, reportedBoard, req);
@@ -85,15 +85,15 @@ public class ReportService {
         }
     }
 
-    private BoardReportHistory createBoardReportHistory(User reporter, Board reportedBoard, BoardReportRequest req) {
+    private BoardReportHistory createBoardReportHistory(Member reporter, Board reportedBoard, BoardReportRequest req) {
         BoardReportHistory boardReportHistory = new BoardReportHistory(reporter.getId(), reportedBoard.getId(),
                 req.getContent());
         boardReportHistoryRepository.save(boardReportHistory);
         return boardReportHistory;
     }
 
-    private void validateBoard(User reporter, Board reportedBoard, BoardReportRequest req) {
-        if (reporter.isReportMySelf(reportedBoard.getUser().getId())) {
+    private void validateBoard(Member reporter, Board reportedBoard, BoardReportRequest req) {
+        if (reporter.isReportMySelf(reportedBoard.getMember().getId())) {
             throw new NotSelfReportException();
         }
 

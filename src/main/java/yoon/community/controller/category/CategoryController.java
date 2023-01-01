@@ -49,5 +49,4 @@ public class CategoryController {
         categoryService.deleteCategory(id);
         return Response.success();
     }
-
 }

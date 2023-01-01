@@ -1,14 +1,13 @@
 package yoon.community.entity.message;
 
 import lombok.AccessLevel;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import yoon.community.entity.common.EntityDate;
-import yoon.community.entity.user.User;
+import yoon.community.entity.member.Member;
 
 import javax.persistence.*;
 
@@ -36,14 +35,14 @@ public class Message extends EntityDate {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sender_id")
     @OnDelete(action = OnDeleteAction.NO_ACTION)
-    private User sender;
+    private Member sender;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "receiver_id")
     @OnDelete(action = OnDeleteAction.NO_ACTION)
-    private User receiver;
+    private Member receiver;
 
-    public Message(String title, String content, User sender, User receiver) {
+    public Message(String title, String content, Member sender, Member receiver) {
         this.title = title;
         this.content = content;
         this.sender = sender;

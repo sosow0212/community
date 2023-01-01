@@ -14,7 +14,7 @@ import yoon.community.dto.board.BoardResponseDto;
 import yoon.community.entity.board.Board;
 import yoon.community.entity.board.Favorite;
 import yoon.community.entity.board.LikeBoard;
-import yoon.community.entity.user.User;
+import yoon.community.entity.member.Member;
 import yoon.community.repository.board.BoardRepository;
 import yoon.community.repository.board.FavoriteRepository;
 import yoon.community.repository.board.LikeBoardRepository;
@@ -71,7 +71,7 @@ public class BoardServiceTest {
         ));
 
         int categoryId = anyInt();
-        User user = createUser();
+        Member member = createUser();
 
         given(categoryRepository.findById(categoryId)).willReturn(Optional.of(createCategory()));
         given(boardRepository.save(any())).willReturn(createBoardWithImages(
@@ -79,7 +79,7 @@ public class BoardServiceTest {
         );
 
         // when
-        BoardCreateResponse result = boardService.createBoard(req, categoryId, user);
+        BoardCreateResponse result = boardService.createBoard(req, categoryId, member);
 
         // then
         assertThat(result.getTitle()).isEqualTo("title");
@@ -126,11 +126,11 @@ public class BoardServiceTest {
     @DisplayName("게시글 좋아요 처리 테스트")
     void processUserLikeBoardTest() {
         // given
-        User user = createUser();
+        Member member = createUser();
         Board board = createBoard();
 
         // when
-        String result = boardService.createLikeBoard(board, user);
+        String result = boardService.createLikeBoard(board, member);
 
         // then
         assertThat(result).isEqualTo(PROCESS_LIKE_BOARD);
@@ -141,14 +141,14 @@ public class BoardServiceTest {
     @DisplayName("게시글 좋아요 취소 처리 테스트")
     void processUserUnLikeBoardTest() {
         // given
-        User user = createUser();
+        Member member = createUser();
         Board board = createBoard();
         board.setLiked(1);
-        LikeBoard likeBoard = new LikeBoard(1L, board, user, true);
-        given(likeBoardRepository.findByBoardAndUser(board, user)).willReturn(Optional.of(likeBoard));
+        LikeBoard likeBoard = new LikeBoard(1L, board, member, true);
+        given(likeBoardRepository.findByBoardAndUser(board, member)).willReturn(Optional.of(likeBoard));
 
         // when
-        String result = boardService.removeLikeBoard(board, user);
+        String result = boardService.removeLikeBoard(board, member);
 
         // then
         assertThat(result).isEqualTo(PROCESS_UNLIKE_BOARD);
@@ -160,12 +160,12 @@ public class BoardServiceTest {
     public void didUserClickLikeAlreadyTest() {
         // given
         Board board = createBoard();
-        User user = createUser();
-        LikeBoard likeBoard = new LikeBoard(1L, board, user, true);
-        given(likeBoardRepository.findByBoardAndUser(board, user)).willReturn(Optional.of(likeBoard));
+        Member member = createUser();
+        LikeBoard likeBoard = new LikeBoard(1L, board, member, true);
+        given(likeBoardRepository.findByBoardAndUser(board, member)).willReturn(Optional.of(likeBoard));
 
         // when
-        boolean result = boardService.hasLikeBoard(board, user);
+        boolean result = boardService.hasLikeBoard(board, member);
 
         // then
         assertThat(result).isEqualTo(true);
@@ -176,12 +176,12 @@ public class BoardServiceTest {
     @DisplayName("게시글 즐겨찾기 처리 테스트")
     void processUserFavoriteBoard() {
         // given
-        User user = createUser();
+        Member member = createUser();
         Board board = createBoard();
         board.setFavorited(0);
 
         // when
-        String result = boardService.createFavoriteBoard(board, user);
+        String result = boardService.createFavoriteBoard(board, member);
 
         // then
         assertThat(result).isEqualTo(PROCESS_FAVORITE_BOARD);
@@ -192,14 +192,14 @@ public class BoardServiceTest {
     @DisplayName("게시글 즐겨찾기 취소 처리 테스트")
     void processUserUnFavoriteBoard() {
         // given
-        User user = createUser();
+        Member member = createUser();
         Board board = createBoard();
         board.setFavorited(1);
-        Favorite favorite = createFavoriteWithFavorite(board, user);
-        given(favoriteRepository.findByBoardAndUser(board, user)).willReturn(Optional.of(favorite));
+        Favorite favorite = createFavoriteWithFavorite(board, member);
+        given(favoriteRepository.findByBoardAndUser(board, member)).willReturn(Optional.of(favorite));
 
         // when
-        String result = boardService.removeFavoriteBoard(board, user);
+        String result = boardService.removeFavoriteBoard(board, member);
 
         // then
         assertThat(result).isEqualTo(PROCESS_UNFAVORITE_BOARD);
@@ -211,12 +211,12 @@ public class BoardServiceTest {
     public void didUserClickFavoriteAlready() {
         // given
         Board board = createBoard();
-        User user = createUser();
-        Favorite favorite = createFavoriteWithFavorite(board, user);
-        given(favoriteRepository.findByBoardAndUser(board, user)).willReturn(Optional.of(favorite));
+        Member member = createUser();
+        Favorite favorite = createFavoriteWithFavorite(board, member);
+        given(favoriteRepository.findByBoardAndUser(board, member)).willReturn(Optional.of(favorite));
 
         // when
-        boolean result = boardService.hasFavoriteBoard(board, user);
+        boolean result = boardService.hasFavoriteBoard(board, member);
 
         // then
         assertThat(result).isEqualTo(true);
@@ -246,12 +246,12 @@ public class BoardServiceTest {
     @DisplayName("deleteBoard 서비스 테스트")
     void deleteBoardTest() {
         // given
-        User user = createUser();
-        Board board = createBoard(user);
+        Member member = createUser();
+        Board board = createBoard(member);
         given(boardRepository.findById(anyLong())).willReturn(Optional.of(board));
 
         // when
-        boardService.deleteBoard(anyLong(), user);
+        boardService.deleteBoard(anyLong(), member);
 
         // then
         verify(boardRepository).delete(any());

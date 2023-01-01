@@ -2,7 +2,6 @@ package yoon.community.entity.report;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -15,7 +14,7 @@ import yoon.community.entity.common.EntityDate;
 @Getter
 @Setter
 @Entity
-public class UserReportHistory extends EntityDate {
+public class MemberReportHistory extends EntityDate {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -29,7 +28,7 @@ public class UserReportHistory extends EntityDate {
     @Column(nullable = false)
     private String content;
 
-    public UserReportHistory(Long reporterId, Long reportedUserId, String content) {
+    public MemberReportHistory(Long reporterId, Long reportedUserId, String content) {
         this.reporterId = reporterId;
         this.reportedUserId = reportedUserId;
         this.content = content;

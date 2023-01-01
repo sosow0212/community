@@ -1,7 +1,7 @@
 package yoon.community.factory;
 
 import yoon.community.entity.message.Message;
-import yoon.community.entity.user.User;
+import yoon.community.entity.member.Member;
 
 import static yoon.community.factory.UserFactory.createUser;
 import static yoon.community.factory.UserFactory.createUser2;
@@ -11,7 +11,7 @@ public class CreateMessageFactory {
         return new Message("title", "content", createUser(), createUser2());
     }
 
-    public static Message createMessage(User sender, User receiver) {
+    public static Message createMessage(Member sender, Member receiver) {
         return new Message("title", "content", sender, receiver);
     }
 }

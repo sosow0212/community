@@ -9,22 +9,21 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import yoon.community.config.jwt.TokenProvider;
 import yoon.community.dto.sign.*;
-import yoon.community.entity.user.Authority;
-import yoon.community.entity.user.RefreshToken;
-import yoon.community.entity.user.User;
+import yoon.community.entity.member.Authority;
+import yoon.community.entity.member.Member;
+import yoon.community.entity.member.RefreshToken;
 import yoon.community.exception.LoginFailureException;
 import yoon.community.exception.MemberNicknameAlreadyExistsException;
-import yoon.community.exception.MemberUsernameAlreadyExistsException;
+import yoon.community.exception.UsernameAlreadyExistsException;
 import yoon.community.repository.refreshToken.RefreshTokenRepository;
-import yoon.community.repository.user.UserRepository;
-import yoon.community.service.redis.RedisService;
+import yoon.community.repository.member.MemberRepository;
 
 @Service
 @RequiredArgsConstructor
 public class AuthService {
 
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
-    private final UserRepository userRepository;
+    private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
     private final RefreshTokenRepository refreshTokenRepository;
@@ -32,17 +31,17 @@ public class AuthService {
     @Transactional
     public void signup(SignUpRequestDto req) {
         validateSignUpInfo(req);
-        User user = createSignupFormOfUser(req);
-        userRepository.save(user);
+        Member member = createSignupFormOfUser(req);
+        memberRepository.save(member);
     }
 
     @Transactional
     public TokenResponseDto signIn(LoginRequestDto req) {
-        User user = userRepository.findByUsername(req.getUsername()).orElseThrow(() -> {
+        Member member = memberRepository.findByUsername(req.getUsername()).orElseThrow(() -> {
             throw new LoginFailureException();
         });
 
-        validatePassword(req, user);
+        validatePassword(req, member);
         Authentication authentication = getUserAuthentication(req);
         TokenDto tokenDto = tokenProvider.generateTokenDto(authentication);
         RefreshToken refreshToken = buildRefreshToken(authentication, tokenDto);
@@ -81,28 +80,28 @@ public class AuthService {
         return tokenResponseDto;
     }
 
-    private User createSignupFormOfUser(SignUpRequestDto req) {
-        User user = User.builder()
+    private Member createSignupFormOfUser(SignUpRequestDto req) {
+        Member member = Member.builder()
                 .username(req.getUsername())
                 .password(passwordEncoder.encode(req.getPassword()))
                 .nickname(req.getNickname())
                 .name(req.getName())
                 .authority(Authority.ROLE_USER)
                 .build();
-        return user;
+        return member;
     }
 
     private void validateSignUpInfo(SignUpRequestDto signUpRequestDto) {
-        if (userRepository.existsByUsername(signUpRequestDto.getUsername())) {
-            throw new MemberUsernameAlreadyExistsException(signUpRequestDto.getUsername());
+        if (memberRepository.existsByUsername(signUpRequestDto.getUsername())) {
+            throw new UsernameAlreadyExistsException(signUpRequestDto.getUsername());
         }
-        if (userRepository.existsByNickname(signUpRequestDto.getNickname())) {
+        if (memberRepository.existsByNickname(signUpRequestDto.getNickname())) {
             throw new MemberNicknameAlreadyExistsException(signUpRequestDto.getNickname());
         }
     }
 
-    private void validatePassword(LoginRequestDto loginRequestDto, User user) {
-        if (!passwordEncoder.matches(loginRequestDto.getPassword(), user.getPassword())) {
+    private void validatePassword(LoginRequestDto loginRequestDto, Member member) {
+        if (!passwordEncoder.matches(loginRequestDto.getPassword(), member.getPassword())) {
             throw new LoginFailureException();
         }
     }

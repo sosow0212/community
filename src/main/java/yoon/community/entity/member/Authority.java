@@ -1,4 +1,4 @@
-package yoon.community.entity.user;
+package yoon.community.entity.member;
 
 public enum Authority {
     ROLE_USER,

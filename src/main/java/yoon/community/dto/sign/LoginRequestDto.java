@@ -5,8 +5,8 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import yoon.community.entity.user.Authority;
-import yoon.community.entity.user.User;
+import yoon.community.entity.member.Authority;
+import yoon.community.entity.member.Member;
 
 import javax.validation.constraints.NotBlank;
 
@@ -24,8 +24,8 @@ public class LoginRequestDto {
     @NotBlank(message = "{LoginRequestDto.password.notBlank}")
     private String password;
 
-    public User toMember(PasswordEncoder passwordEncoder) {
-        return User.builder()
+    public Member toMember(PasswordEncoder passwordEncoder) {
+        return Member.builder()
                 .username(username)
                 .password(passwordEncoder.encode(password))
                 .authority(Authority.ROLE_USER)

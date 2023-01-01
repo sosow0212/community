@@ -7,13 +7,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import yoon.community.dto.board.BoardSimpleDto;
-import yoon.community.dto.user.UserEditRequestDto;
+import yoon.community.dto.member.MemberEditRequestDto;
 import yoon.community.entity.board.Board;
-import yoon.community.entity.user.User;
+import yoon.community.entity.member.Member;
 import yoon.community.repository.board.BoardRepository;
 import yoon.community.repository.report.BoardReportRepository;
-import yoon.community.repository.report.UserReportRepository;
-import yoon.community.repository.user.UserRepository;
+import yoon.community.repository.report.MemberReportRepository;
+import yoon.community.repository.member.MemberRepository;
 import yoon.community.service.admin.AdminService;
 
 import java.util.ArrayList;
@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
@@ -35,11 +34,11 @@ public class AdminServiceTest {
     AdminService adminService;
 
     @Mock
-    UserRepository userRepository;
+    MemberRepository memberRepository;
     @Mock
     BoardRepository boardRepository;
     @Mock
-    UserReportRepository userReportRepository;
+    MemberReportRepository memberReportRepository;
     @Mock
     BoardReportRepository boardReportRepository;
 
@@ -48,12 +47,12 @@ public class AdminServiceTest {
     @DisplayName("manageReportedUser 서비스 테스트")
     void manageReportedUserTest() {
         // given
-        List<User> users = new ArrayList<>();
-        users.add(createUser());
-        given(userRepository.findByReportedIsTrue()).willReturn(users);
+        List<Member> members = new ArrayList<>();
+        members.add(createUser());
+        given(memberRepository.findByReportedIsTrue()).willReturn(members);
 
         // when
-        List<UserEditRequestDto> result = adminService.findReportedUsers();
+        List<MemberEditRequestDto> result = adminService.findReportedUsers();
 
         // then
         assertThat(result.size()).isEqualTo(1);
@@ -63,15 +62,15 @@ public class AdminServiceTest {
     @DisplayName("unlockUser 서비스 테스트")
     void unlockUserTest() {
         // given
-        User user = createUser();
-        user.setReported(true);
-        given(userRepository.findById(anyLong())).willReturn(Optional.of(user));
+        Member member = createUser();
+        member.setReported(true);
+        given(memberRepository.findById(anyLong())).willReturn(Optional.of(member));
 
         // when
-        UserEditRequestDto result = adminService.processUnlockUser(anyLong());
+        MemberEditRequestDto result = adminService.processUnlockUser(anyLong());
 
         // then
-        verify(userReportRepository).deleteAllByReportedUserId(anyLong());
+        verify(memberReportRepository).deleteAllByReportedUserId(anyLong());
     }
 
     @Test

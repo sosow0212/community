@@ -2,21 +2,18 @@ package yoon.community.service.message;
 
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import yoon.community.dto.message.MessageCreateRequest;
 import yoon.community.dto.message.MessageDto;
 import yoon.community.entity.message.Message;
-import yoon.community.entity.user.User;
+import yoon.community.entity.member.Member;
 import yoon.community.exception.MemberNotEqualsException;
 import yoon.community.exception.MemberNotFoundException;
 import yoon.community.exception.MessageNotFoundException;
 import yoon.community.repository.message.MessageRepository;
-import yoon.community.repository.user.UserRepository;
+import yoon.community.repository.member.MemberRepository;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -24,19 +21,19 @@ import java.util.List;
 public class MessageService {
 
     private final MessageRepository messageRepository;
-    private final UserRepository userRepository;
+    private final MemberRepository memberRepository;
 
     @Transactional
-    public MessageDto createMessage(User sender, MessageCreateRequest req) {
-        User receiver = userRepository.findByNickname(req.getReceiverNickname())
+    public MessageDto createMessage(Member sender, MessageCreateRequest req) {
+        Member receiver = memberRepository.findByNickname(req.getReceiverNickname())
                 .orElseThrow(MemberNotFoundException::new);
         Message message = new Message(req.getTitle(), req.getContent(), sender, receiver);
         return MessageDto.toDto(messageRepository.save(message));
     }
 
     @Transactional(readOnly = true)
-    public List<MessageDto> receiveMessages(User user) {
-        List<Message> messageList = messageRepository.findAllByReceiverAndDeletedByReceiverFalseOrderByIdDesc(user);
+    public List<MessageDto> receiveMessages(Member member) {
+        List<Message> messageList = messageRepository.findAllByReceiverAndDeletedByReceiverFalseOrderByIdDesc(member);
         List<MessageDto> messageDtoList = messageList.stream()
                 .map(message -> MessageDto.toDto(message))
                 .collect(Collectors.toList());
@@ -45,14 +42,14 @@ public class MessageService {
 
 
     @Transactional(readOnly = true)
-    public MessageDto receiveMessage(Long id, User user) {
+    public MessageDto receiveMessage(Long id, Member member) {
         Message message = messageRepository.findById(id).orElseThrow(MessageNotFoundException::new);
-        validateReceiveMessage(user, message);
+        validateReceiveMessage(member, message);
         return MessageDto.toDto(message);
     }
 
-    private void validateReceiveMessage(User user, Message message) {
-        if (message.getReceiver() != user) {
+    private void validateReceiveMessage(Member member, Message message) {
+        if (message.getReceiver() != member) {
             throw new MemberNotEqualsException();
         }
         if (message.isDeletedByReceiver()) {
@@ -61,8 +58,8 @@ public class MessageService {
     }
 
     @Transactional(readOnly = true)
-    public List<MessageDto> sendMessages(User user) {
-        List<Message> messageList = messageRepository.findAllBySenderAndDeletedBySenderFalseOrderByIdDesc(user);
+    public List<MessageDto> sendMessages(Member member) {
+        List<Message> messageList = messageRepository.findAllBySenderAndDeletedBySenderFalseOrderByIdDesc(member);
         List<MessageDto> messageDtoList = messageList.stream()
                 .map(message -> MessageDto.toDto(message))
                 .collect(Collectors.toList());
@@ -70,14 +67,14 @@ public class MessageService {
     }
 
     @Transactional(readOnly = true)
-    public MessageDto sendMessage(Long id, User user) {
+    public MessageDto sendMessage(Long id, Member member) {
         Message message = messageRepository.findById(id).orElseThrow(MessageNotFoundException::new);
-        validateSendMessage(user, message);
+        validateSendMessage(member, message);
         return MessageDto.toDto(message);
     }
 
-    private void validateSendMessage(User user, Message message) {
-        if (message.getSender() != user) {
+    private void validateSendMessage(Member member, Message message) {
+        if (message.getSender() != member) {
             throw new MemberNotEqualsException();
         }
         if (message.isDeletedByReceiver()) {
@@ -86,14 +83,14 @@ public class MessageService {
     }
 
     @Transactional
-    public void deleteMessageByReceiver(Long id, User user) {
+    public void deleteMessageByReceiver(Long id, Member member) {
         Message message = messageRepository.findById(id).orElseThrow(MessageNotFoundException::new);
-        processDeleteReceiverMessage(user, message);
+        processDeleteReceiverMessage(member, message);
         checkIsMessageDeletedBySenderAndReceiver(message);
     }
 
-    private void processDeleteReceiverMessage(User user, Message message) {
-        if (message.getReceiver().equals(user)) {
+    private void processDeleteReceiverMessage(Member member, Message message) {
+        if (message.getReceiver().equals(member)) {
             message.deleteByReceiver();
             return;
         }
@@ -107,14 +104,14 @@ public class MessageService {
     }
 
     @Transactional
-    public void deleteMessageBySender(Long id, User user) {
+    public void deleteMessageBySender(Long id, Member member) {
         Message message = messageRepository.findById(id).orElseThrow(MessageNotFoundException::new);
-        processDeleteSenderMessage(user, message);
+        processDeleteSenderMessage(member, message);
         checkIsMessageDeletedBySenderAndReceiver(message);
     }
 
-    private void processDeleteSenderMessage(User user, Message message) {
-        if (message.getSender().equals(user)) {
+    private void processDeleteSenderMessage(Member member, Message message) {
+        if (message.getSender().equals(member)) {
             message.deleteBySender();
             return;
         }

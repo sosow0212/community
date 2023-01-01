@@ -5,7 +5,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import yoon.community.entity.board.Board;
 import yoon.community.entity.common.EntityDate;
-import yoon.community.entity.user.User;
+import yoon.community.entity.member.Member;
 
 import javax.persistence.*;
 
@@ -28,20 +28,20 @@ public class Comment extends EntityDate {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    private User user;
+    private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "board_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Board board;
 
-    public Comment(String content, User user, Board board) {
+    public Comment(String content, Member member, Board board) {
         this.content = content;
-        this.user = user;
+        this.member = member;
         this.board = board;
     }
 
-    public boolean isOwnComment(User user) {
-        return this.user.equals(user);
+    public boolean isOwnComment(Member member) {
+        return this.member.equals(member);
     }
 }

@@ -10,7 +10,7 @@ import yoon.community.dto.category.CategoryCreateRequest;
 import yoon.community.dto.category.CategoryDto;
 import yoon.community.entity.category.Category;
 import yoon.community.repository.category.CategoryRepository;
-import yoon.community.repository.user.UserRepository;
+import yoon.community.repository.member.MemberRepository;
 import yoon.community.service.category.CategoryService;
 
 import java.util.ArrayList;
@@ -20,7 +20,6 @@ import java.util.Optional;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static yoon.community.factory.CategoryFactory.createCategory;
@@ -35,7 +34,7 @@ public class CategoryServiceTest {
     CategoryRepository categoryRepository;
 
     @Mock
-    UserRepository userRepository;
+    MemberRepository memberRepository;
 
 
     @Test

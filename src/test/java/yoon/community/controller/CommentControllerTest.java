@@ -17,8 +17,8 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import yoon.community.controller.comment.CommentController;
 import yoon.community.dto.comment.CommentCreateRequest;
 import yoon.community.dto.comment.CommentReadCondition;
-import yoon.community.entity.user.User;
-import yoon.community.repository.user.UserRepository;
+import yoon.community.entity.member.Member;
+import yoon.community.repository.member.MemberRepository;
 import yoon.community.service.comment.CommentService;
 
 import java.util.Collections;
@@ -37,7 +37,7 @@ public class CommentControllerTest {
     CommentController commentController;
 
     @Mock
-    UserRepository userRepository;
+    MemberRepository memberRepository;
 
     @Mock
     CommentService commentService;
@@ -55,11 +55,11 @@ public class CommentControllerTest {
         // given
         CommentCreateRequest req = new CommentCreateRequest(1L, "content");
 
-        User user = createUserWithAdminRole();
-        Authentication authentication = new UsernamePasswordAuthenticationToken(user.getId(), "",
+        Member member = createUserWithAdminRole();
+        Authentication authentication = new UsernamePasswordAuthenticationToken(member.getId(), "",
                 Collections.emptyList());
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        given(userRepository.findByUsername(authentication.getName())).willReturn(Optional.of(user));
+        given(memberRepository.findByUsername(authentication.getName())).willReturn(Optional.of(member));
 
         //when then
         mockMvc.perform(
@@ -68,7 +68,7 @@ public class CommentControllerTest {
                                 .content(objectMapper.writeValueAsString(req)))
                 .andExpect(status().isCreated());
 
-        verify(commentService).createComment(req, user);
+        verify(commentService).createComment(req, member);
     }
 
 
@@ -94,16 +94,16 @@ public class CommentControllerTest {
         // given
         Long id = 1L;
 
-        User user = createUserWithAdminRole();
-        Authentication authentication = new UsernamePasswordAuthenticationToken(user.getId(), "",
+        Member member = createUserWithAdminRole();
+        Authentication authentication = new UsernamePasswordAuthenticationToken(member.getId(), "",
                 Collections.emptyList());
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        given(userRepository.findByUsername(authentication.getName())).willReturn(Optional.of(user));
+        given(memberRepository.findByUsername(authentication.getName())).willReturn(Optional.of(member));
 
         // when, then
         mockMvc.perform(
                         delete("/api/comments/{id}", id))
                 .andExpect(status().isOk());
-        verify(commentService).deleteComment(id, user);
+        verify(commentService).deleteComment(id, member);
     }
 }

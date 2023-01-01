@@ -1,7 +1,6 @@
 package yoon.community.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -26,9 +25,9 @@ import yoon.community.controller.board.BoardController;
 import yoon.community.dto.board.BoardCreateRequest;
 import yoon.community.dto.board.BoardUpdateRequest;
 import yoon.community.entity.board.Board;
-import yoon.community.entity.user.User;
+import yoon.community.entity.member.Member;
 import yoon.community.repository.board.BoardRepository;
-import yoon.community.repository.user.UserRepository;
+import yoon.community.repository.member.MemberRepository;
 import yoon.community.service.board.BoardService;
 
 import java.util.ArrayList;
@@ -38,7 +37,6 @@ import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -55,7 +53,7 @@ public class BoardControllerTest {
     @Mock
     BoardRepository boardRepository;
     @Mock
-    UserRepository userRepository;
+    MemberRepository memberRepository;
     MockMvc mockMvc;
     ObjectMapper objectMapper = new ObjectMapper();
 
@@ -74,10 +72,10 @@ public class BoardControllerTest {
         images.add(new MockMultipartFile("test2", "test2.PNG", MediaType.IMAGE_PNG_VALUE, "test2".getBytes()));
         BoardCreateRequest req = new BoardCreateRequest("title", "content", images);
 
-        User user = createUserWithAdminRole();
-        Authentication authentication = new UsernamePasswordAuthenticationToken(user.getId(), "", Collections.emptyList());
+        Member member = createUserWithAdminRole();
+        Authentication authentication = new UsernamePasswordAuthenticationToken(member.getId(), "", Collections.emptyList());
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        given(userRepository.findByUsername(authentication.getName())).willReturn(Optional.of(user));
+        given(memberRepository.findByUsername(authentication.getName())).willReturn(Optional.of(member));
 
 
         // when, then
@@ -158,10 +156,10 @@ public class BoardControllerTest {
         // given
         Long id = 1L;
 
-        User user = createUserWithAdminRole();
-        Authentication authentication = new UsernamePasswordAuthenticationToken(user.getId(), "", Collections.emptyList());
+        Member member = createUserWithAdminRole();
+        Authentication authentication = new UsernamePasswordAuthenticationToken(member.getId(), "", Collections.emptyList());
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        given(userRepository.findByUsername(authentication.getName())).willReturn(Optional.of(user));
+        given(memberRepository.findByUsername(authentication.getName())).willReturn(Optional.of(member));
 
 
         // when, then
@@ -170,7 +168,7 @@ public class BoardControllerTest {
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
-        verify(boardService).updateLikeOfBoard(id, user);
+        verify(boardService).updateLikeOfBoard(id, member);
     }
 
 
@@ -180,10 +178,10 @@ public class BoardControllerTest {
         // given
         Long id = 1L;
 
-        User user = createUserWithAdminRole();
-        Authentication authentication = new UsernamePasswordAuthenticationToken(user.getId(), "", Collections.emptyList());
+        Member member = createUserWithAdminRole();
+        Authentication authentication = new UsernamePasswordAuthenticationToken(member.getId(), "", Collections.emptyList());
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        given(userRepository.findByUsername(authentication.getName())).willReturn(Optional.of(user));
+        given(memberRepository.findByUsername(authentication.getName())).willReturn(Optional.of(member));
 
 
         // when, then
@@ -192,7 +190,7 @@ public class BoardControllerTest {
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
-        verify(boardService).updateOfFavoriteBoard(id, user);
+        verify(boardService).updateOfFavoriteBoard(id, member);
     }
 
 
@@ -210,10 +208,10 @@ public class BoardControllerTest {
 
         BoardUpdateRequest req = new BoardUpdateRequest("title", "content", addedImages, deletedImages);
 
-        User user = createUserWithAdminRole();
-        Authentication authentication = new UsernamePasswordAuthenticationToken(user.getId(), "", Collections.emptyList());
+        Member member = createUserWithAdminRole();
+        Authentication authentication = new UsernamePasswordAuthenticationToken(member.getId(), "", Collections.emptyList());
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        given(userRepository.findByUsername(authentication.getName())).willReturn(Optional.of(user));
+        given(memberRepository.findByUsername(authentication.getName())).willReturn(Optional.of(member));
 
 
         // when, then

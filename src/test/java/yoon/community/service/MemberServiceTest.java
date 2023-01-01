@@ -6,70 +6,69 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import yoon.community.dto.user.UserEditRequestDto;
-import yoon.community.entity.user.Authority;
-import yoon.community.entity.user.User;
+import yoon.community.dto.member.MemberEditRequestDto;
+import yoon.community.entity.member.Authority;
+import yoon.community.entity.member.Member;
 import yoon.community.exception.MemberNotFoundException;
-import yoon.community.repository.user.UserRepository;
-import yoon.community.service.user.UserService;
+import yoon.community.repository.member.MemberRepository;
+import yoon.community.service.member.MemberService;
 
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static yoon.community.factory.UserFactory.createUser;
 
 @ExtendWith(MockitoExtension.class)
-public class UserServiceTest {
+public class MemberServiceTest {
     @InjectMocks
-    UserService userService;
+    MemberService memberService;
 
     @Mock
-    UserRepository userRepository;
+    MemberRepository memberRepository;
 
     @Test
     @DisplayName("findUser() 서비스 테스트")
     void findUserTest() {
         // given
-        User user = new User("yoon", "1234", Authority.ROLE_USER);
-        user.setName("yoon");
-        user.setNickname("yoon");
+        Member member = new Member("yoon", "1234", Authority.ROLE_USER);
+        member.setName("yoon");
+        member.setNickname("yoon");
 
-        given(userRepository.findById(anyLong())).willReturn(Optional.of(user));
+        given(memberRepository.findById(anyLong())).willReturn(Optional.of(member));
 
         // when
-        UserEditRequestDto result = userService.findUser(1L);
+        MemberEditRequestDto result = memberService.findMember(1L);
 
         // then
-        assertThat(result.getName()).isEqualTo(user.getName());
+        assertThat(result.getName()).isEqualTo(member.getName());
     }
 
     @Test
     @DisplayName("MemberNotFoundException 테스트")
     void memberNotFoundExceptionTest() {
         // given
-        given(userRepository.findById(any())).willReturn(Optional.empty());
+        given(memberRepository.findById(any())).willReturn(Optional.empty());
 
         // when, then
-        assertThatThrownBy(() -> userService.findUser(1L)).isInstanceOf(MemberNotFoundException.class);
+        assertThatThrownBy(() -> memberService.findMember(1L)).isInstanceOf(MemberNotFoundException.class);
     }
 
     @Test
     @DisplayName("deleteUserInfo() 서비스 테스트")
     void deleteUserInfoTest() {
         // given
-        User user = createUser();
+        Member member = createUser();
 
         // when
-        userService.deleteUserInfo(user);
+        memberService.deleteMemberInfo(member);
 
         // then
-        verify(userRepository).delete(user);
+        verify(memberRepository).delete(member);
 
     }
 }

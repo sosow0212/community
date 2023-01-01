@@ -14,9 +14,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import yoon.community.dto.board.BoardCreateRequest;
 import yoon.community.dto.board.BoardUpdateRequest;
-import yoon.community.entity.user.User;
+import yoon.community.entity.member.Member;
 import yoon.community.exception.MemberNotFoundException;
-import yoon.community.repository.user.UserRepository;
+import yoon.community.repository.member.MemberRepository;
 import yoon.community.response.Response;
 import yoon.community.service.board.BoardService;
 
@@ -29,7 +29,7 @@ import javax.validation.Valid;
 @RequestMapping("/api")
 public class BoardController {
     private final BoardService boardService;
-    private final UserRepository userRepository;
+    private final MemberRepository memberRepository;
 
     @ApiOperation(value = "게시글 생성", notes = "게시글을 작성합니다.")
     @PostMapping("/boards")
@@ -37,8 +37,8 @@ public class BoardController {
     public Response createBoard(@Valid @ModelAttribute BoardCreateRequest req,
                            @RequestParam(value = "category", defaultValue = "1") int categoryId) {
         // http://localhost:8080/api/boards?category=3
-        User user = getPrincipal();
-        return Response.success(boardService.createBoard(req, categoryId, user));
+        Member member = getPrincipal();
+        return Response.success(boardService.createBoard(req, categoryId, member));
     }
 
     @ApiOperation(value = "게시글 목록 조회", notes = "게시글 목록을 조회합니다.")
@@ -62,24 +62,24 @@ public class BoardController {
     @ResponseStatus(HttpStatus.OK)
     public Response editBoard(@ApiParam(value = "게시글 id", required = true) @PathVariable Long id,
                               @Valid @ModelAttribute BoardUpdateRequest req) {
-        User user = getPrincipal();
-        return Response.success(boardService.editBoard(id, req, user));
+        Member member = getPrincipal();
+        return Response.success(boardService.editBoard(id, req, member));
     }
 
     @ApiOperation(value = "게시글 좋아요", notes = "사용자가 게시글 좋아요를 누릅니다.")
     @PostMapping("/boards/{id}")
     @ResponseStatus(HttpStatus.OK)
     public Response likeBoard(@ApiParam(value = "게시글 id", required = true) @PathVariable Long id) {
-        User user = getPrincipal();
-        return Response.success(boardService.updateLikeOfBoard(id, user));
+        Member member = getPrincipal();
+        return Response.success(boardService.updateLikeOfBoard(id, member));
     }
 
     @ApiOperation(value = "게시글 즐겨찾기", notes = "사용자가 게시글 즐겨찾기를 누릅니다.")
     @PostMapping("/boards/{id}/favorites")
     @ResponseStatus(HttpStatus.OK)
     public Response favoriteBoard(@ApiParam(value = "게시글 id", required = true) @PathVariable Long id) {
-        User user = getPrincipal();
-        return Response.success(boardService.updateOfFavoriteBoard(id, user));
+        Member member = getPrincipal();
+        return Response.success(boardService.updateOfFavoriteBoard(id, member));
     }
 
     @ApiOperation(value = "인기글 조회", notes = "추천수 10이상 게시글을 조회합니다.")
@@ -95,8 +95,8 @@ public class BoardController {
     @DeleteMapping("/boards/{id}")
     @ResponseStatus(HttpStatus.OK)
     public Response deleteBoard(@ApiParam(value = "게시글 id", required = true) @PathVariable Long id) {
-        User user = getPrincipal();
-        boardService.deleteBoard(id, user);
+        Member member = getPrincipal();
+        boardService.deleteBoard(id, member);
         return Response.success();
     }
 
@@ -109,9 +109,9 @@ public class BoardController {
         return Response.success(boardService.searchBoard(keyword, pageable));
     }
 
-    private User getPrincipal() {
+    private Member getPrincipal() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = userRepository.findByUsername(authentication.getName()).orElseThrow(MemberNotFoundException::new);
-        return user;
+        Member member = memberRepository.findByUsername(authentication.getName()).orElseThrow(MemberNotFoundException::new);
+        return member;
     }
 }

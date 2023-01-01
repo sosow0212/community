@@ -1,35 +1,35 @@
 package yoon.community.factory;
 
-import yoon.community.entity.user.Authority;
-import yoon.community.entity.user.User;
+import yoon.community.entity.member.Authority;
+import yoon.community.entity.member.Member;
 
 public class UserFactory {
 
-    public static User createUserWithAdminRole() {
-        User user = new User("username", "password", Authority.ROLE_ADMIN);
-        user.setName("yoon");
-        user.setNickname("yoon");
-        return user;
+    public static Member createUserWithAdminRole() {
+        Member member = new Member("username", "password", Authority.ROLE_ADMIN);
+        member.setName("yoon");
+        member.setNickname("yoon");
+        return member;
     }
 
-    public static User createUser() {
-        User user = new User("username", "password", Authority.ROLE_ADMIN);
-        user.setName("yoon");
-        user.setNickname("yoon");
-        return user;
+    public static Member createUser() {
+        Member member = new Member("username", "password", Authority.ROLE_ADMIN);
+        member.setName("yoon");
+        member.setNickname("yoon");
+        return member;
     }
 
-    public static User createUser(String username, String password) {
-        User user = new User(username, password, Authority.ROLE_ADMIN);
-        user.setName("yoon");
-        user.setNickname("yoon");
-        return user;
+    public static Member createUser(String username, String password) {
+        Member member = new Member(username, password, Authority.ROLE_ADMIN);
+        member.setName("yoon");
+        member.setNickname("yoon");
+        return member;
     }
 
-    public static User createUser2() {
-        User user = new User("username2", "password2", Authority.ROLE_ADMIN);
-        user.setName("yoon2");
-        user.setNickname("yoon2");
-        return user;
+    public static Member createUser2() {
+        Member member = new Member("username2", "password2", Authority.ROLE_ADMIN);
+        member.setName("yoon2");
+        member.setNickname("yoon2");
+        return member;
     }
 }

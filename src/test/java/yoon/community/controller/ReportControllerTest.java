@@ -16,9 +16,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import yoon.community.controller.report.ReportController;
 import yoon.community.dto.report.BoardReportRequest;
-import yoon.community.dto.report.UserReportRequest;
-import yoon.community.entity.user.User;
-import yoon.community.repository.user.UserRepository;
+import yoon.community.dto.report.MemberReportRequestDto;
+import yoon.community.entity.member.Member;
+import yoon.community.repository.member.MemberRepository;
 import yoon.community.service.report.ReportService;
 
 import java.util.Collections;
@@ -40,7 +40,7 @@ public class ReportControllerTest {
     ReportService reportService;
 
     @Mock
-    UserRepository userRepository;
+    MemberRepository memberRepository;
 
     MockMvc mockMvc;
     ObjectMapper objectMapper = new ObjectMapper();
@@ -55,12 +55,12 @@ public class ReportControllerTest {
     @DisplayName("유저 신고 하기")
     public void reportUserTest() throws Exception {
         // given
-        UserReportRequest req = new UserReportRequest(1L, "내용");
+        MemberReportRequestDto req = new MemberReportRequestDto(1L, "내용");
 
-        User user = createUserWithAdminRole();
-        Authentication authentication = new UsernamePasswordAuthenticationToken(user.getId(), "", Collections.emptyList());
+        Member member = createUserWithAdminRole();
+        Authentication authentication = new UsernamePasswordAuthenticationToken(member.getId(), "", Collections.emptyList());
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        given(userRepository.findByUsername(authentication.getName())).willReturn(Optional.of(user));
+        given(memberRepository.findByUsername(authentication.getName())).willReturn(Optional.of(member));
 
 
         // when, then
@@ -70,7 +70,7 @@ public class ReportControllerTest {
                         .content(objectMapper.writeValueAsString(req)))
                 .andExpect(status().isOk());
 
-        verify(reportService).reportUser(user, req);
+        verify(reportService).reportUser(member, req);
     }
 
     @Test
@@ -79,10 +79,10 @@ public class ReportControllerTest {
         // given
         BoardReportRequest req = new BoardReportRequest(1L, "내용");
 
-        User user = createUserWithAdminRole();
-        Authentication authentication = new UsernamePasswordAuthenticationToken(user.getId(), "", Collections.emptyList());
+        Member member = createUserWithAdminRole();
+        Authentication authentication = new UsernamePasswordAuthenticationToken(member.getId(), "", Collections.emptyList());
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        given(userRepository.findByUsername(authentication.getName())).willReturn(Optional.of(user));
+        given(memberRepository.findByUsername(authentication.getName())).willReturn(Optional.of(member));
 
 
         // when, then
@@ -92,6 +92,6 @@ public class ReportControllerTest {
                                 .content(objectMapper.writeValueAsString(req)))
                 .andExpect(status().isOk());
 
-        verify(reportService).reportBoard(user, req);
+        verify(reportService).reportBoard(member, req);
     }
 }
