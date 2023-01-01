@@ -34,15 +34,13 @@ public class ExceptionAdvice {
     }
 
     // 400 에러
-    // 요청 객체의 validation을 수행할 때, MethodArgumentNotValidException이 발생
-    // 각 검증 어노테이션 별로 지정해놨던 메시지를 응답
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Response methodArgumentNotValidException(MethodArgumentNotValidException e) { // 2
         return Response.failure(400, e.getBindingResult().getFieldError().getDefaultMessage());
     }
 
-    // 400
+    // 400 에러
     // 토큰 만료
     @ExceptionHandler(TokenExpiredException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -51,7 +49,6 @@ public class ExceptionAdvice {
     }
 
     // 400 에러
-    // Valid 제약조건 위배 캐치
     @ExceptionHandler(BindException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Response bindException(BindException e) {
@@ -60,7 +57,7 @@ public class ExceptionAdvice {
 
 
     // 401 응답
-    // 아이디 혹은 비밀번호 오류시
+    // 아이디 혹은 비밀번호 오류시 발생
     @ExceptionHandler(LoginFailureException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public Response loginFailureException() {
@@ -68,7 +65,7 @@ public class ExceptionAdvice {
     }
 
     // 401 응답
-    // 유저 정보가 일치하지 않음
+    // 요청자와 요청한 유저의 정보가 일치하지 않을시에 발생
     @ExceptionHandler(MemberNotEqualsException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public Response memberNotEqualsException() {
@@ -77,7 +74,7 @@ public class ExceptionAdvice {
 
 
     // 404 응답
-    // 요청한 User를 찾을 수 없음
+    // 요청한 유저를 찾을 수 없음
     @ExceptionHandler(MemberNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public Response memberNotFoundException() {
