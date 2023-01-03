@@ -8,18 +8,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
-public class CategoryHelper<K,E,D> {
+public class CategoryHelper<K, E, D> {
     private List<E> entities;
     private Function<E, D> toDto;
     private Function<E, E> getParent;
     private Function<E, K> getKey;
     private Function<D, List<D>> getChildren;
 
-    public static <K, E, D> CategoryHelper newInstance(List<E> entities, Function<E, D> toDto, Function<E, E> getParent, Function<E, K> getKey, Function<D, List<D>> getChildren) {
+    public static <K, E, D> CategoryHelper newInstance(List<E> entities, Function<E, D> toDto, Function<E, E> getParent,
+                                                       Function<E, K> getKey, Function<D, List<D>> getChildren) {
         return new CategoryHelper<K, E, D>(entities, toDto, getParent, getKey, getChildren);
     }
 
-    private CategoryHelper(List<E> entities, Function<E, D> toDto, Function<E, E> getParent, Function<E, K> getKey, Function<D, List<D>> getChildren) {
+    private CategoryHelper(List<E> entities, Function<E, D> toDto, Function<E, E> getParent, Function<E, K> getKey,
+                           Function<D, List<D>> getChildren) {
         this.entities = entities;
         this.toDto = toDto;
         this.getParent = getParent;

@@ -52,7 +52,8 @@ public class CommentController {
 
     private Member getPrincipal() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Member member = memberRepository.findByUsername(authentication.getName()).orElseThrow(MemberNotFoundException::new);
+        Member member = memberRepository.findByUsername(authentication.getName())
+                .orElseThrow(MemberNotFoundException::new);
         return member;
     }
 }

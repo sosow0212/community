@@ -9,11 +9,10 @@ import yoon.community.entity.member.Member;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MemberEditRequestDto {
-    private String name; // 유저 실명
-    private String nickname; // 유저 닉네임
+    private String name;
+    private String nickname;
 
     public static MemberEditRequestDto toDto(Member member) {
         return new MemberEditRequestDto(member.getName(), member.getNickname());
     }
-
 }

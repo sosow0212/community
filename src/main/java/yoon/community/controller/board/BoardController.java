@@ -35,7 +35,7 @@ public class BoardController {
     @PostMapping("/boards")
     @ResponseStatus(HttpStatus.CREATED)
     public Response createBoard(@Valid @ModelAttribute BoardCreateRequest req,
-                           @RequestParam(value = "category", defaultValue = "1") int categoryId) {
+                                @RequestParam(value = "category", defaultValue = "1") int categoryId) {
         // http://localhost:8080/api/boards?category=3
         Member member = getPrincipal();
         return Response.success(boardService.createBoard(req, categoryId, member));
@@ -104,14 +104,15 @@ public class BoardController {
     @GetMapping("/boards/search")
     @ResponseStatus(HttpStatus.OK)
     public Response searchBoard(String keyword,
-                           @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+                                @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
         // ex) http://localhost:8080/api/boards/search?page=0
         return Response.success(boardService.searchBoard(keyword, pageable));
     }
 
     private Member getPrincipal() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Member member = memberRepository.findByUsername(authentication.getName()).orElseThrow(MemberNotFoundException::new);
+        Member member = memberRepository.findByUsername(authentication.getName())
+                .orElseThrow(MemberNotFoundException::new);
         return member;
     }
 }

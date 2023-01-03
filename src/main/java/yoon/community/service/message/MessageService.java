@@ -19,7 +19,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @Service
 public class MessageService {
-
     private final MessageRepository messageRepository;
     private final MemberRepository memberRepository;
 

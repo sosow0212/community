@@ -22,7 +22,6 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("/api")
 public class MessageController {
-
     private final MessageService messageService;
     private final MemberRepository memberRepository;
 
@@ -86,7 +85,8 @@ public class MessageController {
 
     private Member getPrincipal() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Member member = memberRepository.findByUsername(authentication.getName()).orElseThrow(MemberNotFoundException::new);
+        Member member = memberRepository.findByUsername(authentication.getName())
+                .orElseThrow(MemberNotFoundException::new);
         return member;
     }
 }

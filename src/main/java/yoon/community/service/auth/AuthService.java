@@ -21,7 +21,6 @@ import yoon.community.repository.member.MemberRepository;
 @Service
 @RequiredArgsConstructor
 public class AuthService {
-
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;

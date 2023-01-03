@@ -15,7 +15,6 @@ import java.io.IOException;
 @Slf4j
 @PropertySource("classpath:secure.properties")
 public class LocalFileService implements FileService{
-
     @Value("${upload.image.location}")
     private String location;
 

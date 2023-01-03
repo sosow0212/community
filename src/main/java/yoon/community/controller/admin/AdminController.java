@@ -13,7 +13,6 @@ import yoon.community.service.admin.AdminService;
 @RestController
 @RequestMapping("/api")
 public class AdminController {
-
     private final AdminService adminService;
 
     @ApiOperation(value = "정지 유저 관리", notes = "정지된 유저를 관리합니다.")

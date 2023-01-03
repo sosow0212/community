@@ -16,7 +16,6 @@ public class CategoryDto {
     private String name;
     private List<CategoryDto> children;
 
-
     public static List<CategoryDto> toDtoList(List<Category> categories) {
         CategoryHelper helper = CategoryHelper.newInstance(
                 categories,

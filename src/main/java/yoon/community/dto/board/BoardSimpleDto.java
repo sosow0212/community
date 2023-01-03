@@ -9,7 +9,6 @@ import yoon.community.entity.board.Board;
 @AllArgsConstructor
 @NoArgsConstructor
 public class BoardSimpleDto {
-    // 메인 페이지에서 보여지는 게시글 정보
     private Long id;
     private String title;
     private String nickname;
@@ -17,7 +16,7 @@ public class BoardSimpleDto {
     private int favorited;
 
     public BoardSimpleDto toDto(Board board) {
-        return new BoardSimpleDto(board.getId() ,board.getTitle(), board.getMember().getNickname(), board.getLiked(), board.getFavorited());
+        return new BoardSimpleDto(board.getId(), board.getTitle(), board.getMember().getNickname(), board.getLiked(),
+                board.getFavorited());
     }
-
 }

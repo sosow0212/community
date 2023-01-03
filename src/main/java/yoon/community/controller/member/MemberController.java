@@ -20,7 +20,6 @@ import yoon.community.service.member.MemberService;
 @RequiredArgsConstructor
 @RestController
 public class MemberController {
-
     private final MemberService memberService;
     private final MemberRepository memberRepository;
 

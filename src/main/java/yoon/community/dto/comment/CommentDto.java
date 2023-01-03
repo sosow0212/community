@@ -13,7 +13,6 @@ import yoon.community.entity.comment.Comment;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CommentDto {
-
     private Long id;
     private String content;
     private MemberEditRequestDto memberEditRequestDto;

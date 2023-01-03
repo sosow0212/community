@@ -12,5 +12,4 @@ public class BoardCreateResponse {
     private Long id;
     private String title;
     private String content;
-
 }

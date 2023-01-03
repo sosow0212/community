@@ -14,7 +14,6 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MessageCreateRequest {
-
     @ApiModelProperty(value = "메시지 제목", notes = "메시지 제목을 입력해주세요.", required = true, example = "message title")
     @NotBlank(message = "메시지 제목을 입력해주세요.")
     private String title;

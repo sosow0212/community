@@ -18,7 +18,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @Service
 public class MemberService {
-
     private final MemberRepository memberRepository;
     private final FavoriteRepository favoriteRepository;
 
