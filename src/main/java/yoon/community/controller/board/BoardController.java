@@ -44,10 +44,9 @@ public class BoardController {
     @ApiOperation(value = "게시글 목록 조회", notes = "게시글 목록을 조회합니다.")
     @GetMapping("/boards/all/{categoryId}")
     @ResponseStatus(HttpStatus.OK)
-    public Response findAllBoards(@ApiParam(value = "카테고리 id", required = true) @PathVariable Long categoryId,
-                                  @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
-        // ex) http://localhost:8080/api/boards/all/{categoryId}/?page=0
-        return Response.success(boardService.findAllBoards(pageable, categoryId));
+    public Response findAllBoards(@ApiParam(value = "카테고리 id", required = true) @PathVariable int categoryId, @RequestParam(defaultValue = "0") Integer page) {
+        // ex) http://localhost:8080/api/boards/all/{categoryId}?page=0
+        return Response.success(boardService.findAllBoards(page, categoryId));
     }
 
     @ApiOperation(value = "게시글 단건 조회", notes = "게시글을 단건 조회합니다.")

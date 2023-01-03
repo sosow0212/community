@@ -6,6 +6,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import yoon.community.dto.board.BoardCreateRequest;
@@ -88,22 +90,13 @@ public class BoardServiceTest {
     @Test
     @DisplayName("findAllBoards 서비스 테스트")
     void findAllBoardsTest() {
-//        // given
-//        Pageable pageable =  PageRequest.of(3, 5, Sort.by("createdAt").descending());
-//        int categoryId = 0;
-//        List<Image> images = new ArrayList<>();
-//        images.add(createImage());
-//        Board board = createBoardWithImages(images);
-//        Page<Board> boards = null;
-//        given(boardRepository.findAllByCategoryId(any(), categoryId)).willReturn(boards);
-//
-//        // when
-//        List<BoardSimpleDto> result = boardService.findAllBoards(any(), categoryId);
-//
-//        // then
-//        verify(boardService.findAllBoards(pageable, anyInt()));
-    }
+        // given
+        String sort = "likeCount";
+        Integer page = 0;
+        PageRequest pageRequest = PageRequest.of(page, 10, Sort.by(sort).descending().and(Sort.by("id")));
 
+        assertThat(pageRequest.getPageNumber()).isEqualTo(0);
+    }
 
     @Test
     @DisplayName("findBoard 서비스 테스트")
@@ -145,7 +138,7 @@ public class BoardServiceTest {
         Board board = createBoard();
         board.setLiked(1);
         LikeBoard likeBoard = new LikeBoard(1L, board, member, true);
-        given(likeBoardRepository.findByBoardAndUser(board, member)).willReturn(Optional.of(likeBoard));
+        given(likeBoardRepository.findByBoardAndMember(board, member)).willReturn(Optional.of(likeBoard));
 
         // when
         String result = boardService.removeLikeBoard(board, member);
@@ -162,7 +155,7 @@ public class BoardServiceTest {
         Board board = createBoard();
         Member member = createUser();
         LikeBoard likeBoard = new LikeBoard(1L, board, member, true);
-        given(likeBoardRepository.findByBoardAndUser(board, member)).willReturn(Optional.of(likeBoard));
+        given(likeBoardRepository.findByBoardAndMember(board, member)).willReturn(Optional.of(likeBoard));
 
         // when
         boolean result = boardService.hasLikeBoard(board, member);
@@ -196,7 +189,7 @@ public class BoardServiceTest {
         Board board = createBoard();
         board.setFavorited(1);
         Favorite favorite = createFavoriteWithFavorite(board, member);
-        given(favoriteRepository.findByBoardAndUser(board, member)).willReturn(Optional.of(favorite));
+        given(favoriteRepository.findByBoardAndMember(board, member)).willReturn(Optional.of(favorite));
 
         // when
         String result = boardService.removeFavoriteBoard(board, member);
@@ -213,7 +206,7 @@ public class BoardServiceTest {
         Board board = createBoard();
         Member member = createUser();
         Favorite favorite = createFavoriteWithFavorite(board, member);
-        given(favoriteRepository.findByBoardAndUser(board, member)).willReturn(Optional.of(favorite));
+        given(favoriteRepository.findByBoardAndMember(board, member)).willReturn(Optional.of(favorite));
 
         // when
         boolean result = boardService.hasFavoriteBoard(board, member);

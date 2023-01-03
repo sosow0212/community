@@ -91,10 +91,6 @@ public class BoardControllerTest {
                                 })
                                 .contentType(MediaType.MULTIPART_FORM_DATA))
                 .andExpect(status().isCreated());
-
-//        verify(boardService).create(boardCreateRequestArgumentCaptor.capture(), anyInt(), user);
-//        BoardCreateRequest capturedReq = boardCreateRequestArgumentCaptor.getValue();
-//        assertThat(capturedReq.getImages().size()).isEqualTo(2);
     }
 
     @Test
@@ -106,7 +102,6 @@ public class BoardControllerTest {
 
         // when, then
         assertThat(result).isEqualTo(null);
-
     }
 
 
@@ -119,8 +114,6 @@ public class BoardControllerTest {
 
         // when, then
         assertThat(result).isEqualTo(null);
-
-
     }
 
 
@@ -155,12 +148,10 @@ public class BoardControllerTest {
     public void likeBoardTest() throws Exception {
         // given
         Long id = 1L;
-
         Member member = createUserWithAdminRole();
         Authentication authentication = new UsernamePasswordAuthenticationToken(member.getId(), "", Collections.emptyList());
         SecurityContextHolder.getContext().setAuthentication(authentication);
         given(memberRepository.findByUsername(authentication.getName())).willReturn(Optional.of(member));
-
 
         // when, then
         mockMvc.perform(
@@ -177,12 +168,10 @@ public class BoardControllerTest {
     public void favoriteBoardTest() throws Exception {
         // given
         Long id = 1L;
-
         Member member = createUserWithAdminRole();
         Authentication authentication = new UsernamePasswordAuthenticationToken(member.getId(), "", Collections.emptyList());
         SecurityContextHolder.getContext().setAuthentication(authentication);
         given(memberRepository.findByUsername(authentication.getName())).willReturn(Optional.of(member));
-
 
         // when, then
         mockMvc.perform(
@@ -199,20 +188,15 @@ public class BoardControllerTest {
     public void editBoardTest() throws Exception {
         // given
         ArgumentCaptor<BoardUpdateRequest> boardUpdateRequestArgumentCaptor = ArgumentCaptor.forClass(BoardUpdateRequest.class);
-
         List<MultipartFile> addedImages = new ArrayList<>();
         addedImages.add(new MockMultipartFile("test1", "test1.PNG", MediaType.IMAGE_PNG_VALUE, "test1".getBytes()));
         addedImages.add(new MockMultipartFile("test2", "test2.PNG", MediaType.IMAGE_PNG_VALUE, "test2".getBytes()));
-
         List<Integer> deletedImages = List.of(1, 2);
-
         BoardUpdateRequest req = new BoardUpdateRequest("title", "content", addedImages, deletedImages);
-
         Member member = createUserWithAdminRole();
         Authentication authentication = new UsernamePasswordAuthenticationToken(member.getId(), "", Collections.emptyList());
         SecurityContextHolder.getContext().setAuthentication(authentication);
         given(memberRepository.findByUsername(authentication.getName())).willReturn(Optional.of(member));
-
 
         // when, then
         mockMvc.perform(
@@ -228,16 +212,6 @@ public class BoardControllerTest {
                                 })
                                 .contentType(MediaType.MULTIPART_FORM_DATA))
                 .andExpect(status().isOk());
-
-//        verify(boardService).editBoard(anyInt(), boardUpdateRequestArgumentCaptor.capture(), user);
-//
-//        BoardUpdateRequest capturedReq = boardUpdateRequestArgumentCaptor.getValue();
-//        List<MultipartFile> capturedAddedImages = capturedReq.getAddedImages();
-//        assertThat(capturedAddedImages.size()).isEqualTo(2);
-//
-//        List<Integer> capturedDeletedImages = capturedReq.getDeletedImages();
-//        Assertions.assertThat(capturedDeletedImages.size()).isEqualTo(2);
-//        Assertions.assertThat(capturedDeletedImages).contains(deletedImages.get(0), deletedImages.get(1));
     }
 }
 

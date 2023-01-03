@@ -2,7 +2,9 @@ package yoon.community.service.board;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -56,12 +58,22 @@ public class BoardService {
     }
 
     @Transactional(readOnly = true)
-    public List<BoardSimpleDto> findAllBoards(Pageable pageable, Long categoryId) {
-        Page<Board> boards = boardRepository.findAllByCategoryId(pageable, categoryId);
+    public BoardFindAllWithPagingResponseDto findAllBoards(Integer page, int categoryId) {
+        Page<Board> boards = makePageBoards(page, categoryId);
+        return responsePagingBoards(boards);
+    }
+
+    private BoardFindAllWithPagingResponseDto responsePagingBoards(Page<Board> boards) {
         List<BoardSimpleDto> boardSimpleDtoList = boards.stream()
                 .map(i -> new BoardSimpleDto().toDto(i))
                 .collect(toList());
-        return boardSimpleDtoList;
+        return BoardFindAllWithPagingResponseDto.toDto(boardSimpleDtoList, new PageInfoDto(boards));
+    }
+
+    private Page<Board> makePageBoards(Integer page, int categoryId) {
+        PageRequest pageRequest = PageRequest.of(page, 10, Sort.by("id").descending());
+        Page<Board> boards = boardRepository.findAllByCategoryId(pageRequest, categoryId);
+        return boards;
     }
 
     @Transactional(readOnly = true)
@@ -149,7 +161,7 @@ public class BoardService {
     }
 
     public String removeLikeBoard(Board board, Member member) {
-        LikeBoard likeBoard = likeBoardRepository.findByBoardAndUser(board, member).orElseThrow(() -> {
+        LikeBoard likeBoard = likeBoardRepository.findByBoardAndMember(board, member).orElseThrow(() -> {
             throw new IllegalArgumentException("'좋아요' 기록을 찾을 수 없습니다.");
         });
         likeBoardRepository.delete(likeBoard);
@@ -157,7 +169,7 @@ public class BoardService {
     }
 
     public boolean hasLikeBoard(Board board, Member member) {
-        return likeBoardRepository.findByBoardAndUser(board, member).isPresent();
+        return likeBoardRepository.findByBoardAndMember(board, member).isPresent();
     }
 
     public String createFavoriteBoard(Board board, Member member) {
@@ -167,14 +179,14 @@ public class BoardService {
     }
 
     public String removeFavoriteBoard(Board board, Member member) {
-        Favorite favorite = favoriteRepository.findByBoardAndUser(board, member)
+        Favorite favorite = favoriteRepository.findByBoardAndMember(board, member)
                 .orElseThrow(FavoriteNotFoundException::new);
         favoriteRepository.delete(favorite);
         return SUCCESS_UNFAVORITE_BOARD;
     }
 
     public boolean hasFavoriteBoard(Board board, Member member) {
-        return favoriteRepository.findByBoardAndUser(board, member).isPresent();
+        return favoriteRepository.findByBoardAndMember(board, member).isPresent();
     }
 }
 
