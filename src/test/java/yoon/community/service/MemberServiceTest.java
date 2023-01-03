@@ -7,6 +7,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import yoon.community.dto.member.MemberEditRequestDto;
+import yoon.community.dto.member.MemberSimpleResponseDto;
 import yoon.community.entity.member.Authority;
 import yoon.community.entity.member.Member;
 import yoon.community.exception.MemberNotFoundException;
@@ -42,7 +43,7 @@ public class MemberServiceTest {
         given(memberRepository.findById(anyLong())).willReturn(Optional.of(member));
 
         // when
-        MemberEditRequestDto result = memberService.findMember(1L);
+        MemberSimpleResponseDto result = memberService.findMember(1L);
 
         // then
         assertThat(result.getName()).isEqualTo(member.getName());

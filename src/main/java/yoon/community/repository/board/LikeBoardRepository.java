@@ -8,5 +8,5 @@ import yoon.community.entity.member.Member;
 
 public interface LikeBoardRepository extends JpaRepository<LikeBoard, Long> {
 
-    Optional<LikeBoard> findByBoardAndUser(Board board, Member member);
+    Optional<LikeBoard> findByBoardAndMember(Board board, Member member);
 }

@@ -13,7 +13,7 @@ public class CorsConfig {
     public CorsFilter corsFilter() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
-        config.addAllowedOrigin("http://localhost:3000"); // e.g. http://domain1.com
+        config.addAllowedOrigin("^https?:\\/\\/https://main--chimerical-malabi-ffde60.netlify.app/$"); // e.g. /**, http://domain1.com
 
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");

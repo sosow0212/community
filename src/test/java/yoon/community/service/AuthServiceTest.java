@@ -86,6 +86,4 @@ public class AuthServiceTest {
         assertThatThrownBy(() -> authService.signIn(new LoginRequestDto("username", "password")))
                 .isInstanceOf(LoginFailureException.class);
     }
-
-
 }
