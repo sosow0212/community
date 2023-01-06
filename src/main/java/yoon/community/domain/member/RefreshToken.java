@@ -1,4 +1,4 @@
-package yoon.community.entity.member;
+package yoon.community.domain.member;
 
 import lombok.Builder;
 import lombok.Getter;

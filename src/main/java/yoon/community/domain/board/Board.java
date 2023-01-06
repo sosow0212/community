@@ -1,13 +1,13 @@
-package yoon.community.entity.board;
+package yoon.community.domain.board;
 
 import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.web.multipart.MultipartFile;
 import yoon.community.dto.board.BoardUpdateRequest;
-import yoon.community.entity.category.Category;
-import yoon.community.entity.common.EntityDate;
-import yoon.community.entity.member.Member;
+import yoon.community.domain.category.Category;
+import yoon.community.domain.common.EntityDate;
+import yoon.community.domain.member.Member;
 
 import javax.persistence.*;
 import java.util.ArrayList;

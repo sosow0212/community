@@ -1,8 +1,8 @@
 package yoon.community.factory;
 
-import yoon.community.entity.board.Board;
-import yoon.community.entity.board.Favorite;
-import yoon.community.entity.member.Member;
+import yoon.community.domain.board.Board;
+import yoon.community.domain.board.Favorite;
+import yoon.community.domain.member.Member;
 
 public class FavoriteFactory {
     public static Favorite createFavoriteWithNotFavorite(Board board, Member member) {

@@ -4,7 +4,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import yoon.community.entity.category.Category;
+import yoon.community.domain.category.Category;
 
 public class CategoryTest {
     @Test

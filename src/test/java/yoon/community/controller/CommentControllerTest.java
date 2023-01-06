@@ -17,7 +17,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import yoon.community.controller.comment.CommentController;
 import yoon.community.dto.comment.CommentCreateRequest;
 import yoon.community.dto.comment.CommentReadCondition;
-import yoon.community.entity.member.Member;
+import yoon.community.domain.member.Member;
 import yoon.community.repository.member.MemberRepository;
 import yoon.community.service.comment.CommentService;
 

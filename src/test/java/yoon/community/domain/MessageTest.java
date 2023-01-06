@@ -7,8 +7,8 @@ import static yoon.community.factory.UserFactory.createUser2;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import yoon.community.entity.message.Message;
-import yoon.community.entity.member.Member;
+import yoon.community.domain.message.Message;
+import yoon.community.domain.member.Member;
 
 public class MessageTest {
     Member sender = createUser();

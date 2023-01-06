@@ -3,7 +3,7 @@ package yoon.community.dto.message;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import yoon.community.entity.message.Message;
+import yoon.community.domain.message.Message;
 
 @Data
 @NoArgsConstructor

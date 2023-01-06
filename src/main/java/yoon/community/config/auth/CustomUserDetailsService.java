@@ -9,7 +9,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import yoon.community.entity.member.Member;
+import yoon.community.domain.member.Member;
 import yoon.community.repository.member.MemberRepository;
 
 import java.util.Collections;

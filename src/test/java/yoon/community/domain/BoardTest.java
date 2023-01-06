@@ -6,7 +6,6 @@ import static yoon.community.factory.BoardFactory.createBoard;
 import static yoon.community.factory.BoardFactory.createBoardWithImages;
 import static yoon.community.factory.CategoryFactory.createCategory;
 import static yoon.community.factory.ImageFactory.createImage;
-import static yoon.community.factory.ImageFactory.createImageWithIdAndOriginName;
 import static yoon.community.factory.UserFactory.createUser;
 import static yoon.community.factory.dto.BoardUpdateRequestFactory.createBoardUpdateRequest;
 
@@ -18,9 +17,8 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 import yoon.community.dto.board.BoardUpdateRequest;
-import yoon.community.entity.board.Board;
-import yoon.community.entity.board.Board.ImageUpdatedResult;
-import yoon.community.entity.board.Image;
+import yoon.community.domain.board.Board;
+import yoon.community.domain.board.Image;
 
 public class BoardTest {
     @Test

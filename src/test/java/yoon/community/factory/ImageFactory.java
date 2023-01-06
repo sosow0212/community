@@ -1,7 +1,7 @@
 package yoon.community.factory;
 
 import org.springframework.test.util.ReflectionTestUtils;
-import yoon.community.entity.board.Image;
+import yoon.community.domain.board.Image;
 
 public class ImageFactory {
     public static Image createImage() {

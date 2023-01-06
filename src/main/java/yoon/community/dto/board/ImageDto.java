@@ -2,7 +2,7 @@ package yoon.community.dto.board;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import yoon.community.entity.board.Image;
+import yoon.community.domain.board.Image;
 
 @Data
 @AllArgsConstructor

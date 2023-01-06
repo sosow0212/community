@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.domain.Page;
-import yoon.community.entity.board.Board;
+import yoon.community.domain.board.Board;
 
 @AllArgsConstructor
 @NoArgsConstructor

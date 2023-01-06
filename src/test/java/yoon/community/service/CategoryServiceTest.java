@@ -8,7 +8,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import yoon.community.dto.category.CategoryCreateRequest;
 import yoon.community.dto.category.CategoryDto;
-import yoon.community.entity.category.Category;
+import yoon.community.domain.category.Category;
 import yoon.community.repository.category.CategoryRepository;
 import yoon.community.repository.member.MemberRepository;
 import yoon.community.service.category.CategoryService;

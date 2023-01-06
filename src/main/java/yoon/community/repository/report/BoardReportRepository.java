@@ -2,7 +2,7 @@ package yoon.community.repository.report;
 
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
-import yoon.community.entity.report.BoardReportHistory;
+import yoon.community.domain.report.BoardReportHistory;
 
 import java.util.List;
 

@@ -5,8 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import yoon.community.dto.member.MemberEditRequestDto;
-import yoon.community.entity.report.MemberReportHistory;
-import yoon.community.entity.member.Member;
+import yoon.community.domain.report.MemberReportHistory;
+import yoon.community.domain.member.Member;
 
 @Data
 @NoArgsConstructor

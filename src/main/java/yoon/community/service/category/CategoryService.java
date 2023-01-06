@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import yoon.community.dto.category.CategoryCreateRequest;
 import yoon.community.dto.category.CategoryDto;
-import yoon.community.entity.category.Category;
+import yoon.community.domain.category.Category;
 import yoon.community.exception.CategoryNotFoundException;
 import yoon.community.repository.category.CategoryRepository;
 

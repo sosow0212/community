@@ -1,19 +1,16 @@
-package yoon.community.entity.board;
+package yoon.community.domain.board;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-import org.springframework.format.annotation.DateTimeFormat;
-import yoon.community.entity.common.EntityDate;
+import yoon.community.domain.common.EntityDate;
 import yoon.community.exception.UnsupportedImageFormatException;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.UUID;
 

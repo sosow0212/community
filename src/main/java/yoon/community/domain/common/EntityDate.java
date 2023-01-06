@@ -1,4 +1,4 @@
-package yoon.community.entity.common;
+package yoon.community.domain.common;
 
 import java.time.LocalDateTime;
 import javax.persistence.Column;

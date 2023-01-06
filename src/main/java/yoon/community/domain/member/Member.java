@@ -1,4 +1,4 @@
-package yoon.community.entity.member;
+package yoon.community.domain.member;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import lombok.Setter;
 import yoon.community.dto.member.MemberEditRequestDto;
-import yoon.community.entity.common.EntityDate;
+import yoon.community.domain.common.EntityDate;
 
 @Getter
 @Setter

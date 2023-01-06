@@ -3,7 +3,7 @@ package yoon.community.dto.member;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import yoon.community.entity.member.Member;
+import yoon.community.domain.member.Member;
 
 @Data
 @AllArgsConstructor

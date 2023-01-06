@@ -1,6 +1,6 @@
 package yoon.community.factory;
 
-import yoon.community.entity.category.Category;
+import yoon.community.domain.category.Category;
 
 public class CategoryFactory {
     public static Category createCategory() {

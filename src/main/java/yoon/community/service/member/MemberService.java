@@ -7,13 +7,12 @@ import org.springframework.transaction.annotation.Transactional;
 import yoon.community.dto.board.BoardSimpleDto;
 import yoon.community.dto.member.MemberEditRequestDto;
 import yoon.community.dto.member.MemberSimpleResponseDto;
-import yoon.community.entity.board.Favorite;
-import yoon.community.entity.member.Member;
+import yoon.community.domain.board.Favorite;
+import yoon.community.domain.member.Member;
 import yoon.community.exception.MemberNotFoundException;
 import yoon.community.repository.board.FavoriteRepository;
 import yoon.community.repository.member.MemberRepository;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor

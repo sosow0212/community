@@ -3,7 +3,7 @@ package yoon.community.dto.board;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import yoon.community.entity.board.Board;
+import yoon.community.domain.board.Board;
 
 @Data
 @AllArgsConstructor

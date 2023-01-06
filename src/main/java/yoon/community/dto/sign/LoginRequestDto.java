@@ -5,8 +5,8 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import yoon.community.entity.member.Authority;
-import yoon.community.entity.member.Member;
+import yoon.community.domain.member.Authority;
+import yoon.community.domain.member.Member;
 
 import javax.validation.constraints.NotBlank;
 

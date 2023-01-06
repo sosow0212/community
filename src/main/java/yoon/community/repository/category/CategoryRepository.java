@@ -2,7 +2,7 @@ package yoon.community.repository.category;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import yoon.community.entity.category.Category;
+import yoon.community.domain.category.Category;
 
 import java.util.List;
 

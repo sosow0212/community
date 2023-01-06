@@ -1,7 +1,7 @@
 package yoon.community.factory;
 
-import yoon.community.entity.member.Authority;
-import yoon.community.entity.member.Member;
+import yoon.community.domain.member.Authority;
+import yoon.community.domain.member.Member;
 
 public class UserFactory {
 

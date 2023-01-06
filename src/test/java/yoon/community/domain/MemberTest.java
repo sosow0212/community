@@ -6,7 +6,7 @@ import static yoon.community.factory.UserFactory.createUser;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import yoon.community.dto.member.MemberEditRequestDto;
-import yoon.community.entity.member.Member;
+import yoon.community.domain.member.Member;
 
 public class MemberTest {
     @Test

@@ -16,7 +16,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import yoon.community.controller.member.MemberController;
 import yoon.community.dto.member.MemberEditRequestDto;
-import yoon.community.entity.member.Member;
+import yoon.community.domain.member.Member;
 import yoon.community.repository.member.MemberRepository;
 import yoon.community.service.member.MemberService;
 

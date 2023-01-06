@@ -1,11 +1,11 @@
-package yoon.community.entity.comment;
+package yoon.community.domain.comment;
 
 import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-import yoon.community.entity.board.Board;
-import yoon.community.entity.common.EntityDate;
-import yoon.community.entity.member.Member;
+import yoon.community.domain.board.Board;
+import yoon.community.domain.common.EntityDate;
+import yoon.community.domain.member.Member;
 
 import javax.persistence.*;
 

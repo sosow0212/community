@@ -1,7 +1,7 @@
 package yoon.community.repository.commnet;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import yoon.community.entity.comment.Comment;
+import yoon.community.domain.comment.Comment;
 
 import java.util.List;
 

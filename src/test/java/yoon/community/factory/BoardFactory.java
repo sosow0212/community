@@ -1,12 +1,12 @@
 package yoon.community.factory;
 
-import yoon.community.entity.board.Board;
-import yoon.community.entity.board.Image;
+import yoon.community.domain.board.Board;
+import yoon.community.domain.board.Image;
 
 import java.util.ArrayList;
 import java.util.List;
-import yoon.community.entity.category.Category;
-import yoon.community.entity.member.Member;
+import yoon.community.domain.category.Category;
+import yoon.community.domain.member.Member;
 
 import static yoon.community.factory.CategoryFactory.createCategory;
 import static yoon.community.factory.ImageFactory.createImage;

@@ -1,4 +1,4 @@
-package yoon.community.entity.message;
+package yoon.community.domain.message;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -6,8 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-import yoon.community.entity.common.EntityDate;
-import yoon.community.entity.member.Member;
+import yoon.community.domain.common.EntityDate;
+import yoon.community.domain.member.Member;
 
 import javax.persistence.*;
 

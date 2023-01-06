@@ -3,7 +3,7 @@ package yoon.community.repository.board;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-import yoon.community.entity.board.Board;
+import yoon.community.domain.board.Board;
 
 import java.util.List;
 

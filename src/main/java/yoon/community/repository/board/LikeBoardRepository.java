@@ -2,9 +2,9 @@ package yoon.community.repository.board;
 
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
-import yoon.community.entity.board.Board;
-import yoon.community.entity.board.LikeBoard;
-import yoon.community.entity.member.Member;
+import yoon.community.domain.board.Board;
+import yoon.community.domain.board.LikeBoard;
+import yoon.community.domain.member.Member;
 
 public interface LikeBoardRepository extends JpaRepository<LikeBoard, Long> {
 

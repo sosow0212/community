@@ -10,7 +10,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import yoon.community.dto.comment.CommentCreateRequest;
 import yoon.community.dto.comment.CommentReadCondition;
-import yoon.community.entity.member.Member;
+import yoon.community.domain.member.Member;
 import yoon.community.exception.MemberNotFoundException;
 import yoon.community.repository.member.MemberRepository;
 import yoon.community.response.Response;

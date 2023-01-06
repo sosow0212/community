@@ -1,4 +1,4 @@
-package yoon.community.entity.category;
+package yoon.community.domain.category;
 
 import lombok.AccessLevel;
 import lombok.Getter;

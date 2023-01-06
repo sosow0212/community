@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import yoon.community.entity.board.Board;
+import yoon.community.domain.board.Board;
 
 import java.util.List;
 

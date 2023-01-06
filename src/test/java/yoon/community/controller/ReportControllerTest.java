@@ -17,7 +17,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import yoon.community.controller.report.ReportController;
 import yoon.community.dto.report.BoardReportRequest;
 import yoon.community.dto.report.MemberReportRequestDto;
-import yoon.community.entity.member.Member;
+import yoon.community.domain.member.Member;
 import yoon.community.repository.member.MemberRepository;
 import yoon.community.service.report.ReportService;
 

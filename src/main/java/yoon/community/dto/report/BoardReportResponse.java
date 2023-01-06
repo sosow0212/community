@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import yoon.community.entity.report.BoardReportHistory;
+import yoon.community.domain.report.BoardReportHistory;
 
 @Data
 @NoArgsConstructor

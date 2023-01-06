@@ -6,7 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import yoon.community.dto.member.MemberEditRequestDto;
-import yoon.community.entity.comment.Comment;
+import yoon.community.domain.comment.Comment;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Data

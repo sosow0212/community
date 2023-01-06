@@ -1,7 +1,7 @@
 package yoon.community.factory;
 
-import yoon.community.entity.message.Message;
-import yoon.community.entity.member.Member;
+import yoon.community.domain.message.Message;
+import yoon.community.domain.member.Member;
 
 import static yoon.community.factory.UserFactory.createUser;
 import static yoon.community.factory.UserFactory.createUser2;
