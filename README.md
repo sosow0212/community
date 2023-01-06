@@ -6,6 +6,7 @@
 
 - [X] 기본적인 API 설계 완료 (Done 2022.08)
 - [X] 레거시 프로젝트 클린코드 적용과 리팩토링 작업 시작 (Done 2022.11.28)
+- [X] Docker, Docker-compose를 이용한 환경 세팅 (Done 22.12.26)
 - [X] 1차 클린코드 리팩토링 작업 완료 & 도메인 메서드 분리 작업 (Done 22.12.26)
 - [X] 남은 도메인 단위 테스트 작성 (Done 22.12.26)
 - [X] 확장성을 위해 Domain 기본키 Long 타입으로 리팩토링 작업 (Done 22.12.31)
@@ -62,7 +63,7 @@
 
 ### JUnit5 테스트
 
-- Junit5 를 이용해서 Controller, Service, Domain 레이어의 단위테스트를 진행했습니다.
+- JUnit5 를 이용해서 Domain, Service, Controller 레이어의 단위테스트를 진행했습니다.
 
 <img width="323" alt="image" src="https://member-images.githubusercontent.com/63213487/186866768-4e091e48-e3ee-43c1-86db-aa5c81069227.png"> 
 <img width="316" alt="image" src="https://member-images.githubusercontent.com/63213487/186866894-e44c50e7-572b-4298-ad84-3e1323ce5373.png">
