@@ -1,4 +1,4 @@
-package yoon.community.config;
+package yoon.community.config.security;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
