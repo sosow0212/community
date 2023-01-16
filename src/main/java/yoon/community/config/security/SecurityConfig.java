@@ -125,6 +125,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/api/categories/start").access("hasRole('ROLE_ADMIN')")
                 .antMatchers(HttpMethod.DELETE, "/api/categories/{id}").access("hasRole('ROLE_ADMIN')")
 
+                .antMatchers(HttpMethod.GET, "/api/points").access("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
+
+
                 .anyRequest().hasAnyRole("ROLE_ADMIN")
 //                .anyRequest().authenticated() // 나머지는 전부 인증 필요
 //                .anyRequest().permitAll()   // 나머지는 모두 그냥 접근 가능

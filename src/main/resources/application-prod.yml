@@ -5,9 +5,9 @@ spring:
     password: ${password}
     driver-class-name: com.mysql.cj.jdbc.Driver
   redis:
-    host: localhost
-    port: 6379
+    host: ${redis.host}
+    port: ${redis.port}
 
 upload:
   image:
-    location: /Users/yoon/Desktop/image
+    location: ${upload.image.url}
