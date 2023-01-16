@@ -45,8 +45,6 @@ public class Member extends EntityDate {
     public Member(String username, String password, Authority authority) {
         this.username = username;
         this.password = password;
-        this.name = name;
-        this.nickname = nickname;
         this.reported = false;
         this.authority = authority;
     }

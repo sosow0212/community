@@ -8,6 +8,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import yoon.community.config.jwt.TokenProvider;
+import yoon.community.domain.point.Point;
 import yoon.community.dto.sign.*;
 import yoon.community.domain.member.Authority;
 import yoon.community.domain.member.Member;
@@ -15,6 +16,7 @@ import yoon.community.domain.member.RefreshToken;
 import yoon.community.exception.LoginFailureException;
 import yoon.community.exception.MemberNicknameAlreadyExistsException;
 import yoon.community.exception.UsernameAlreadyExistsException;
+import yoon.community.repository.point.PointRepository;
 import yoon.community.repository.refreshToken.RefreshTokenRepository;
 import yoon.community.repository.member.MemberRepository;
 
@@ -23,6 +25,7 @@ import yoon.community.repository.member.MemberRepository;
 public class AuthService {
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final MemberRepository memberRepository;
+    private final PointRepository pointRepository;
     private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
     private final RefreshTokenRepository refreshTokenRepository;
@@ -32,6 +35,7 @@ public class AuthService {
         validateSignUpInfo(req);
         Member member = createSignupFormOfUser(req);
         memberRepository.save(member);
+        savePointEntity(member);
     }
 
     @Transactional
@@ -88,6 +92,11 @@ public class AuthService {
                 .authority(Authority.ROLE_USER)
                 .build();
         return member;
+    }
+
+    private void savePointEntity(Member member) {
+        Point point = new Point(member);
+        pointRepository.save(point);
     }
 
     private void validateSignUpInfo(SignUpRequestDto signUpRequestDto) {
