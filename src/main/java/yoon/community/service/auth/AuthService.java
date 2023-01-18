@@ -51,19 +51,6 @@ public class AuthService {
         redisTemplate.opsForZSet().add(RANKING_KEY, member.getUsername(), point.getPoint());
     }
 
-    public void test() {
-        System.out.println("hihihihihi");
-        ZSetOperations<String, String> zSetOperations = redisTemplate.opsForZSet();
-        zSetOperations.add(RANKING_KEY, "username", 10);
-    }
-
-    public void test2() {
-        Double ranking1 = redisTemplate.opsForZSet().score(RANKING_KEY, "username");
-        Set<String> ranking2 = redisTemplate.opsForZSet().reverseRangeByScore(RANKING_KEY, ranking1, ranking1, 0, 1);
-        System.out.println(ranking1 + " " + ranking2);
-    }
-
-
     @Transactional
     public TokenResponseDto signIn(LoginRequestDto req) {
         Member member = memberRepository.findByUsername(req.getUsername()).orElseThrow(() -> {
