@@ -1,12 +1,16 @@
 package yoon.community.service.auth;
 
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import yoon.community.config.constant.Constant;
 import yoon.community.config.jwt.TokenProvider;
 import yoon.community.domain.point.Point;
 import yoon.community.dto.sign.*;
@@ -23,9 +27,11 @@ import yoon.community.repository.member.MemberRepository;
 @Service
 @RequiredArgsConstructor
 public class AuthService {
+    private final static String RANKING_KEY = Constant.REDIS_RANKING_KEY;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final MemberRepository memberRepository;
     private final PointRepository pointRepository;
+    private final RedisTemplate<String, String> redisTemplate;
     private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
     private final RefreshTokenRepository refreshTokenRepository;
@@ -37,6 +43,26 @@ public class AuthService {
         memberRepository.save(member);
         savePointEntity(member);
     }
+
+    private void savePointEntity(Member member) {
+        Point point = new Point(member);
+        pointRepository.save(point);
+        // redis-cli 에서 [ZSCORE key username]로 조회 가능
+        redisTemplate.opsForZSet().add(RANKING_KEY, member.getUsername(), point.getPoint());
+    }
+
+    public void test() {
+        System.out.println("hihihihihi");
+        ZSetOperations<String, String> zSetOperations = redisTemplate.opsForZSet();
+        zSetOperations.add(RANKING_KEY, "username", 10);
+    }
+
+    public void test2() {
+        Double ranking1 = redisTemplate.opsForZSet().score(RANKING_KEY, "username");
+        Set<String> ranking2 = redisTemplate.opsForZSet().reverseRangeByScore(RANKING_KEY, ranking1, ranking1, 0, 1);
+        System.out.println(ranking1 + " " + ranking2);
+    }
+
 
     @Transactional
     public TokenResponseDto signIn(LoginRequestDto req) {
@@ -65,7 +91,6 @@ public class AuthService {
         return authentication;
     }
 
-
     @Transactional
     public TokenResponseDto reissue(TokenRequestDto tokenRequestDto) {
         validateRefreshToken(tokenRequestDto);
@@ -92,11 +117,6 @@ public class AuthService {
                 .authority(Authority.ROLE_USER)
                 .build();
         return member;
-    }
-
-    private void savePointEntity(Member member) {
-        Point point = new Point(member);
-        pointRepository.save(point);
     }
 
     private void validateSignUpInfo(SignUpRequestDto signUpRequestDto) {
