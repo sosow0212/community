@@ -11,6 +11,7 @@ import org.springframework.data.redis.repository.configuration.EnableRedisReposi
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
+@EnableRedisRepositories
 @PropertySource("classpath:")
 public class RedisConfig {
     @Value("${redis.host}")
@@ -25,8 +26,10 @@ public class RedisConfig {
     }
 
     @Bean
-    public RedisTemplate<?, ?> redisTemplate() {
-        RedisTemplate<?, ?> redisTemplate = new RedisTemplate<>();
+    public RedisTemplate<String, String> redisTemplate() {
+        RedisTemplate<String, String> redisTemplate = new RedisTemplate<>();
+        redisTemplate.setKeySerializer(new StringRedisSerializer());//key 깨짐 방지
+        redisTemplate.setValueSerializer(new StringRedisSerializer());//value 깨짐 방지
         redisTemplate.setConnectionFactory(redisConnectionFactory());
         return redisTemplate;
     }
