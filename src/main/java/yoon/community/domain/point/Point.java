@@ -13,13 +13,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import yoon.community.domain.common.EntityDate;
 import yoon.community.domain.member.Member;
 
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class Point {
+public class Point extends EntityDate {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
