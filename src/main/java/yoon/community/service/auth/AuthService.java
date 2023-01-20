@@ -37,17 +37,17 @@ public class AuthService {
     private final RefreshTokenRepository refreshTokenRepository;
 
     @Transactional
-    public void signup(SignUpRequestDto req) {
+    public Member signup(SignUpRequestDto req) {
         validateSignUpInfo(req);
         Member member = createSignupFormOfUser(req);
         memberRepository.save(member);
-        savePointEntity(member);
+        return member;
     }
 
-    private void savePointEntity(Member member) {
+    @Transactional
+    public void savePointEntity(Member member) {
         Point point = new Point(member);
         pointRepository.save(point);
-        // redis-cli 에서 [ZSCORE key username]로 조회 가능
         redisTemplate.opsForZSet().add(RANKING_KEY, member.getUsername(), point.getPoint());
     }
 

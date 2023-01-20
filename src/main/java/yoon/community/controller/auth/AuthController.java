@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import yoon.community.domain.member.Member;
 import yoon.community.dto.sign.LoginRequestDto;
 import yoon.community.dto.sign.SignUpRequestDto;
 import yoon.community.dto.sign.TokenRequestDto;
@@ -26,7 +27,8 @@ public class AuthController {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/sign-up")
     public Response register(@Valid @RequestBody SignUpRequestDto signUpRequestDto) {
-        authService.signup(signUpRequestDto);
+        Member member = authService.signup(signUpRequestDto);
+        authService.savePointEntity(member);
         return success();
     }
 

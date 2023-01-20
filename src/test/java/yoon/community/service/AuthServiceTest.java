@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.crypto.password.PasswordEncoder;
 import yoon.community.config.constant.Constant;
 import yoon.community.config.jwt.TokenProvider;
+import yoon.community.domain.member.Member;
 import yoon.community.dto.sign.*;
 import yoon.community.exception.LoginFailureException;
 import yoon.community.repository.point.PointRepository;
@@ -64,17 +65,16 @@ public class AuthServiceTest {
     @Test
     @DisplayName("signup 서비스 테스트")
     void signupTest() {
-//        // given
-//        SignUpRequestDto req = new SignUpRequestDto("username", "1234", "name", "nickname");
-//        given(memberRepository.existsByUsername(req.getUsername())).willReturn(false);
-//        given(memberRepository.existsByNickname(req.getNickname())).willReturn(false);
-//
-//        // when
-//        authService.signup(req);
-//
-//        // then
-//        verify(passwordEncoder).encode(req.getPassword());
-//        verify(memberRepository).save(any());
+        // given
+        SignUpRequestDto req = new SignUpRequestDto("username", "1234", "name", "nickname");
+        given(memberRepository.existsByNickname(req.getNickname())).willReturn(false);
+
+        // when
+        authService.signup(req);
+
+        // then
+        verify(passwordEncoder).encode(req.getPassword());
+        verify(memberRepository).save(any());
     }
 
     @Test
