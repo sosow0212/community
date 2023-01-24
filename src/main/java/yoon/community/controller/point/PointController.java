@@ -27,13 +27,6 @@ import yoon.community.service.point.PointService;
 public class PointController {
     private final PointService pointService;
 
-//    @ApiOperation(value = "포인트 랭킹 조회(페이징, MySQL)", notes = "전체 유저의 포인트 랭킹을 조회합니다.")
-//    @GetMapping("/points")
-//    @ResponseStatus(HttpStatus.OK)
-//    public Response findPointsRanking(@RequestParam(defaultValue = "0") Integer page) {
-//        return Response.success(pointService.findPointsRankingWithMySQL(page));
-//    }
-
     @ApiOperation(value = "포인트 랭킹 조회", notes = "전체 유저의 포인트 랭킹을 조회합니다.")
     @GetMapping("/points")
     @ResponseStatus(HttpStatus.OK)
