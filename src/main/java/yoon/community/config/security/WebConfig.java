@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.CacheControl;
 import org.springframework.validation.Validator;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
@@ -17,6 +18,7 @@ import java.time.Duration;
 @EnableWebMvc
 @Configuration
 @RequiredArgsConstructor
+@PropertySource("classpath:application.yml")
 public class WebConfig implements WebMvcConfigurer {
     private final MessageSource messageSource;
 

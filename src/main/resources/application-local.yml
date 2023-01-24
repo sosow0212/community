@@ -10,4 +10,4 @@ spring:
 
 upload:
   image:
-    location: /Users/yoon/Desktop/image
+    location: /Users/yoon/Desktop/image/

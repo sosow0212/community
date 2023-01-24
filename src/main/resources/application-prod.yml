@@ -10,4 +10,4 @@ spring:
 
 upload:
   image:
-    location: ${upload.image.url}
+    location: ${upload.image.aws.url}

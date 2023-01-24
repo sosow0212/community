@@ -13,7 +13,7 @@ import java.io.IOException;
 
 @Service
 @Slf4j
-@PropertySource("classpath:secure.properties")
+@PropertySource("classpath:application.yml")
 public class LocalFileService implements FileService{
     @Value("${upload.image.location}")
     private String location;
