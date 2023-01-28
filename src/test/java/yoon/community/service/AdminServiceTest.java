@@ -10,6 +10,7 @@ import yoon.community.dto.board.BoardSimpleDto;
 import yoon.community.dto.member.MemberEditRequestDto;
 import yoon.community.domain.board.Board;
 import yoon.community.domain.member.Member;
+import yoon.community.dto.member.MemberSimpleNicknameResponseDto;
 import yoon.community.repository.board.BoardRepository;
 import yoon.community.repository.report.BoardReportRepository;
 import yoon.community.repository.report.MemberReportRepository;
@@ -52,7 +53,7 @@ public class AdminServiceTest {
         given(memberRepository.findByReportedIsTrue()).willReturn(members);
 
         // when
-        List<MemberEditRequestDto> result = adminService.findReportedUsers();
+        List<MemberSimpleNicknameResponseDto> result = adminService.findReportedUsers();
 
         // then
         assertThat(result.size()).isEqualTo(1);
@@ -67,7 +68,7 @@ public class AdminServiceTest {
         given(memberRepository.findById(anyLong())).willReturn(Optional.of(member));
 
         // when
-        MemberEditRequestDto result = adminService.processUnlockUser(anyLong());
+        MemberSimpleNicknameResponseDto result = adminService.processUnlockUser(anyLong());
 
         // then
         verify(memberReportRepository).deleteAllByReportedUserId(anyLong());
