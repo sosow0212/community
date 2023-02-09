@@ -1,20 +1,19 @@
 package yoon.community.service.message;
 
+import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import yoon.community.domain.member.Member;
+import yoon.community.domain.message.Message;
 import yoon.community.dto.message.MessageCreateRequest;
 import yoon.community.dto.message.MessageDto;
-import yoon.community.domain.message.Message;
-import yoon.community.domain.member.Member;
 import yoon.community.exception.MemberNotEqualsException;
 import yoon.community.exception.MemberNotFoundException;
 import yoon.community.exception.MessageNotFoundException;
-import yoon.community.repository.message.MessageRepository;
 import yoon.community.repository.member.MemberRepository;
-
-import java.util.List;
+import yoon.community.repository.message.MessageRepository;
 
 @RequiredArgsConstructor
 @Service
@@ -24,19 +23,26 @@ public class MessageService {
 
     @Transactional
     public MessageDto createMessage(Member sender, MessageCreateRequest req) {
-        Member receiver = memberRepository.findByNickname(req.getReceiverNickname())
-                .orElseThrow(MemberNotFoundException::new);
-        Message message = new Message(req.getTitle(), req.getContent(), sender, receiver);
+        Member receiver = getReceiver(req);
+        Message message = getMessage(sender, req, receiver);
         return MessageDto.toDto(messageRepository.save(message));
+    }
+
+    private Member getReceiver(MessageCreateRequest req) {
+        return memberRepository.findByNickname(req.getReceiverNickname())
+                .orElseThrow(MemberNotFoundException::new);
+    }
+
+    private Message getMessage(Member sender, MessageCreateRequest req, Member receiver) {
+        return new Message(req.getTitle(), req.getContent(), sender, receiver);
     }
 
     @Transactional(readOnly = true)
     public List<MessageDto> receiveMessages(Member member) {
         List<Message> messageList = messageRepository.findAllByReceiverAndDeletedByReceiverFalseOrderByIdDesc(member);
-        List<MessageDto> messageDtoList = messageList.stream()
+        return messageList.stream()
                 .map(message -> MessageDto.toDto(message))
                 .collect(Collectors.toList());
-        return messageDtoList;
     }
 
 
@@ -59,10 +65,9 @@ public class MessageService {
     @Transactional(readOnly = true)
     public List<MessageDto> sendMessages(Member member) {
         List<Message> messageList = messageRepository.findAllBySenderAndDeletedBySenderFalseOrderByIdDesc(member);
-        List<MessageDto> messageDtoList = messageList.stream()
+        return messageList.stream()
                 .map(message -> MessageDto.toDto(message))
                 .collect(Collectors.toList());
-        return messageDtoList;
     }
 
     @Transactional(readOnly = true)
