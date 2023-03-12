@@ -1,5 +1,9 @@
 package yoon.community.service.board;
 
+import static java.util.stream.Collectors.toList;
+
+import java.util.List;
+import java.util.stream.IntStream;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -8,28 +12,29 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import yoon.community.dto.board.*;
 import yoon.community.domain.board.Board;
 import yoon.community.domain.board.Favorite;
 import yoon.community.domain.board.Image;
 import yoon.community.domain.board.LikeBoard;
 import yoon.community.domain.category.Category;
 import yoon.community.domain.member.Member;
+import yoon.community.dto.board.BoardCreateRequest;
+import yoon.community.dto.board.BoardCreateResponse;
+import yoon.community.dto.board.BoardFindAllWithPagingResponseDto;
+import yoon.community.dto.board.BoardResponseDto;
+import yoon.community.dto.board.BoardSimpleDto;
+import yoon.community.dto.board.BoardUpdateRequest;
+import yoon.community.dto.board.PageInfoDto;
 import yoon.community.exception.BoardNotFoundException;
 import yoon.community.exception.CategoryNotFoundException;
 import yoon.community.exception.FavoriteNotFoundException;
+import yoon.community.exception.LikeHistoryNotfoundException;
 import yoon.community.exception.MemberNotEqualsException;
 import yoon.community.repository.board.BoardRepository;
 import yoon.community.repository.board.FavoriteRepository;
 import yoon.community.repository.board.LikeBoardRepository;
 import yoon.community.repository.category.CategoryRepository;
 import yoon.community.service.file.FileService;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.IntStream;
-
-import static java.util.stream.Collectors.toList;
 
 @RequiredArgsConstructor
 @Service
@@ -49,12 +54,14 @@ public class BoardService {
     @Transactional
     public BoardCreateResponse createBoard(BoardCreateRequest req, int categoryId, Member member) {
         List<Image> images = req.getImages().stream()
-                .map(i -> new Image(i.getOriginalFilename()))
+                .map(image -> new Image(image.getOriginalFilename()))
                 .collect(toList());
+
         Category category = categoryRepository.findById(categoryId).orElseThrow(CategoryNotFoundException::new);
         Board board = boardRepository.save(new Board(req.getTitle(), req.getContent(), member, category, images));
+
         uploadImages(board.getImages(), req.getImages());
-        return new BoardCreateResponse(board.getId(), board.getTitle(), board.getContent());
+        return BoardCreateResponse.toDto(board);
     }
 
     @Transactional(readOnly = true)
@@ -65,7 +72,7 @@ public class BoardService {
 
     private BoardFindAllWithPagingResponseDto responsePagingBoards(Page<Board> boards) {
         List<BoardSimpleDto> boardSimpleDtoList = boards.stream()
-                .map(i -> new BoardSimpleDto().toDto(i))
+                .map(board -> new BoardSimpleDto().toDto(board))
                 .collect(toList());
         return BoardFindAllWithPagingResponseDto.toDto(boardSimpleDtoList, new PageInfoDto(boards));
     }
@@ -86,10 +93,12 @@ public class BoardService {
     @Transactional
     public String updateLikeOfBoard(Long id, Member member) {
         Board board = boardRepository.findById(id).orElseThrow(BoardNotFoundException::new);
+
         if (!hasLikeBoard(board, member)) {
             board.increaseLikeCount();
             return createLikeBoard(board, member);
         }
+
         board.decreaseLikeCount();
         return removeLikeBoard(board, member);
     }
@@ -97,10 +106,12 @@ public class BoardService {
     @Transactional
     public String updateOfFavoriteBoard(Long id, Member member) {
         Board board = boardRepository.findById(id).orElseThrow(BoardNotFoundException::new);
+
         if (!hasFavoriteBoard(board, member)) {
             board.increaseFavoriteCount();
             return createFavoriteBoard(board, member);
         }
+
         board.decreaseFavoriteCount();
         return removeFavoriteBoard(board, member);
     }
@@ -108,24 +119,28 @@ public class BoardService {
     @Transactional(readOnly = true)
     public List<BoardSimpleDto> findBestBoards(Pageable pageable) {
         Page<Board> boards = boardRepository.findByLikedGreaterThanEqual(pageable, RECOMMEND_SET_COUNT);
-        List<BoardSimpleDto> boardSimpleDtoList = new ArrayList<>();
-        boards.stream().forEach(i -> boardSimpleDtoList.add(new BoardSimpleDto().toDto(i)));
-        return boardSimpleDtoList;
+
+        return boards.stream()
+                .map(board -> new BoardSimpleDto().toDto(board))
+                .collect(toList());
     }
 
     @Transactional
     public BoardResponseDto editBoard(Long id, BoardUpdateRequest req, Member member) {
-        Board board = boardRepository.findById(id).orElseThrow(BoardNotFoundException::new);
+        Board board = boardRepository.findById(id)
+                .orElseThrow(BoardNotFoundException::new);
         validateBoardOwner(member, board);
+
         Board.ImageUpdatedResult result = board.update(req);
         uploadImages(result.getAddedImages(), result.getAddedImageFiles());
         deleteImages(result.getDeletedImages());
+
         return BoardResponseDto.toDto(board, member.getNickname());
     }
 
     @Transactional
-    public void deleteBoard(Long id, Member member) {
-        Board board = boardRepository.findById(id).orElseThrow(BoardNotFoundException::new);
+    public void deleteBoard(Long boardId, Member member) {
+        Board board = boardRepository.findById(boardId).orElseThrow(BoardNotFoundException::new);
         validateBoardOwner(member, board);
         boardRepository.delete(board);
     }
@@ -133,10 +148,10 @@ public class BoardService {
     @Transactional(readOnly = true)
     public List<BoardSimpleDto> searchBoard(String keyword, Pageable pageable) {
         Page<Board> boards = boardRepository.findByTitleContaining(keyword, pageable);
-        List<BoardSimpleDto> boardSimpleDtoList = boards.stream()
-                .map(i -> new BoardSimpleDto().toDto(i))
+
+        return boards.stream()
+                .map(board -> new BoardSimpleDto().toDto(board))
                 .collect(toList());
-        return boardSimpleDtoList;
     }
 
     private void uploadImages(List<Image> images, List<MultipartFile> fileImages) {
@@ -161,10 +176,11 @@ public class BoardService {
     }
 
     public String removeLikeBoard(Board board, Member member) {
-        LikeBoard likeBoard = likeBoardRepository.findByBoardAndMember(board, member).orElseThrow(() -> {
-            throw new IllegalArgumentException("'좋아요' 기록을 찾을 수 없습니다.");
-        });
+        LikeBoard likeBoard = likeBoardRepository.findByBoardAndMember(board, member)
+                .orElseThrow(LikeHistoryNotfoundException::new);
+
         likeBoardRepository.delete(likeBoard);
+
         return SUCCESS_UNLIKE_BOARD;
     }
 
@@ -181,7 +197,9 @@ public class BoardService {
     public String removeFavoriteBoard(Board board, Member member) {
         Favorite favorite = favoriteRepository.findByBoardAndMember(board, member)
                 .orElseThrow(FavoriteNotFoundException::new);
+
         favoriteRepository.delete(favorite);
+
         return SUCCESS_UNFAVORITE_BOARD;
     }
 

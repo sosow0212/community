@@ -134,6 +134,14 @@ public class ExceptionAdvice {
 
     // 404 응답
     // 게시글 찾기 실패
+    @ExceptionHandler(LikeHistoryNotfoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Response likeHistoryNotfoundException() {
+        return Response.failure(404, "좋아요 기록을 찾을 수 없습니다.");
+    }
+
+    // 404 응답
+    // 게시글 찾기 실패
     @ExceptionHandler(BoardNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public Response boardNotFoundException() {
