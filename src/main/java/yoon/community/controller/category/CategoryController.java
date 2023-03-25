@@ -23,6 +23,7 @@ import yoon.community.service.category.CategoryService;
 @RestController
 @RequestMapping("/api")
 public class CategoryController {
+
     private final CategoryService categoryService;
 
     @ApiOperation(value = "모든 카테고리 조회", notes = "모든 카테고리를 조회합니다.")

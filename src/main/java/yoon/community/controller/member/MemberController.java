@@ -7,9 +7,16 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.*;
-import yoon.community.dto.member.MemberEditRequestDto;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 import yoon.community.domain.member.Member;
+import yoon.community.dto.member.MemberEditRequestDto;
 import yoon.community.exception.MemberNotFoundException;
 import yoon.community.repository.member.MemberRepository;
 import yoon.community.response.Response;
@@ -20,6 +27,7 @@ import yoon.community.service.member.MemberService;
 @RequiredArgsConstructor
 @RestController
 public class MemberController {
+
     private final MemberService memberService;
     private final MemberRepository memberRepository;
 
@@ -64,8 +72,7 @@ public class MemberController {
 
     public Member getPrincipal() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Member member = memberRepository.findByUsername(authentication.getName())
+        return memberRepository.findByUsername(authentication.getName())
                 .orElseThrow(MemberNotFoundException::new);
-        return member;
     }
 }

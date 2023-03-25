@@ -3,6 +3,7 @@ package yoon.community.controller.board;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -11,16 +12,23 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+import yoon.community.domain.member.Member;
 import yoon.community.dto.board.BoardCreateRequest;
 import yoon.community.dto.board.BoardUpdateRequest;
-import yoon.community.domain.member.Member;
 import yoon.community.exception.MemberNotFoundException;
 import yoon.community.repository.member.MemberRepository;
 import yoon.community.response.Response;
 import yoon.community.service.board.BoardService;
-
-import javax.validation.Valid;
 
 @Api(value = "Board Controller", tags = "Board")
 @RequiredArgsConstructor
@@ -28,6 +36,7 @@ import javax.validation.Valid;
 @Slf4j
 @RequestMapping("/api")
 public class BoardController {
+
     private final BoardService boardService;
     private final MemberRepository memberRepository;
 
@@ -44,7 +53,8 @@ public class BoardController {
     @ApiOperation(value = "게시글 목록 조회", notes = "게시글 목록을 조회합니다.")
     @GetMapping("/boards/all/{categoryId}")
     @ResponseStatus(HttpStatus.OK)
-    public Response findAllBoards(@ApiParam(value = "카테고리 id", required = true) @PathVariable int categoryId, @RequestParam(defaultValue = "0") Integer page) {
+    public Response findAllBoards(@ApiParam(value = "카테고리 id", required = true) @PathVariable int categoryId,
+                                  @RequestParam(defaultValue = "0") Integer page) {
         // ex) http://localhost:8080/api/boards/all/{categoryId}?page=0
         return Response.success(boardService.findAllBoards(page, categoryId));
     }
@@ -89,7 +99,6 @@ public class BoardController {
         return Response.success(boardService.findBestBoards(pageable));
     }
 
-
     @ApiOperation(value = "게시글 삭제", notes = "게시글을 삭제합니다.")
     @DeleteMapping("/boards/{id}")
     @ResponseStatus(HttpStatus.OK)
@@ -110,8 +119,7 @@ public class BoardController {
 
     private Member getPrincipal() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Member member = memberRepository.findByUsername(authentication.getName())
+        return memberRepository.findByUsername(authentication.getName())
                 .orElseThrow(MemberNotFoundException::new);
-        return member;
     }
 }

@@ -3,26 +3,33 @@ package yoon.community.controller.comment;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+import yoon.community.domain.member.Member;
 import yoon.community.dto.comment.CommentCreateRequest;
 import yoon.community.dto.comment.CommentReadCondition;
-import yoon.community.domain.member.Member;
 import yoon.community.exception.MemberNotFoundException;
 import yoon.community.repository.member.MemberRepository;
 import yoon.community.response.Response;
 import yoon.community.service.comment.CommentService;
-
-import javax.validation.Valid;
 
 @Api(value = "Comment Controller", tags = "Comment ")
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api")
 public class CommentController {
+
     private final CommentService commentService;
     private final MemberRepository memberRepository;
 
@@ -52,8 +59,7 @@ public class CommentController {
 
     private Member getPrincipal() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Member member = memberRepository.findByUsername(authentication.getName())
+        return memberRepository.findByUsername(authentication.getName())
                 .orElseThrow(MemberNotFoundException::new);
-        return member;
     }
 }

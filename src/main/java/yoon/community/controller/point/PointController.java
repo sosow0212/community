@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import yoon.community.response.Response;
@@ -25,6 +24,7 @@ import yoon.community.service.point.PointService;
 @RestController
 @RequestMapping("/api")
 public class PointController {
+
     private final PointService pointService;
 
     @ApiOperation(value = "포인트 랭킹 조회", notes = "전체 유저의 포인트 랭킹을 조회합니다.")

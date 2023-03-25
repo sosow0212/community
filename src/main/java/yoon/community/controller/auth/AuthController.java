@@ -1,10 +1,17 @@
 package yoon.community.controller.auth;
 
+import static yoon.community.response.Response.success;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 import yoon.community.domain.member.Member;
 import yoon.community.dto.sign.LoginRequestDto;
 import yoon.community.dto.sign.SignUpRequestDto;
@@ -12,15 +19,12 @@ import yoon.community.dto.sign.TokenRequestDto;
 import yoon.community.response.Response;
 import yoon.community.service.auth.AuthService;
 
-import javax.validation.Valid;
-
-import static yoon.community.response.Response.success;
-
 @Api(value = "Sign Controller", tags = "Sign")
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api")
 public class AuthController {
+
     private final AuthService authService;
 
     @ApiOperation(value = "회원가입", notes = "회원가입 진행")
