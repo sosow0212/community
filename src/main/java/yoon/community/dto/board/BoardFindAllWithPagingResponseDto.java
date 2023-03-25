@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 public class BoardFindAllWithPagingResponseDto {
+
     private List<BoardSimpleDto> boards;
     private PageInfoDto pageInfoDto;
 

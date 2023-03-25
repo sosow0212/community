@@ -1,6 +1,17 @@
 package yoon.community.controller;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verify;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static yoon.community.factory.UserFactory.createUserWithAdminRole;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Collections;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,23 +26,14 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import yoon.community.controller.member.MemberController;
-import yoon.community.dto.member.MemberEditRequestDto;
 import yoon.community.domain.member.Member;
+import yoon.community.dto.member.MemberEditRequestDto;
 import yoon.community.repository.member.MemberRepository;
 import yoon.community.service.member.MemberService;
 
-import java.util.Collections;
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.verify;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static yoon.community.factory.UserFactory.createUserWithAdminRole;
-
 @ExtendWith(MockitoExtension.class)
 public class MemberControllerTest {
+
     @InjectMocks
     MemberController memberController;
 
@@ -75,7 +77,8 @@ public class MemberControllerTest {
     public void findFavoritesTest() throws Exception {
         // given
         Member member = createUserWithAdminRole();
-        Authentication authentication = new UsernamePasswordAuthenticationToken(member.getId(), "", Collections.emptyList());
+        Authentication authentication = new UsernamePasswordAuthenticationToken(member.getId(), "",
+                Collections.emptyList());
         SecurityContextHolder.getContext().setAuthentication(authentication);
         given(memberRepository.findByUsername(authentication.getName())).willReturn(Optional.of(member));
 
@@ -106,7 +109,6 @@ public class MemberControllerTest {
 
         verify(memberService).editMemberInfo(member, memberEditRequestDto);
         assertThat(memberEditRequestDto.getName()).isEqualTo("name");
-
     }
 
     @Test
@@ -125,6 +127,5 @@ public class MemberControllerTest {
                 .andExpect(status().isOk());
 
         verify(memberService).deleteMemberInfo(member);
-
     }
 }

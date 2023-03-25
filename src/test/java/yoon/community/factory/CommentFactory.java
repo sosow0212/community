@@ -1,10 +1,10 @@
 package yoon.community.factory;
 
-import yoon.community.domain.comment.Comment;
-import yoon.community.domain.member.Member;
-
 import static yoon.community.factory.BoardFactory.createBoard;
 import static yoon.community.factory.UserFactory.createUser;
+
+import yoon.community.domain.comment.Comment;
+import yoon.community.domain.member.Member;
 
 public class CommentFactory {
 

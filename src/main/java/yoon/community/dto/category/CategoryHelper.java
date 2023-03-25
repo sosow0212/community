@@ -1,14 +1,14 @@
 package yoon.community.dto.category;
 
-import yoon.community.exception.CannotConvertHelperException;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
+import yoon.community.exception.CannotConvertHelperException;
 
 public class CategoryHelper<K, E, D> {
+
     private List<E> entities;
     private Function<E, D> toDto;
     private Function<E, E> getParent;

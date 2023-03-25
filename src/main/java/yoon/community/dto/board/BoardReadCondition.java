@@ -1,19 +1,19 @@
 package yoon.community.dto.board;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
+import java.util.ArrayList;
+import java.util.List;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
-import java.util.ArrayList;
-import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class BoardReadCondition {
+
     @NotNull(message = "페이지 번호를 입력하세요.")
     @PositiveOrZero(message = "올바른 페이지 번호를 입력해주세요. (0 이상)")
     private int page;

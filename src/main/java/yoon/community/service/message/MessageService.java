@@ -18,6 +18,7 @@ import yoon.community.repository.message.MessageRepository;
 @RequiredArgsConstructor
 @Service
 public class MessageService {
+
     private final MessageRepository messageRepository;
     private final MemberRepository memberRepository;
 
@@ -25,6 +26,7 @@ public class MessageService {
     public MessageDto createMessage(Member sender, MessageCreateRequest req) {
         Member receiver = getReceiver(req);
         Message message = getMessage(sender, req, receiver);
+
         return MessageDto.toDto(messageRepository.save(message));
     }
 
@@ -40,8 +42,9 @@ public class MessageService {
     @Transactional(readOnly = true)
     public List<MessageDto> receiveMessages(Member member) {
         List<Message> messageList = messageRepository.findAllByReceiverAndDeletedByReceiverFalseOrderByIdDesc(member);
+
         return messageList.stream()
-                .map(message -> MessageDto.toDto(message))
+                .map(MessageDto::toDto)
                 .collect(Collectors.toList());
     }
 
@@ -57,6 +60,7 @@ public class MessageService {
         if (message.getReceiver() != member) {
             throw new MemberNotEqualsException();
         }
+
         if (message.isDeletedByReceiver()) {
             throw new MessageNotFoundException();
         }
@@ -65,8 +69,9 @@ public class MessageService {
     @Transactional(readOnly = true)
     public List<MessageDto> sendMessages(Member member) {
         List<Message> messageList = messageRepository.findAllBySenderAndDeletedBySenderFalseOrderByIdDesc(member);
+
         return messageList.stream()
-                .map(message -> MessageDto.toDto(message))
+                .map(MessageDto::toDto)
                 .collect(Collectors.toList());
     }
 
@@ -98,6 +103,7 @@ public class MessageService {
             message.deleteByReceiver();
             return;
         }
+
         throw new MemberNotEqualsException();
     }
 
@@ -119,6 +125,7 @@ public class MessageService {
             message.deleteBySender();
             return;
         }
+
         throw new MemberNotEqualsException();
     }
 }

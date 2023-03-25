@@ -15,6 +15,7 @@ import javax.persistence.*;
 @Builder
 @Entity
 public class Favorite extends EntityDate {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

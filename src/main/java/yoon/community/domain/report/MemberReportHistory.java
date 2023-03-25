@@ -15,6 +15,7 @@ import yoon.community.domain.common.EntityDate;
 @Setter
 @Entity
 public class MemberReportHistory extends EntityDate {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

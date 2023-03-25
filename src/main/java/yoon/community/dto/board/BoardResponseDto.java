@@ -1,19 +1,19 @@
 package yoon.community.dto.board;
 
+import static java.util.stream.Collectors.toList;
+
 import java.time.LocalDateTime;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import yoon.community.domain.board.Board;
 
-import java.util.List;
-
-import static java.util.stream.Collectors.toList;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class BoardResponseDto {
+
     private Long id;
     private String writer_nickname;
     private String title;
@@ -31,7 +31,7 @@ public class BoardResponseDto {
                 board.getContent(),
                 board.getLiked(),
                 board.getFavorited(),
-                board.getImages().stream().map(i -> ImageDto.toDto(i)).collect(toList()),
+                board.getImages().stream().map(ImageDto::toDto).collect(toList()),
                 board.getCreatedAt()
         );
     }

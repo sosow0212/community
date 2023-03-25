@@ -1,26 +1,5 @@
 package yoon.community.service;
 
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import yoon.community.dto.comment.CommentCreateRequest;
-import yoon.community.dto.comment.CommentDto;
-import yoon.community.dto.comment.CommentReadCondition;
-import yoon.community.domain.board.Board;
-import yoon.community.domain.comment.Comment;
-import yoon.community.domain.member.Member;
-import yoon.community.repository.board.BoardRepository;
-import yoon.community.repository.commnet.CommentRepository;
-import yoon.community.repository.member.MemberRepository;
-import yoon.community.service.comment.CommentService;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -30,17 +9,35 @@ import static yoon.community.factory.BoardFactory.createBoard;
 import static yoon.community.factory.CommentFactory.createComment;
 import static yoon.community.factory.UserFactory.createUser;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import yoon.community.domain.board.Board;
+import yoon.community.domain.comment.Comment;
+import yoon.community.domain.member.Member;
+import yoon.community.dto.comment.CommentCreateRequest;
+import yoon.community.dto.comment.CommentDto;
+import yoon.community.dto.comment.CommentReadCondition;
+import yoon.community.repository.board.BoardRepository;
+import yoon.community.repository.commnet.CommentRepository;
+import yoon.community.repository.member.MemberRepository;
+import yoon.community.service.comment.CommentService;
+
 
 @ExtendWith(MockitoExtension.class)
 public class CommentServiceTest {
+
     @InjectMocks
     CommentService commentService;
 
     @Mock
     CommentRepository commentRepository;
-
-    @Mock
-    MemberRepository memberRepository;
 
     @Mock
     BoardRepository boardRepository;

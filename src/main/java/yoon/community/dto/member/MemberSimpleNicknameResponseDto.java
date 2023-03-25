@@ -9,6 +9,7 @@ import yoon.community.domain.member.Member;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MemberSimpleNicknameResponseDto {
+
     private String name;
     private String nickname;
 

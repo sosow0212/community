@@ -1,20 +1,5 @@
 package yoon.community.service;
 
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import yoon.community.dto.member.MemberSimpleResponseDto;
-import yoon.community.domain.member.Authority;
-import yoon.community.domain.member.Member;
-import yoon.community.exception.MemberNotFoundException;
-import yoon.community.repository.member.MemberRepository;
-import yoon.community.service.member.MemberService;
-
-import java.util.Optional;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
@@ -23,8 +8,23 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static yoon.community.factory.UserFactory.createUser;
 
+import java.util.Optional;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import yoon.community.domain.member.Authority;
+import yoon.community.domain.member.Member;
+import yoon.community.dto.member.MemberSimpleResponseDto;
+import yoon.community.exception.MemberNotFoundException;
+import yoon.community.repository.member.MemberRepository;
+import yoon.community.service.member.MemberService;
+
 @ExtendWith(MockitoExtension.class)
 public class MemberServiceTest {
+
     @InjectMocks
     MemberService memberService;
 
@@ -69,6 +69,5 @@ public class MemberServiceTest {
 
         // then
         verify(memberRepository).delete(member);
-
     }
 }

@@ -39,11 +39,12 @@ import yoon.community.service.file.FileService;
 @RequiredArgsConstructor
 @Service
 public class BoardService {
-    private final static String SUCCESS_LIKE_BOARD = "좋아요 처리 완료";
-    private final static String SUCCESS_UNLIKE_BOARD = "좋아요 취소 완료";
-    private final static String SUCCESS_FAVORITE_BOARD = "즐겨찾기 처리 완료";
-    private final static String SUCCESS_UNFAVORITE_BOARD = "즐겨찾기 취소 완료";
-    private final static int RECOMMEND_SET_COUNT = 10;
+
+    private static final String SUCCESS_LIKE_BOARD = "좋아요 처리 완료";
+    private static final String SUCCESS_UNLIKE_BOARD = "좋아요 취소 완료";
+    private static final String SUCCESS_FAVORITE_BOARD = "즐겨찾기 처리 완료";
+    private static final String SUCCESS_UNFAVORITE_BOARD = "즐겨찾기 취소 완료";
+    private static final int RECOMMEND_SET_COUNT = 10;
     private static final int PAGE_SIZE = 10;
     private static final String SORTED_BY_ID = "id";
 
@@ -171,7 +172,8 @@ public class BoardService {
 
     private void uploadImages(List<Image> uploadedImages, List<MultipartFile> fileImages) {
         IntStream.range(0, uploadedImages.size())
-                .forEach(uploadedImage -> fileService.upload(fileImages.get(uploadedImage), uploadedImages.get(uploadedImage).getUniqueName()));
+                .forEach(uploadedImage -> fileService.upload(fileImages.get(uploadedImage),
+                        uploadedImages.get(uploadedImage).getUniqueName()));
     }
 
     private void deleteImages(List<Image> deletedImages) {

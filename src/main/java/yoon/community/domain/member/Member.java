@@ -18,6 +18,7 @@ import yoon.community.domain.common.EntityDate;
 @Entity
 @Builder
 public class Member extends EntityDate {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

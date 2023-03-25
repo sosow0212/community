@@ -10,6 +10,7 @@ import yoon.community.domain.report.BoardReportHistory;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BoardReportResponse {
+
     private Long id;
     private Long reportedBoardId;
     private String content;

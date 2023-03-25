@@ -46,8 +46,6 @@ public class ReportServiceTest {
     @Mock
     BoardRepository boardRepository;
 
-    @BeforeEach
-
     @Test
     @DisplayName("reportUser 서비스 테스트")
     void reportUserTest() {
@@ -71,7 +69,6 @@ public class ReportServiceTest {
 
         // then
         assertThat(result.getReportedUser().getName()).isEqualTo(reportedMember.getName());
-
     }
 
 

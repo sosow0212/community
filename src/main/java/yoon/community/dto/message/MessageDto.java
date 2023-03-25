@@ -9,6 +9,7 @@ import yoon.community.domain.message.Message;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MessageDto {
+
     private Long id;
     private String title;
     private String content;

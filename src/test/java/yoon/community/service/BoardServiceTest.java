@@ -1,5 +1,22 @@
 package yoon.community.service;
 
+import static java.util.stream.Collectors.toList;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verify;
+import static yoon.community.factory.BoardFactory.createBoard;
+import static yoon.community.factory.BoardFactory.createBoardWithImages;
+import static yoon.community.factory.CategoryFactory.createCategory;
+import static yoon.community.factory.FavoriteFactory.createFavoriteWithFavorite;
+import static yoon.community.factory.ImageFactory.createImage;
+import static yoon.community.factory.UserFactory.createUser;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.IntStream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -10,38 +27,23 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
-import yoon.community.dto.board.BoardCreateRequest;
-import yoon.community.dto.board.BoardCreateResponse;
-import yoon.community.dto.board.BoardResponseDto;
 import yoon.community.domain.board.Board;
 import yoon.community.domain.board.Favorite;
 import yoon.community.domain.board.LikeBoard;
 import yoon.community.domain.member.Member;
+import yoon.community.dto.board.BoardCreateRequest;
+import yoon.community.dto.board.BoardCreateResponse;
+import yoon.community.dto.board.BoardResponseDto;
 import yoon.community.repository.board.BoardRepository;
 import yoon.community.repository.board.FavoriteRepository;
 import yoon.community.repository.board.LikeBoardRepository;
 import yoon.community.repository.category.CategoryRepository;
 import yoon.community.service.board.BoardService;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.IntStream;
 import yoon.community.service.file.FileService;
-
-import static java.util.stream.Collectors.toList;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.verify;
-import static yoon.community.factory.BoardFactory.createBoard;
-import static yoon.community.factory.BoardFactory.createBoardWithImages;
-import static yoon.community.factory.CategoryFactory.createCategory;
-import static yoon.community.factory.FavoriteFactory.createFavoriteWithFavorite;
-import static yoon.community.factory.ImageFactory.createImage;
-import static yoon.community.factory.UserFactory.createUser;
 
 @ExtendWith(MockitoExtension.class)
 public class BoardServiceTest {
+
     private final static String PROCESS_LIKE_BOARD = "좋아요 처리 완료";
     private final static String PROCESS_UNLIKE_BOARD = "좋아요 취소 완료";
     private final static String PROCESS_FAVORITE_BOARD = "즐겨찾기 처리 완료";
@@ -60,7 +62,6 @@ public class BoardServiceTest {
     CategoryRepository categoryRepository;
     @Mock
     FileService fileService;
-
 
     @Test
     @DisplayName("createBoard 서비스 테스트")

@@ -9,6 +9,7 @@ import org.springframework.data.redis.core.ZSetOperations;
 @NoArgsConstructor
 @Data
 public class PointRankingRedisResponseDto {
+
     private String username;
     private int point;
 

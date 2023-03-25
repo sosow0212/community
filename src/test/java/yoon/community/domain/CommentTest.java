@@ -13,6 +13,7 @@ public class CommentTest {
     @Test
     @DisplayName("자신의 댓글인지 확인하는 메서드 테스트")
     public void isOwnCommentTest() {
+
         // given
         Member member = createUser();
         Comment comment = createComment(member);

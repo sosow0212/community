@@ -5,10 +5,11 @@ import static yoon.community.factory.UserFactory.createUser;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import yoon.community.dto.member.MemberEditRequestDto;
 import yoon.community.domain.member.Member;
+import yoon.community.dto.member.MemberEditRequestDto;
 
 public class MemberTest {
+
     @Test
     @DisplayName("신고처리 테스트")
     public void setStatusIsBeingReportedTest() {

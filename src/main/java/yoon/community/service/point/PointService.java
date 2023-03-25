@@ -17,13 +17,14 @@ import yoon.community.dto.point.PointRankingRedisResponseDto;
 import yoon.community.dto.point.PointRankingSimpleDto;
 import yoon.community.dto.point.PointRankingWithPagingResponseDto;
 import yoon.community.dto.point.RankingPageInfoDto;
-import yoon.community.repository.member.MemberRepository;
 import yoon.community.repository.point.PointRepository;
 
 @RequiredArgsConstructor
 @Service
 public class PointService {
-    private final static String RANKING_KEY = Constant.REDIS_RANKING_KEY;
+
+    private static final String RANKING_KEY = Constant.REDIS_RANKING_KEY;
+
     private final RedisTemplate redisTemplate;
     private final PointRepository pointRepository;
 
@@ -35,7 +36,7 @@ public class PointService {
 
     private PointRankingWithPagingResponseDto responseRankingPaging(Page<Point> points) {
         List<PointRankingSimpleDto> pointRanking = points.stream()
-                .map(point -> new PointRankingSimpleDto().toDto(point))
+                .map(PointRankingSimpleDto::toDto)
                 .collect(Collectors.toList());
         return PointRankingWithPagingResponseDto.toDto(pointRanking, new RankingPageInfoDto(points));
     }
@@ -48,11 +49,12 @@ public class PointService {
     @Transactional(readOnly = true)
     public List<PointRankingRedisResponseDto> findPointsRankingWithRedis() {
         ZSetOperations<String, String> stringStringZSetOperations = redisTemplate.opsForZSet();
-        Set<ZSetOperations.TypedTuple<String>> typedTuples = stringStringZSetOperations.reverseRangeWithScores(RANKING_KEY, 0, 10);
-        List<PointRankingRedisResponseDto> result = typedTuples.stream()
+        Set<ZSetOperations.TypedTuple<String>> typedTuples = stringStringZSetOperations.reverseRangeWithScores(
+                RANKING_KEY, 0, 10);
+
+        return typedTuples.stream()
                 .map(i -> new PointRankingRedisResponseDto().toDto(i))
                 .collect(Collectors.toList());
-        return result;
     }
 
     @Transactional
@@ -60,6 +62,5 @@ public class PointService {
         ZSetOperations<String, String> zSetOperation = redisTemplate.opsForZSet();
         zSetOperation.incrementScore(RANKING_KEY, username, 5);
     }
-
     // todo : 주기적으로 mysql 백업하는 로직 작성하기
 }

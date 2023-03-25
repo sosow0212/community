@@ -1,9 +1,7 @@
 package yoon.community.service.auth;
 
-import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -12,29 +10,37 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import yoon.community.config.constant.Constant;
 import yoon.community.config.jwt.TokenProvider;
-import yoon.community.domain.point.Point;
-import yoon.community.dto.sign.*;
 import yoon.community.domain.member.Authority;
 import yoon.community.domain.member.Member;
 import yoon.community.domain.member.RefreshToken;
+import yoon.community.domain.point.Point;
+import yoon.community.dto.sign.LoginRequestDto;
+import yoon.community.dto.sign.SignUpRequestDto;
+import yoon.community.dto.sign.TokenDto;
+import yoon.community.dto.sign.TokenRequestDto;
+import yoon.community.dto.sign.TokenResponseDto;
 import yoon.community.exception.LoginFailureException;
 import yoon.community.exception.MemberNicknameAlreadyExistsException;
 import yoon.community.exception.UsernameAlreadyExistsException;
+import yoon.community.repository.member.MemberRepository;
 import yoon.community.repository.point.PointRepository;
 import yoon.community.repository.refreshToken.RefreshTokenRepository;
-import yoon.community.repository.member.MemberRepository;
 
 @Service
 @RequiredArgsConstructor
 public class AuthService {
-    private final static String RANKING_KEY = Constant.REDIS_RANKING_KEY;
+
+    private static final String RANKING_KEY = Constant.REDIS_RANKING_KEY;
+
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
+    private final PasswordEncoder passwordEncoder;
+    private final RedisTemplate<String, String> redisTemplate;
+    private final TokenProvider tokenProvider;
+
     private final MemberRepository memberRepository;
     private final PointRepository pointRepository;
-    private final RedisTemplate<String, String> redisTemplate;
-    private final PasswordEncoder passwordEncoder;
-    private final TokenProvider tokenProvider;
     private final RefreshTokenRepository refreshTokenRepository;
+
 
     @Transactional
     public Member signup(SignUpRequestDto req) {

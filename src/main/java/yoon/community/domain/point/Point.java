@@ -21,6 +21,7 @@ import yoon.community.domain.member.Member;
 @NoArgsConstructor
 @Entity
 public class Point extends EntityDate {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

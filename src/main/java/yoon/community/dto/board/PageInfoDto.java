@@ -10,6 +10,7 @@ import yoon.community.domain.board.Board;
 @NoArgsConstructor
 @Data
 public class PageInfoDto {
+
     private int totalPage; // 전체 페이지 수
     private int nowPage; // 현재 페이지
     private int numberOfElements; // 현재 페이지에 나올 데이터 수

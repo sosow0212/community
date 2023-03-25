@@ -2,18 +2,18 @@ package yoon.community.dto.message;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 
 @ApiModel(value = "쪽지 생성 요청")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class MessageCreateRequest {
+
     @ApiModelProperty(value = "메시지 제목", notes = "메시지 제목을 입력해주세요.", required = true, example = "message title")
     @NotBlank(message = "메시지 제목을 입력해주세요.")
     private String title;

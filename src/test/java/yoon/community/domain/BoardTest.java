@@ -16,11 +16,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
-import yoon.community.dto.board.BoardUpdateRequest;
 import yoon.community.domain.board.Board;
 import yoon.community.domain.board.Image;
+import yoon.community.dto.board.BoardUpdateRequest;
 
 public class BoardTest {
+
     @Test
     @DisplayName("신고 테스트")
     public void setStatusIsBeingReportedTest() {
@@ -84,7 +85,7 @@ public class BoardTest {
         Assertions.assertThat(board.getContent()).isEqualTo(boardUpdateRequest.getContent());
 
         List<Image> resultImages = board.getImages();
-        List<String> resultOriginNames = resultImages.stream().map(i -> i.getOriginName()).collect(toList());
+        List<String> resultOriginNames = resultImages.stream().map(Image::getOriginName).collect(toList());
         Assertions.assertThat(resultImages.size()).isEqualTo(2);
         Assertions.assertThat(resultOriginNames).contains(b.getOriginName(), cFile.getOriginalFilename());
 
@@ -93,12 +94,12 @@ public class BoardTest {
         assertThat(addedImageFiles.get(0).getOriginalFilename()).isEqualTo(cFile.getOriginalFilename());
 
         List<Image> addedImages = imageUpdatedResult.getAddedImages();
-        List<String> addedOriginNames = addedImages.stream().map(i -> i.getOriginName()).collect(toList());
+        List<String> addedOriginNames = addedImages.stream().map(Image::getOriginName).collect(toList());
         Assertions.assertThat(addedImages.size()).isEqualTo(1);
         Assertions.assertThat(addedOriginNames).contains(cFile.getOriginalFilename());
 
         List<Image> deletedImages = imageUpdatedResult.getDeletedImages();
-        List<String> deletedOriginNames = deletedImages.stream().map(i -> i.getOriginName()).collect(toList());
+        List<String> deletedOriginNames = deletedImages.stream().map(Image::getOriginName).collect(toList());
         Assertions.assertThat(deletedImages.size()).isEqualTo(1);
         Assertions.assertThat(deletedOriginNames).contains(a.getOriginName());
     }

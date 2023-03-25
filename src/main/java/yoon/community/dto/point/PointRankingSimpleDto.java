@@ -9,11 +9,12 @@ import yoon.community.domain.point.Point;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PointRankingSimpleDto {
+
     private Long point_id;
     private String username;
     private int point;
 
-    public PointRankingSimpleDto toDto(Point point) {
+    public static PointRankingSimpleDto toDto(Point point) {
         return new PointRankingSimpleDto(point.getId(), point.getMember().getUsername(), point.getPoint());
     }
 }

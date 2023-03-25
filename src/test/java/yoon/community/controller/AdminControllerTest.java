@@ -1,5 +1,10 @@
 package yoon.community.controller;
 
+import static org.mockito.Mockito.verify;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -13,13 +18,9 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import yoon.community.controller.admin.AdminController;
 import yoon.community.service.admin.AdminService;
 
-import static org.mockito.Mockito.verify;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 @ExtendWith(MockitoExtension.class)
 public class AdminControllerTest {
+
     @InjectMocks
     AdminController adminController;
 
@@ -32,18 +33,14 @@ public class AdminControllerTest {
     @BeforeEach
     public void beforeEach() {
         mockMvc = MockMvcBuilders.standaloneSetup(adminController).build();
-
-
     }
 
     @Test
     @DisplayName("정지된 유저 관리")
     public void manageReportedUserTest() throws Exception {
-        // given
-
         // when, then
         mockMvc.perform(
-                get("/api/admin/manages/users"))
+                        get("/api/admin/manages/users"))
                 .andExpect(status().isOk());
         verify(adminService).findReportedUsers();
     }
@@ -51,8 +48,6 @@ public class AdminControllerTest {
     @Test
     @DisplayName("정지된 게시글 관리")
     public void manageReportedBoardTest() throws Exception {
-        // given
-
         // when, then
         mockMvc.perform(
                         get("/api/admin/manages/boards"))
@@ -85,5 +80,4 @@ public class AdminControllerTest {
                 .andExpect(status().isOk());
         verify(adminService).processUnlockBoard(id);
     }
-
 }

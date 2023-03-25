@@ -22,6 +22,7 @@ import yoon.community.repository.commnet.CommentRepository;
 @Service
 @Slf4j
 public class CommentService {
+
     private final CommentRepository commentRepository;
     private final BoardRepository boardRepository;
 
@@ -29,7 +30,7 @@ public class CommentService {
     public List<CommentDto> findAllComments(CommentReadCondition condition) {
         List<Comment> comments = commentRepository.findByBoardId(condition.getBoardId());
         return comments.stream()
-                .map(comment -> new CommentDto().toDto(comment))
+                .map(CommentDto::toDto)
                 .collect(Collectors.toList());
     }
 
@@ -38,7 +39,7 @@ public class CommentService {
         Board board = boardRepository.findById(req.getBoardId()).orElseThrow(BoardNotFoundException::new);
         Comment comment = new Comment(req.getContent(), member, board);
         commentRepository.save(comment);
-        return new CommentDto().toDto(comment);
+        return CommentDto.toDto(comment);
     }
 
     @Transactional

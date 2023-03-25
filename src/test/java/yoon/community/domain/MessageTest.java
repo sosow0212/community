@@ -7,12 +7,13 @@ import static yoon.community.factory.UserFactory.createUser2;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import yoon.community.domain.message.Message;
 import yoon.community.domain.member.Member;
+import yoon.community.domain.message.Message;
 
 public class MessageTest {
-    Member sender = createUser();
-    Member receiver = createUser2();
+
+    private final Member sender = createUser();
+    private final Member receiver = createUser2();
 
     @Test
     @DisplayName("deleteBySender 테스트")

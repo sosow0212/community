@@ -9,6 +9,7 @@ import yoon.community.domain.board.Board;
 @AllArgsConstructor
 @NoArgsConstructor
 public class BoardSimpleDto {
+
     private Long id;
     private String title;
     private String nickname;

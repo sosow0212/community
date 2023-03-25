@@ -4,14 +4,15 @@ import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import yoon.community.dto.member.MemberEditRequestDto;
-import yoon.community.domain.report.MemberReportHistory;
 import yoon.community.domain.member.Member;
+import yoon.community.domain.report.MemberReportHistory;
+import yoon.community.dto.member.MemberEditRequestDto;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class MemberReportResponseDto {
+
     private Long id;
     private MemberEditRequestDto reportedUser;
     private String content;

@@ -1,28 +1,27 @@
 package yoon.community.service;
 
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import yoon.community.dto.category.CategoryCreateRequest;
-import yoon.community.dto.category.CategoryDto;
-import yoon.community.domain.category.Category;
-import yoon.community.repository.category.CategoryRepository;
-import yoon.community.repository.member.MemberRepository;
-import yoon.community.service.category.CategoryService;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static yoon.community.factory.CategoryFactory.createCategory;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import yoon.community.domain.category.Category;
+import yoon.community.dto.category.CategoryCreateRequest;
+import yoon.community.dto.category.CategoryDto;
+import yoon.community.repository.category.CategoryRepository;
+import yoon.community.repository.member.MemberRepository;
+import yoon.community.service.category.CategoryService;
 
 @ExtendWith(MockitoExtension.class)
 public class CategoryServiceTest {

@@ -1,5 +1,9 @@
 package yoon.community.controller;
 
+import static org.mockito.Mockito.verify;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -13,12 +17,9 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import yoon.community.controller.point.PointController;
 import yoon.community.service.point.PointService;
 
-import static org.mockito.Mockito.verify;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 @ExtendWith(MockitoExtension.class)
 public class PointControllerTest {
+
     @InjectMocks
     PointController pointController;
 
@@ -26,7 +27,6 @@ public class PointControllerTest {
     PointService pointService;
 
     MockMvc mockMvc;
-    ObjectMapper objectMapper;
 
     @BeforeEach
     public void beforeEach() {

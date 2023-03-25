@@ -1,19 +1,19 @@
 package yoon.community.factory;
 
-import yoon.community.domain.board.Board;
-import yoon.community.domain.board.Image;
-
-import java.util.ArrayList;
-import java.util.List;
-import yoon.community.domain.category.Category;
-import yoon.community.domain.member.Member;
-
 import static yoon.community.factory.CategoryFactory.createCategory;
 import static yoon.community.factory.ImageFactory.createImage;
 import static yoon.community.factory.UserFactory.createUser;
 import static yoon.community.factory.UserFactory.createUserWithAdminRole;
 
+import java.util.ArrayList;
+import java.util.List;
+import yoon.community.domain.board.Board;
+import yoon.community.domain.board.Image;
+import yoon.community.domain.category.Category;
+import yoon.community.domain.member.Member;
+
 public class BoardFactory {
+
     public static Board createBoardWithImages(List<Image> images) {
         return new Board("title", "content", createUserWithAdminRole(), createCategory(), images);
     }

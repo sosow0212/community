@@ -4,6 +4,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 import yoon.community.domain.board.Image;
 
 public class ImageFactory {
+
     public static Image createImage() {
         return new Image("origin_filename.jpg");
     }

@@ -1,6 +1,14 @@
 package yoon.community.controller;
 
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verify;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static yoon.community.factory.UserFactory.createUserWithAdminRole;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Collections;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,24 +23,15 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import yoon.community.controller.report.ReportController;
+import yoon.community.domain.member.Member;
 import yoon.community.dto.report.BoardReportRequest;
 import yoon.community.dto.report.MemberReportRequestDto;
-import yoon.community.domain.member.Member;
 import yoon.community.repository.member.MemberRepository;
 import yoon.community.service.report.ReportService;
 
-import java.util.Collections;
-import java.util.Optional;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.verify;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static yoon.community.factory.UserFactory.createUserWithAdminRole;
-
 @ExtendWith(MockitoExtension.class)
 public class ReportControllerTest {
+
     @InjectMocks
     ReportController reportController;
 
@@ -58,16 +57,16 @@ public class ReportControllerTest {
         MemberReportRequestDto req = new MemberReportRequestDto(1L, "내용");
 
         Member member = createUserWithAdminRole();
-        Authentication authentication = new UsernamePasswordAuthenticationToken(member.getId(), "", Collections.emptyList());
+        Authentication authentication = new UsernamePasswordAuthenticationToken(member.getId(), "",
+                Collections.emptyList());
         SecurityContextHolder.getContext().setAuthentication(authentication);
         given(memberRepository.findByUsername(authentication.getName())).willReturn(Optional.of(member));
 
-
         // when, then
         mockMvc.perform(
-                post("/api/reports/users")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(req)))
+                        post("/api/reports/users")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(req)))
                 .andExpect(status().isOk());
 
         verify(reportService).reportUser(member, req);
@@ -80,10 +79,10 @@ public class ReportControllerTest {
         BoardReportRequest req = new BoardReportRequest(1L, "내용");
 
         Member member = createUserWithAdminRole();
-        Authentication authentication = new UsernamePasswordAuthenticationToken(member.getId(), "", Collections.emptyList());
+        Authentication authentication = new UsernamePasswordAuthenticationToken(member.getId(), "",
+                Collections.emptyList());
         SecurityContextHolder.getContext().setAuthentication(authentication);
         given(memberRepository.findByUsername(authentication.getName())).willReturn(Optional.of(member));
-
 
         // when, then
         mockMvc.perform(

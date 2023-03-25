@@ -7,6 +7,7 @@ import yoon.community.domain.board.Image;
 @Data
 @AllArgsConstructor
 public class ImageDto {
+
     private int id;
     private String originName;
     private String uniqueName;

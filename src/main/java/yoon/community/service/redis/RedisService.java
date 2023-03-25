@@ -1,16 +1,16 @@
 package yoon.community.service.redis;
 
+import java.time.Duration;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 import yoon.community.exception.TokenExpiredException;
 
-import java.time.Duration;
-
 @RequiredArgsConstructor
 @Service
 public class RedisService {
+
     private final RedisTemplate<String, String> redisTemplate;
 
     public void setValues(String key, String data) {
@@ -34,7 +34,7 @@ public class RedisService {
 
     public void checkRefreshToken(String username, String refreshToken) {
         String redisRT = this.getValues(username);
-        if(!refreshToken.equals(redisRT)) {
+        if (!refreshToken.equals(redisRT)) {
             throw new TokenExpiredException();
         }
     }

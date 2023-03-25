@@ -8,6 +8,6 @@ import yoon.community.domain.member.Member;
 import yoon.community.domain.point.Point;
 
 public interface PointRepository extends JpaRepository<Point, Long> {
-    Optional<Point> findByMember(Member member);
+
     Page<Point> findAll(Pageable pageable);
 }

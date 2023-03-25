@@ -9,10 +9,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 public class PointRankingWithPagingResponseDto {
+
     private List<PointRankingSimpleDto> ranking;
     private RankingPageInfoDto rankingPageInfoDto;
 
-    public static PointRankingWithPagingResponseDto toDto(List<PointRankingSimpleDto> ranking, RankingPageInfoDto rankingPageInfoDto) {
+    public static PointRankingWithPagingResponseDto toDto(List<PointRankingSimpleDto> ranking,
+                                                          RankingPageInfoDto rankingPageInfoDto) {
         return new PointRankingWithPagingResponseDto(ranking, rankingPageInfoDto);
     }
 }
