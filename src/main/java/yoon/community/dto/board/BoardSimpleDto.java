@@ -15,7 +15,7 @@ public class BoardSimpleDto {
     private int liked;
     private int favorited;
 
-    public BoardSimpleDto toDto(Board board) {
+    public static BoardSimpleDto toDto(Board board) {
         return new BoardSimpleDto(board.getId(), board.getTitle(), board.getMember().getNickname(), board.getLiked(),
                 board.getFavorited());
     }
