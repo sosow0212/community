@@ -65,4 +65,8 @@ public class Image extends EntityDate {
     private boolean isSupportedFormat(String ext) {
         return Arrays.stream(supportedExtension).anyMatch(e -> e.equalsIgnoreCase(ext));
     }
+
+    public boolean isSameImageId(int id) {
+        return this.getId() == id;
+    }
 }

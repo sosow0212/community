@@ -1,20 +1,34 @@
 package yoon.community.domain.board;
 
-import lombok.*;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
-import org.springframework.web.multipart.MultipartFile;
-import yoon.community.dto.board.BoardUpdateRequest;
-import yoon.community.domain.category.Category;
-import yoon.community.domain.common.EntityDate;
-import yoon.community.domain.member.Member;
+import static java.util.stream.Collectors.toList;
 
-import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
-import static java.util.stream.Collectors.toList;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+import org.springframework.web.multipart.MultipartFile;
+import yoon.community.domain.category.Category;
+import yoon.community.domain.common.EntityDate;
+import yoon.community.domain.member.Member;
+import yoon.community.dto.board.BoardUpdateRequest;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
@@ -23,6 +37,7 @@ import static java.util.stream.Collectors.toList;
 @Builder
 @Entity
 public class Board extends EntityDate {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -71,21 +86,22 @@ public class Board extends EntityDate {
     public ImageUpdatedResult update(BoardUpdateRequest req) {
         this.title = req.getTitle();
         this.content = req.getContent();
+
         ImageUpdatedResult result = findImageUpdatedResult(req.getAddedImages(), req.getDeletedImages());
         addImages(result.getAddedImages());
         deleteImages(result.getDeletedImages());
         return result;
     }
 
-    private void addImages(List<Image> added) {
-        added.stream().forEach(i -> {
-            images.add(i);
-            i.initBoard(this);
+    private void addImages(List<Image> addedImages) {
+        addedImages.forEach(addedImage -> {
+            images.add(addedImage);
+            addedImage.initBoard(this);
         });
     }
 
-    private void deleteImages(List<Image> deleted) {
-        deleted.stream().forEach(di -> this.images.remove(di));
+    private void deleteImages(List<Image> deletedImages) {
+        deletedImages.forEach(deletedImage -> this.images.remove(deletedImage));
     }
 
     private ImageUpdatedResult findImageUpdatedResult(List<MultipartFile> addedImageFiles,
@@ -97,18 +113,22 @@ public class Board extends EntityDate {
 
     private List<Image> convertImageIdsToImages(List<Integer> imageIds) {
         return imageIds.stream()
-                .map(id -> convertImageIdToImage(id))
-                .filter(i -> i.isPresent())
-                .map(i -> i.get())
+                .map(this::convertImageIdToImage)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .collect(toList());
     }
 
     private Optional<Image> convertImageIdToImage(int id) {
-        return this.images.stream().filter(i -> i.getId() == (id)).findAny();
+        return this.images.stream()
+                .filter(image -> image.isSameImageId(id))
+                .findAny();
     }
 
     private List<Image> convertImageFilesToImages(List<MultipartFile> imageFiles) {
-        return imageFiles.stream().map(imageFile -> new Image(imageFile.getOriginalFilename())).collect(toList());
+        return imageFiles.stream()
+                .map(imageFile -> new Image(imageFile.getOriginalFilename()))
+                .collect(toList());
     }
 
     public boolean isReported() {
