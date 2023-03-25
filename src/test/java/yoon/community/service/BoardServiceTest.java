@@ -134,14 +134,18 @@ public class BoardServiceTest {
     @DisplayName("게시글 좋아요 취소 처리 테스트")
     void processUserUnLikeBoardTest() {
         // given
+        Long id = 1L;
+
         Member member = createUser();
         Board board = createBoard();
-        board.setLiked(1);
-        LikeBoard likeBoard = new LikeBoard(1L, board, member, true);
+        board.increaseLikeCount();
+
+        LikeBoard likeBoard = new LikeBoard(id, board, member, true);
+        given(boardRepository.findById(id)).willReturn(Optional.of(board));
         given(likeBoardRepository.findByBoardAndMember(board, member)).willReturn(Optional.of(likeBoard));
 
         // when
-        String result = boardService.removeLikeBoard(board, member);
+        String result = boardService.updateLikeOfBoard(id, member);
 
         // then
         assertThat(result).isEqualTo(PROCESS_UNLIKE_BOARD);

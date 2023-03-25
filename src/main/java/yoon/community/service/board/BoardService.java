@@ -96,7 +96,8 @@ public class BoardService {
 
     @Transactional
     public String updateLikeOfBoard(Long id, Member member) {
-        Board board = boardRepository.findById(id).orElseThrow(BoardNotFoundException::new);
+        Board board = boardRepository.findById(id)
+                .orElseThrow(BoardNotFoundException::new);
 
         if (!hasLikeBoard(board, member)) {
             board.increaseLikeCount();
