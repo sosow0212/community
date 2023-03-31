@@ -90,7 +90,8 @@ public class BoardService {
 
     @Transactional(readOnly = true)
     public BoardResponseDto findBoard(Long id) {
-        Board board = boardRepository.findById(id).orElseThrow(BoardNotFoundException::new);
+        Board board = boardRepository.findById(id)
+                .orElseThrow(BoardNotFoundException::new);
         Member member = board.getMember();
         return BoardResponseDto.toDto(board, member.getNickname());
     }
@@ -120,7 +121,8 @@ public class BoardService {
 
     @Transactional
     public String updateOfFavoriteBoard(Long id, Member member) {
-        Board board = boardRepository.findById(id).orElseThrow(BoardNotFoundException::new);
+        Board board = boardRepository.findById(id)
+                .orElseThrow(BoardNotFoundException::new);
 
         if (!hasFavoriteBoard(board, member)) {
             board.increaseFavoriteCount();
@@ -172,8 +174,10 @@ public class BoardService {
 
     private void uploadImages(List<Image> uploadedImages, List<MultipartFile> fileImages) {
         IntStream.range(0, uploadedImages.size())
-                .forEach(uploadedImage -> fileService.upload(fileImages.get(uploadedImage),
-                        uploadedImages.get(uploadedImage).getUniqueName()));
+                .forEach(uploadedImage -> fileService.upload(
+                        fileImages.get(uploadedImage),
+                        uploadedImages.get(uploadedImage).getUniqueName())
+                );
     }
 
     private void deleteImages(List<Image> deletedImages) {
@@ -187,7 +191,7 @@ public class BoardService {
     }
 
     public String createLikeBoard(Board board, Member member) {
-        LikeBoard likeBoard = new LikeBoard(board, member); // true 처리
+        LikeBoard likeBoard = new LikeBoard(board, member);
         likeBoardRepository.save(likeBoard);
         return SUCCESS_LIKE_BOARD;
     }

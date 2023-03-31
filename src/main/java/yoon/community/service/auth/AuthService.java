@@ -80,8 +80,7 @@ public class AuthService {
 
     private Authentication getUserAuthentication(LoginRequestDto req) {
         UsernamePasswordAuthenticationToken authenticationToken = req.toAuthentication();
-        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
-        return authentication;
+        return authenticationManagerBuilder.getObject().authenticate(authenticationToken);
     }
 
     @Transactional
@@ -91,31 +90,31 @@ public class AuthService {
         Authentication authentication = tokenProvider.getAuthentication(tokenRequestDto.getAccessToken());
         RefreshToken refreshToken = refreshTokenRepository.findByKey(authentication.getName())
                 .orElseThrow(() -> new RuntimeException("로그아웃 된 사용자입니다."));
+
         validateRefreshTokenOwner(refreshToken, tokenRequestDto);
 
         TokenDto tokenDto = tokenProvider.generateTokenDto(authentication);
         RefreshToken newRefreshToken = refreshToken.updateValue(tokenDto.getRefreshToken());
         refreshTokenRepository.save(newRefreshToken);
 
-        TokenResponseDto tokenResponseDto = new TokenResponseDto(tokenDto.getAccessToken(), tokenDto.getRefreshToken());
-        return tokenResponseDto;
+        return new TokenResponseDto(tokenDto.getAccessToken(), tokenDto.getRefreshToken());
     }
 
     private Member createSignupFormOfUser(SignUpRequestDto req) {
-        Member member = Member.builder()
+        return Member.builder()
                 .username(req.getUsername())
                 .password(passwordEncoder.encode(req.getPassword()))
                 .nickname(req.getNickname())
                 .name(req.getName())
                 .authority(Authority.ROLE_USER)
                 .build();
-        return member;
     }
 
     private void validateSignUpInfo(SignUpRequestDto signUpRequestDto) {
         if (memberRepository.existsByUsername(signUpRequestDto.getUsername())) {
             throw new UsernameAlreadyExistsException(signUpRequestDto.getUsername());
         }
+
         if (memberRepository.existsByNickname(signUpRequestDto.getNickname())) {
             throw new MemberNicknameAlreadyExistsException(signUpRequestDto.getNickname());
         }
