@@ -51,7 +51,7 @@ public class ReportService {
     private void checkUserStatusIsBeingReported(Member reportedMember, MemberReportRequestDto req) {
         if (MemberReportHistoryRepository.findByReportedUserId(req.getReportedUserId()).size()
                 >= NORMAL_USER_REPORT_LIMIT_FOR_BEING_REPORTED) {
-            reportedMember.setStatusIsBeingReported();
+            reportedMember.makeStatusReported();
         }
     }
 

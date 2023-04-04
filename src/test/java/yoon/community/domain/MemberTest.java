@@ -17,7 +17,7 @@ public class MemberTest {
         Member member = createUser();
 
         // when
-        member.setStatusIsBeingReported();
+        member.makeStatusReported();
 
         // then
         assertThat(member.isReported()).isEqualTo(true);
@@ -28,7 +28,7 @@ public class MemberTest {
     public void unlockReportTest() {
         // given
         Member member = createUser();
-        member.setStatusIsBeingReported();
+        member.makeStatusReported();
 
         // when
         member.unlockReport();

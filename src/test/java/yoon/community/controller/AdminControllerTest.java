@@ -37,7 +37,7 @@ public class AdminControllerTest {
 
     @Test
     @DisplayName("정지된 유저 관리")
-    public void manageReportedUserTest() throws Exception {
+    public void manage_reported_user_success() throws Exception {
         // when, then
         mockMvc.perform(
                         get("/api/admin/manages/users"))
@@ -47,7 +47,7 @@ public class AdminControllerTest {
 
     @Test
     @DisplayName("정지된 게시글 관리")
-    public void manageReportedBoardTest() throws Exception {
+    public void manage_reported_board_success() throws Exception {
         // when, then
         mockMvc.perform(
                         get("/api/admin/manages/boards"))
@@ -57,7 +57,7 @@ public class AdminControllerTest {
 
     @Test
     @DisplayName("신고된 유저 정지 해제")
-    public void unlockUser() throws Exception {
+    public void unlock_reported_user() throws Exception {
         // given
         Long id = 1L;
 
@@ -70,7 +70,7 @@ public class AdminControllerTest {
 
     @Test
     @DisplayName("신고된 게시글 정지 해제")
-    public void unlockBoard() throws Exception {
+    public void unlock_reported_board() throws Exception {
         // given
         Long id = 1L;
 

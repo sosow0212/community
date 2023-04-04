@@ -67,7 +67,7 @@ public class Member extends EntityDate {
         return this.id == id;
     }
 
-    public void setStatusIsBeingReported() {
+    public void makeStatusReported() {
         this.reported = true;
     }
 }

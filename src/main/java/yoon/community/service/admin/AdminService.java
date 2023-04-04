@@ -11,7 +11,7 @@ import yoon.community.dto.board.BoardSimpleDto;
 import yoon.community.dto.member.MemberSimpleNicknameResponseDto;
 import yoon.community.exception.BoardNotFoundException;
 import yoon.community.exception.MemberNotEqualsException;
-import yoon.community.exception.NotReportedException;
+import yoon.community.exception.BoardNotReportedException;
 import yoon.community.repository.board.BoardRepository;
 import yoon.community.repository.member.MemberRepository;
 import yoon.community.repository.report.BoardReportRepository;
@@ -36,7 +36,8 @@ public class AdminService {
 
     @Transactional
     public MemberSimpleNicknameResponseDto processUnlockUser(Long id) {
-        Member member = memberRepository.findById(id).orElseThrow(MemberNotEqualsException::new);
+        Member member = memberRepository.findById(id)
+                .orElseThrow(MemberNotEqualsException::new);
         validateUnlockUser(member);
         deleteUnlockUser(member, id);
         return MemberSimpleNicknameResponseDto.toDto(member);
@@ -44,7 +45,7 @@ public class AdminService {
 
     private void validateUnlockUser(Member member) {
         if (!member.isReported()) {
-            throw new NotReportedException();
+            throw new BoardNotReportedException();
         }
     }
 
@@ -52,7 +53,6 @@ public class AdminService {
         member.unlockReport();
         memberReportRepository.deleteAllByReportedUserId(id);
     }
-
 
     @Transactional(readOnly = true)
     public List<BoardSimpleDto> findReportedBoards() {
@@ -77,7 +77,7 @@ public class AdminService {
 
     private void validateUnlockBoard(Board board) {
         if (!board.isReported()) {
-            throw new NotReportedException();
+            throw new BoardNotReportedException();
         }
     }
 }

@@ -166,7 +166,7 @@ public class ExceptionAdvice {
 
     // 404 응답
     // 신고되지 않은 게시물 혹은 유저
-    @ExceptionHandler(NotReportedException.class)
+    @ExceptionHandler(BoardNotReportedException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public Response notReportedException() {
         return Response.failure(404, "신고되지 않은 유저 혹은 게시물입니다.");
