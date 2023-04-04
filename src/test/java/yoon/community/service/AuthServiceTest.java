@@ -8,10 +8,10 @@ import static org.mockito.Mockito.verify;
 import static yoon.community.factory.UserFactory.createUser;
 
 import java.util.Optional;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -29,6 +29,7 @@ import yoon.community.service.auth.AuthService;
 @ExtendWith(MockitoExtension.class)
 public class AuthServiceTest {
 
+    @InjectMocks
     AuthService authService;
 
     @Mock
@@ -51,12 +52,6 @@ public class AuthServiceTest {
 
     @Mock
     RefreshTokenRepository refreshTokenRepository;
-
-    @BeforeEach
-    void beforeEach() {
-        authService = new AuthService(authenticationManagerBuilder, memberRepository, pointRepository, redisTemplate,
-                passwordEncoder, tokenProvider, refreshTokenRepository);
-    }
 
     @Test
     @DisplayName("signup 서비스 테스트")
