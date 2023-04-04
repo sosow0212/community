@@ -1,6 +1,7 @@
 package yoon.community.service;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.BDDMockito.given;
@@ -19,6 +20,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import yoon.community.domain.category.Category;
 import yoon.community.dto.category.CategoryCreateRequest;
 import yoon.community.dto.category.CategoryDto;
+import yoon.community.exception.CategoryNotFoundException;
 import yoon.community.repository.category.CategoryRepository;
 import yoon.community.repository.member.MemberRepository;
 import yoon.community.service.category.CategoryService;
@@ -35,10 +37,9 @@ public class CategoryServiceTest {
     @Mock
     MemberRepository memberRepository;
 
-
     @Test
-    @DisplayName("findAll 서비스 테스트")
-    void findAllTest() {
+    @DisplayName("카테고리를 모두 찾는다.")
+    void find_categories_success() {
         // given
         List<Category> categories = new ArrayList<>();
         categories.add(createCategory());
@@ -52,8 +53,8 @@ public class CategoryServiceTest {
     }
 
     @Test
-    @DisplayName("create 서비스 테스트")
-    void createTest() {
+    @DisplayName("카테고리 생성을 한다.")
+    void create_category_success() {
         // given
         CategoryCreateRequest req = new CategoryCreateRequest("name", 1);
         given(categoryRepository.findById(anyInt())).willReturn(Optional.of(createCategory()));
@@ -66,8 +67,19 @@ public class CategoryServiceTest {
     }
 
     @Test
-    @DisplayName("delete 서비스 테스트")
-    void deleteTest() {
+    @DisplayName("부모 카테고리의 id가 잘못되면, 카테고리 생성에 실패한다.")
+    void throws_exception_when_category_creating_with_invalid_parent_category_id() {
+        // given
+        CategoryCreateRequest req = new CategoryCreateRequest("name", 1);
+
+        // when & then
+        assertThatThrownBy(() -> categoryService.createCategory(req))
+                .isInstanceOf(CategoryNotFoundException.class);
+    }
+
+    @Test
+    @DisplayName("카테고리를 지운다.")
+    void delete_category_success() {
         // given
         given(categoryRepository.findById(anyInt())).willReturn(Optional.of(createCategory()));
 

@@ -41,9 +41,7 @@ public class CategoryTest {
 
     @Test
     @DisplayName("전체 카테고리 조회")
-    void readAllTest() throws Exception {
-        // given
-
+    void find_categories_success() throws Exception {
         // when, then
         mockMvc.perform(get("/api/categories"))
                 .andExpect(status().isOk());
@@ -52,7 +50,7 @@ public class CategoryTest {
 
     @Test
     @DisplayName("카테고리 생성")
-    void createTest() throws Exception {
+    void create_category_success() throws Exception {
         // given
         CategoryCreateRequest req = new CategoryCreateRequest("category1", 1);
 
@@ -68,7 +66,7 @@ public class CategoryTest {
 
     @Test
     @DisplayName("카테고리 제거")
-    void deleteTest() throws Exception {
+    void delete_category_success() throws Exception {
         // given
         int id = 1;
 
