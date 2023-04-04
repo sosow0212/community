@@ -11,9 +11,8 @@ import yoon.community.domain.member.Member;
 
 public class CommentTest {
     @Test
-    @DisplayName("자신의 댓글인지 확인하는 메서드 테스트")
-    public void isOwnCommentTest() {
-
+    @DisplayName("자신의 댓글인지 확인한다.")
+    public void check_comment_is_mine() {
         // given
         Member member = createUser();
         Comment comment = createComment(member);

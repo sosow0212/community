@@ -29,6 +29,7 @@ public class CommentService {
     @Transactional(readOnly = true)
     public List<CommentDto> findAllComments(CommentReadCondition condition) {
         List<Comment> comments = commentRepository.findByBoardId(condition.getBoardId());
+
         return comments.stream()
                 .map(CommentDto::toDto)
                 .collect(Collectors.toList());
@@ -36,15 +37,20 @@ public class CommentService {
 
     @Transactional
     public CommentDto createComment(CommentCreateRequest req, Member member) {
-        Board board = boardRepository.findById(req.getBoardId()).orElseThrow(BoardNotFoundException::new);
+        Board board = boardRepository.findById(req.getBoardId())
+                .orElseThrow(BoardNotFoundException::new);
+
         Comment comment = new Comment(req.getContent(), member, board);
         commentRepository.save(comment);
+
         return CommentDto.toDto(comment);
     }
 
     @Transactional
     public void deleteComment(Long id, Member member) {
-        Comment comment = commentRepository.findById(id).orElseThrow(CommentNotFoundException::new);
+        Comment comment = commentRepository.findById(id)
+                .orElseThrow(CommentNotFoundException::new);
+
         validateDeleteComment(comment, member);
         commentRepository.delete(comment);
     }
