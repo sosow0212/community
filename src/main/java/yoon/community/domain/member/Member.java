@@ -63,7 +63,7 @@ public class Member extends EntityDate {
         this.reported = false;
     }
 
-    public boolean isReportMySelf(Long id) {
+    public boolean isSameMemberId(Long id) {
         return this.id == id;
     }
 

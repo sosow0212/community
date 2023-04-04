@@ -11,8 +11,8 @@ import yoon.community.dto.member.MemberEditRequestDto;
 public class MemberTest {
 
     @Test
-    @DisplayName("신고처리 테스트")
-    public void setStatusIsBeingReportedTest() {
+    @DisplayName("유저를 신고처리 한다.")
+    public void make_status_reported_success() {
         // given
         Member member = createUser();
 
@@ -24,8 +24,8 @@ public class MemberTest {
     }
 
     @Test
-    @DisplayName("정지 해제 테스트")
-    public void unlockReportTest() {
+    @DisplayName("유저의 신고 상태를 해제한다.")
+    public void unlock_reported_user_success() {
         // given
         Member member = createUser();
         member.makeStatusReported();
@@ -38,8 +38,8 @@ public class MemberTest {
     }
 
     @Test
-    @DisplayName("유저 수정 테스트")
-    public void editUserTest() {
+    @DisplayName("유저의 정보를 수정한다.")
+    public void edit_user_success() {
         // given
         Member member = createUser();
         Member editedMember = createUser();
@@ -53,13 +53,13 @@ public class MemberTest {
     }
 
     @Test
-    @DisplayName("셀프 신고 메서드 테스트")
-    public void isReportMySelfTest() {
+    @DisplayName("같은 Member Id인지 확인한다.")
+    public void check_same_member_success() {
         // given
         Member member = createUser();
 
         // when
-        boolean result = member.isReportMySelf(member.getId());
+        boolean result = member.isSameMemberId(member.getId());
 
         // then
         assertThat(result).isEqualTo(true);

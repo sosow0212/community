@@ -64,7 +64,7 @@ public class ReportService {
     }
 
     private void validateUserReportRequest(Member reporter, MemberReportRequestDto req) {
-        if (reporter.isReportMySelf(req.getReportedUserId())) {
+        if (reporter.isSameMemberId(req.getReportedUserId())) {
             throw new NotSelfReportException();
         }
 
@@ -103,7 +103,7 @@ public class ReportService {
     }
 
     private void validateBoard(Member reporter, Board reportedBoard, BoardReportRequest req) {
-        if (reporter.isReportMySelf(reportedBoard.getMember().getId())) {
+        if (reporter.isSameMemberId(reportedBoard.getMember().getId())) {
             throw new NotSelfReportException();
         }
 
