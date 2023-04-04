@@ -90,7 +90,7 @@ public class ReportService {
     private void checkBoardStatusIsBeingReported(Board reportedBoard, BoardReportRequest req) {
         if (boardReportHistoryRepository.findByReportedBoardId(req.getReportedBoardId()).size()
                 >= NORMAL_BOARD_REPORT_LIMIT_FOR_BEING_REPORTED) {
-            reportedBoard.setStatusIsBeingReported();
+            reportedBoard.makeStatusReported();
         }
     }
 

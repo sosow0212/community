@@ -23,11 +23,11 @@ import yoon.community.dto.board.BoardUpdateRequest;
 public class BoardTest {
 
     @Test
-    @DisplayName("신고 테스트")
-    public void setStatusIsBeingReportedTest() {
+    @DisplayName("신고처리를 한다.")
+    public void board_report_success() {
         // given
         Board board = createBoard();
-        board.setStatusIsBeingReported();
+        board.makeStatusReported();
 
         // when
         boolean result = board.isReported();
@@ -37,8 +37,8 @@ public class BoardTest {
     }
 
     @Test
-    @DisplayName("좋아요, 즐겨찾기 테스트")
-    public void increaseLikeCountTest() {
+    @DisplayName("좋아요, 즐겨찾기처리를 한다.")
+    public void like_and_favorite_success() {
         // given
         Board board = createBoard();
 
@@ -52,11 +52,11 @@ public class BoardTest {
     }
 
     @Test
-    @DisplayName("신고 해제 테스트")
-    public void unReportedTest() {
+    @DisplayName("신고 해제를 한다.")
+    public void un_report_success() {
         // given
         Board board = createBoard();
-        board.setStatusIsBeingReported();
+        board.makeStatusReported();
 
         // when
         board.unReportedBoard();
@@ -67,8 +67,8 @@ public class BoardTest {
     }
 
     @Test
-    @DisplayName("editBoard 테스트")
-    public void updateTest() {
+    @DisplayName("게시글 수정에 성공한다.")
+    public void edit_board_success() {
         // given
         Image a = createImage();
         Image b = createImage();

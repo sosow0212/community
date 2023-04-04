@@ -151,7 +151,7 @@ public class Board extends EntityDate {
         this.favorited -= 1;
     }
 
-    public void setStatusIsBeingReported() {
+    public void makeStatusReported() {
         this.reported = true;
     }
 

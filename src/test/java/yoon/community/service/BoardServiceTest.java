@@ -2,6 +2,7 @@ package yoon.community.service;
 
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -34,6 +35,9 @@ import yoon.community.domain.member.Member;
 import yoon.community.dto.board.BoardCreateRequest;
 import yoon.community.dto.board.BoardCreateResponse;
 import yoon.community.dto.board.BoardResponseDto;
+import yoon.community.dto.board.BoardUpdateRequest;
+import yoon.community.exception.BoardNotFoundException;
+import yoon.community.exception.CategoryNotFoundException;
 import yoon.community.repository.board.BoardRepository;
 import yoon.community.repository.board.FavoriteRepository;
 import yoon.community.repository.board.LikeBoardRepository;
@@ -64,8 +68,8 @@ public class BoardServiceTest {
     FileService fileService;
 
     @Test
-    @DisplayName("createBoard 서비스 테스트")
-    void createBoardTest() {
+    @DisplayName("게시글을 생성한다.")
+    void create_board_success() {
         // given
         BoardCreateRequest req = new BoardCreateRequest("title", "content", List.of(
                 new MockMultipartFile("test1", "test1.PNG", MediaType.IMAGE_PNG_VALUE, "test1".getBytes()),
@@ -89,8 +93,26 @@ public class BoardServiceTest {
     }
 
     @Test
-    @DisplayName("findAllBoards 서비스 테스트")
-    void findAllBoardsTest() {
+    @DisplayName("카테고리를 찾지 못해서 게시글 생성에 실패한다.")
+    void create_board_fail_when_category_can_not_found() {
+        // given
+        BoardCreateRequest req = new BoardCreateRequest("title", "content", List.of(
+                new MockMultipartFile("test1", "test1.PNG", MediaType.IMAGE_PNG_VALUE, "test1".getBytes()),
+                new MockMultipartFile("test2", "test2.PNG", MediaType.IMAGE_PNG_VALUE, "test2".getBytes()),
+                new MockMultipartFile("test3", "test3.PNG", MediaType.IMAGE_PNG_VALUE, "test3".getBytes())
+        ));
+
+        int categoryId = anyInt();
+        Member member = createUser();
+
+        // when & then
+        assertThatThrownBy(() -> boardService.createBoard(req, categoryId, member))
+                .isInstanceOf(CategoryNotFoundException.class);
+    }
+
+    @Test
+    @DisplayName("게시글을 모두 찾는다.")
+    void find_all_board_success() {
         // given
         String sort = "likeCount";
         Integer page = 0;
@@ -100,8 +122,8 @@ public class BoardServiceTest {
     }
 
     @Test
-    @DisplayName("findBoard 서비스 테스트")
-    void findBoardTest() {
+    @DisplayName("게시글을 찾는다.")
+    void find_board_success() {
         // given
         Long id = 1L;
         Board board = createBoard();
@@ -115,10 +137,22 @@ public class BoardServiceTest {
         assertThat(result.getTitle()).isEqualTo("title");
     }
 
+    @Test
+    @DisplayName("올바른 게시글 번호가 아니라서 게시글 찾는데 실패한다.")
+    void find_board_fail_when_board_id_invalid() {
+        // given
+        Long id = 1L;
+        Member member = createUser();
+        Board board = createBoard(member);
+
+        // when & then
+        assertThatThrownBy(() -> boardService.findBoard(id))
+                .isInstanceOf(BoardNotFoundException.class);
+    }
 
     @Test
-    @DisplayName("게시글 좋아요 처리 테스트")
-    void processUserLikeBoardTest() {
+    @DisplayName("게시글 좋아요 처리를한다.")
+    void like_board_success() {
         // given
         Member member = createUser();
         Board board = createBoard();
@@ -132,8 +166,8 @@ public class BoardServiceTest {
     }
 
     @Test
-    @DisplayName("게시글 좋아요 취소 처리 테스트")
-    void processUserUnLikeBoardTest() {
+    @DisplayName("게시글 좋아요 취소를 한다.")
+    void unlike_board_success() {
         // given
         Long id = 1L;
 
@@ -154,8 +188,21 @@ public class BoardServiceTest {
     }
 
     @Test
-    @DisplayName("유저가 좋아요를 이미 클릭했는지 테스트")
-    public void didUserClickLikeAlreadyTest() {
+    @DisplayName("게시글을 찾지 못해서 좋아요 및 좋아요 취소를 하지 못한다.")
+    void like_board_fail_when_board_id_invalid() {
+        // given
+        Long id = 1L;
+        Member member = createUser();
+        Board board = createBoard();
+
+        // when & then
+        assertThatThrownBy(() -> boardService.updateLikeOfBoard(id, member))
+                .isInstanceOf(BoardNotFoundException.class);
+    }
+
+    @Test
+    @DisplayName("유저가 좋아요를 이미 클릭했는지 확인한다.")
+    public void check_user_click_like_button_already_success() {
         // given
         Board board = createBoard();
         Member member = createUser();
@@ -171,8 +218,8 @@ public class BoardServiceTest {
 
 
     @Test
-    @DisplayName("게시글 즐겨찾기 처리 테스트")
-    void processUserFavoriteBoard() {
+    @DisplayName("게시글 즐겨찾기 처리를 한다.")
+    void favorite_board_success() {
         // given
         Member member = createUser();
         Board board = createBoard();
@@ -187,8 +234,8 @@ public class BoardServiceTest {
     }
 
     @Test
-    @DisplayName("게시글 즐겨찾기 취소 처리 테스트")
-    void processUserUnFavoriteBoard() {
+    @DisplayName("게시글 즐겨찾기를 취소 처리한다.")
+    void unfavorite_board_success() {
         // given
         Member member = createUser();
         Board board = createBoard();
@@ -205,8 +252,21 @@ public class BoardServiceTest {
     }
 
     @Test
-    @DisplayName("유저가 즐겨찾기를 이미 클릭했는지 테스트")
-    public void didUserClickFavoriteAlready() {
+    @DisplayName("게시글을 찾지 못한 경우 즐겨찾기 처리를 하지 못한다.")
+    void favorite_fail_when_board_id_invalid() {
+        // given
+        Long id = 1L;
+        Member member = createUser();
+        Board board = createBoard();
+
+        // when & then
+        assertThatThrownBy(() -> boardService.updateOfFavoriteBoard(id, member))
+                .isInstanceOf(BoardNotFoundException.class);
+    }
+
+    @Test
+    @DisplayName("유저가 즐겨찾기를 이미 클릭했는지 확인한다.")
+    public void check_user_click_favorite_button_already_success() {
         // given
         Board board = createBoard();
         Member member = createUser();
@@ -222,27 +282,42 @@ public class BoardServiceTest {
 
 
     @Test
-    @DisplayName("editBoard 서비스 테스트")
-    void editBoardTest() {
-//        // given
-//        Image a = createImageWithIdAndOriginName(1L, "a.png");
-//        Image b = createImageWithIdAndOriginName(2L, "b.png");
-//        Board board = createBoardWithImages(List.of(a, b));
-//        given(boardRepository.findById(anyInt())).willReturn(Optional.of(board));
-//        MockMultipartFile cFile = new MockMultipartFile("c", "c.png", MediaType.IMAGE_PNG_VALUE, "c".getBytes());
-//        BoardUpdateRequest req = new BoardUpdateRequest("title2", "content2", List.of(cFile), List.of(a.getId()));
-//
-//        // when
-//        BoardDto result = boardService.editBoard(1, req, createUser());
-//
-//        // then
-//        assertThat(result.getTitle()).isEqualTo("title2");
+    @DisplayName("게시글을 수정한다.")
+    void edit_board_success() {
+        // given
+        Long id = 2L;
+        BoardUpdateRequest req = new BoardUpdateRequest();
+        req.setTitle("수정");
+        req.setContent("수정");
+        Member member = createUser();
+        Board board = createBoard(member);
+        board.setId(id);
+
+        given(boardRepository.findById(id)).willReturn(Optional.of(board));
+
+        // when
+        BoardResponseDto result = boardService.editBoard(id, req, member);
+
+        // then
+        assertThat(result.getTitle()).isEqualTo(req.getTitle());
     }
 
+    @Test
+    @DisplayName("게시글을 찾지 못해서 수정에 실패한다.")
+    void edit_board_fail_when_board_id_not_found() {
+        // given
+        Long id = 1L;
+        BoardUpdateRequest req = new BoardUpdateRequest();
+        Member member = createUser();
+
+        // when & then
+        assertThatThrownBy(() -> boardService.editBoard(id, req, member))
+                .isInstanceOf(BoardNotFoundException.class);
+    }
 
     @Test
-    @DisplayName("deleteBoard 서비스 테스트")
-    void deleteBoardTest() {
+    @DisplayName("게시글을 제거한다.")
+    void delete_board_success() {
         // given
         Member member = createUser();
         Board board = createBoard(member);
@@ -253,5 +328,17 @@ public class BoardServiceTest {
 
         // then
         verify(boardRepository).delete(any());
+    }
+
+    @Test
+    @DisplayName("게시글의 주인이 달라서 게시글 제거에 실패한다.")
+    void delete_board_fail_when_owner_invalid() {
+        // given
+        Member member = createUser();
+        Board board = createBoard(member);
+        given(boardRepository.findById(anyLong())).willReturn(Optional.of(board));
+
+        // when & then
+        assertThatThrownBy(() -> boardService.deleteBoard(anyLong(), createUser()));
     }
 }
