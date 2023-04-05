@@ -46,13 +46,12 @@ public class ReportControllerTest {
 
     @BeforeEach
     public void beforeEach() {
-
         mockMvc = MockMvcBuilders.standaloneSetup(reportController).build();
     }
 
     @Test
-    @DisplayName("유저 신고 하기")
-    public void reportUserTest() throws Exception {
+    @DisplayName("유저를 신고한다.")
+    void report_member_success() throws Exception {
         // given
         MemberReportRequestDto req = new MemberReportRequestDto(1L, "내용");
 
@@ -73,8 +72,8 @@ public class ReportControllerTest {
     }
 
     @Test
-    @DisplayName("게시판 신고 하기")
-    public void reportBoardTest() throws Exception {
+    @DisplayName("게시글을 신고한다.")
+    void report_board_success() throws Exception {
         // given
         BoardReportRequest req = new BoardReportRequest(1L, "내용");
 

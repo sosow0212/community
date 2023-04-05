@@ -43,9 +43,23 @@ public class ReportService {
         MemberReportHistory memberReportHistory = createUserReportHistory(reporter, reportedMember, req);
         checkUserStatusIsBeingReported(reportedMember, req);
 
-        return new MemberReportResponseDto(memberReportHistory.getId(), MemberEditRequestDto.toDto(reportedMember),
+        return new MemberReportResponseDto(
+                memberReportHistory.getId(),
+                MemberEditRequestDto.toDto(reportedMember),
                 req.getContent(),
-                memberReportHistory.getCreatedAt());
+                memberReportHistory.getCreatedAt()
+        );
+    }
+
+    private void validateUserReportRequest(Member reporter, MemberReportRequestDto req) {
+        if (reporter.isSameMemberId(req.getReportedUserId())) {
+            throw new NotSelfReportException();
+        }
+
+        if (MemberReportHistoryRepository.existsByReporterIdAndReportedUserId(reporter.getId(),
+                req.getReportedUserId())) {
+            throw new AlreadyReportException();
+        }
     }
 
     private void checkUserStatusIsBeingReported(Member reportedMember, MemberReportRequestDto req) {
@@ -63,17 +77,6 @@ public class ReportService {
         return memberReportHistory;
     }
 
-    private void validateUserReportRequest(Member reporter, MemberReportRequestDto req) {
-        if (reporter.isSameMemberId(req.getReportedUserId())) {
-            throw new NotSelfReportException();
-        }
-
-        if (MemberReportHistoryRepository.existsByReporterIdAndReportedUserId(reporter.getId(),
-                req.getReportedUserId())) {
-            throw new AlreadyReportException();
-        }
-    }
-
     @Transactional
     public BoardReportResponse reportBoard(Member reporter, BoardReportRequest req) {
         Board reportedBoard = boardRepository.findById(req.getReportedBoardId())
@@ -85,6 +88,17 @@ public class ReportService {
 
         return new BoardReportResponse(boardReportHistory.getId(), req.getReportedBoardId(),
                 req.getContent(), boardReportHistory.getCreatedAt());
+    }
+
+    private void validateBoard(Member reporter, Board reportedBoard, BoardReportRequest req) {
+        if (reporter.isSameMemberId(reportedBoard.getMember().getId())) {
+            throw new NotSelfReportException();
+        }
+
+        if (boardReportHistoryRepository.existsByReporterIdAndReportedBoardId(reporter.getId(),
+                req.getReportedBoardId())) {
+            throw new AlreadyReportException();
+        }
     }
 
     private void checkBoardStatusIsBeingReported(Board reportedBoard, BoardReportRequest req) {
@@ -100,16 +114,5 @@ public class ReportService {
 
         boardReportHistoryRepository.save(boardReportHistory);
         return boardReportHistory;
-    }
-
-    private void validateBoard(Member reporter, Board reportedBoard, BoardReportRequest req) {
-        if (reporter.isSameMemberId(reportedBoard.getMember().getId())) {
-            throw new NotSelfReportException();
-        }
-
-        if (boardReportHistoryRepository.existsByReporterIdAndReportedBoardId(reporter.getId(),
-                req.getReportedBoardId())) {
-            throw new AlreadyReportException();
-        }
     }
 }
