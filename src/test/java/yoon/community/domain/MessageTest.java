@@ -16,8 +16,8 @@ public class MessageTest {
     private final Member receiver = createUser2();
 
     @Test
-    @DisplayName("deleteBySender 테스트")
-    public void deleteBySenderTest() {
+    @DisplayName("전송자가 메시지를 삭제한다.")
+    void delete_message_by_sender_success() {
         // given
         Message message = createMessage(sender, receiver);
 
@@ -29,8 +29,8 @@ public class MessageTest {
     }
 
     @Test
-    @DisplayName("deleteByReceiver 테스트")
-    public void deleteByReceiverTest() {
+    @DisplayName("수신자가 메시지를 삭제한다.")
+    void delete_message_by_receiver_success() {
         // given
         Message message = createMessage(sender, receiver);
 
@@ -42,8 +42,8 @@ public class MessageTest {
     }
 
     @Test
-    @DisplayName("메시지 삭제 테스트")
-    public void deleteMessageTest() {
+    @DisplayName("메시지를 삭제한다.")
+    void delete_message_success() {
         // given
         Message message = createMessage(sender, receiver);
 

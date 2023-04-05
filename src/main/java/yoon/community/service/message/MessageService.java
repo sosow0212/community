@@ -48,16 +48,17 @@ public class MessageService {
                 .collect(Collectors.toList());
     }
 
-
     @Transactional(readOnly = true)
-    public MessageDto receiveMessage(Long id, Member member) {
-        Message message = messageRepository.findById(id).orElseThrow(MessageNotFoundException::new);
-        validateReceiveMessage(member, message);
+    public MessageDto receiveMessage(Long id, Member receiver) {
+        Message message = messageRepository.findById(id)
+                .orElseThrow(MessageNotFoundException::new);
+
+        validateReceiveMessage(receiver, message);
         return MessageDto.toDto(message);
     }
 
     private void validateReceiveMessage(Member member, Message message) {
-        if (message.getReceiver() != member) {
+        if (!message.getReceiver().isSameMemberId(member.getId())) {
             throw new MemberNotEqualsException();
         }
 
@@ -77,7 +78,9 @@ public class MessageService {
 
     @Transactional(readOnly = true)
     public MessageDto sendMessage(Long id, Member member) {
-        Message message = messageRepository.findById(id).orElseThrow(MessageNotFoundException::new);
+        Message message = messageRepository.findById(id)
+                .orElseThrow(MessageNotFoundException::new);
+
         validateSendMessage(member, message);
         return MessageDto.toDto(message);
     }
@@ -86,6 +89,7 @@ public class MessageService {
         if (message.getSender() != member) {
             throw new MemberNotEqualsException();
         }
+
         if (message.isDeletedByReceiver()) {
             throw new MessageNotFoundException();
         }
@@ -93,13 +97,15 @@ public class MessageService {
 
     @Transactional
     public void deleteMessageByReceiver(Long id, Member member) {
-        Message message = messageRepository.findById(id).orElseThrow(MessageNotFoundException::new);
+        Message message = messageRepository.findById(id)
+                .orElseThrow(MessageNotFoundException::new);
+
         processDeleteReceiverMessage(member, message);
         checkIsMessageDeletedBySenderAndReceiver(message);
     }
 
     private void processDeleteReceiverMessage(Member member, Message message) {
-        if (message.getReceiver().equals(member)) {
+        if (message.getReceiver().isSameMemberId(member.getId())) {
             message.deleteByReceiver();
             return;
         }
@@ -115,7 +121,9 @@ public class MessageService {
 
     @Transactional
     public void deleteMessageBySender(Long id, Member member) {
-        Message message = messageRepository.findById(id).orElseThrow(MessageNotFoundException::new);
+        Message message = messageRepository.findById(id)
+                .orElseThrow(MessageNotFoundException::new);
+
         processDeleteSenderMessage(member, message);
         checkIsMessageDeletedBySenderAndReceiver(message);
     }
