@@ -45,7 +45,7 @@ public class ReportControllerTest {
     ObjectMapper objectMapper = new ObjectMapper();
 
     @BeforeEach
-    public void beforeEach() {
+    void beforeEach() {
         mockMvc = MockMvcBuilders.standaloneSetup(reportController).build();
     }
 

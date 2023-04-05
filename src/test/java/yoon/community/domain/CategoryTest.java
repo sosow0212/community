@@ -7,9 +7,10 @@ import org.junit.jupiter.api.Test;
 import yoon.community.domain.category.Category;
 
 public class CategoryTest {
+
     @Test
     @DisplayName("카테고리 생성에 성공한다.")
-    public void create_category_success() {
+    void create_category_success() {
         // given, when
         String name = "카테고리";
         Category category = new Category(name, null);

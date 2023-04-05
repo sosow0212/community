@@ -46,13 +46,13 @@ public class MemberControllerTest {
     ObjectMapper objectMapper = new ObjectMapper();
 
     @BeforeEach
-    public void beforeEach() {
+    void beforeEach() {
         mockMvc = MockMvcBuilders.standaloneSetup(memberController).build();
     }
 
     @Test
-    @DisplayName("전체 회원 조회")
-    public void findAllUsersTest() throws Exception {
+    @DisplayName("전체 회원 조회를 한다.")
+    void find_members_success() throws Exception {
         mockMvc.perform(
                         get("/api/users"))
                 .andExpect(status().isOk());
@@ -60,8 +60,8 @@ public class MemberControllerTest {
     }
 
     @Test
-    @DisplayName("개별 회원 조회")
-    public void findUserTest() throws Exception {
+    @DisplayName("개별 회원 조회를 한다.")
+    void find_member_success() throws Exception {
         //given
         Long id = 1L;
 
@@ -73,8 +73,8 @@ public class MemberControllerTest {
     }
 
     @Test
-    @DisplayName("즐겨찾기 조회")
-    public void findFavoritesTest() throws Exception {
+    @DisplayName("즐겨찾기한 글을 조회한다.")
+    void find_favorite_board_success() throws Exception {
         // given
         Member member = createUserWithAdminRole();
         Authentication authentication = new UsernamePasswordAuthenticationToken(member.getId(), "",
@@ -90,8 +90,8 @@ public class MemberControllerTest {
     }
 
     @Test
-    @DisplayName("회원 정보 수정")
-    public void editUserInfoTest() throws Exception {
+    @DisplayName("회원 정보를 수정한다.")
+    void edit_member_info_success() throws Exception {
         // given
         MemberEditRequestDto memberEditRequestDto = new MemberEditRequestDto("name", "nickname");
         Member member = createUserWithAdminRole();
@@ -112,8 +112,8 @@ public class MemberControllerTest {
     }
 
     @Test
-    @DisplayName("회원 탈퇴")
-    public void deleteUserInfoTest() throws Exception {
+    @DisplayName("회원 탈퇴를 한다.")
+    void delete_member_success() throws Exception {
         // given
         Member member = createUserWithAdminRole();
         Authentication authentication = new UsernamePasswordAuthenticationToken(member.getId(), "",

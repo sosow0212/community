@@ -9,7 +9,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static yoon.community.factory.UserFactory.createUserWithAdminRole;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -58,13 +57,13 @@ public class BoardControllerTest {
     MockMvc mockMvc;
 
     @BeforeEach
-    public void beforeEach() {
+    void beforeEach() {
         mockMvc = MockMvcBuilders.standaloneSetup(boardController).build();
     }
 
     @Test
-    @DisplayName("게시글 작성")
-    public void createBoardTest() throws Exception {
+    @DisplayName("게시글을 작성한다.")
+    void create_board_success() throws Exception {
         // given
         ArgumentCaptor<BoardCreateRequest> boardCreateRequestArgumentCaptor = ArgumentCaptor.forClass(
                 BoardCreateRequest.class);
@@ -95,8 +94,8 @@ public class BoardControllerTest {
     }
 
     @Test
-    @DisplayName("게시물 검색")
-    public void searchBoardTest() throws Exception {
+    @DisplayName("게시물을 검색한다.")
+    void search_board_success() throws Exception {
         // given
         Pageable pageable = PageRequest.of(0, 5, Sort.Direction.DESC, "id");
         Page<Board> result = boardRepository.findByTitleContaining("keyword", pageable);
@@ -105,10 +104,9 @@ public class BoardControllerTest {
         assertThat(result).isEqualTo(null);
     }
 
-
     @Test
-    @DisplayName("전체 게시물 조회 (페이징)")
-    public void findAllBoardsTest() throws Exception {
+    @DisplayName("전체 게시물 조회한다. (페이징)")
+    void find_all_boards_success_with_paging() throws Exception {
         // given
         Pageable pageable = PageRequest.of(0, 5, Sort.Direction.DESC, "id");
         Page<Board> result = boardRepository.findAll(pageable);
@@ -117,10 +115,9 @@ public class BoardControllerTest {
         assertThat(result).isEqualTo(null);
     }
 
-
     @Test
-    @DisplayName("개시물 단건 조회")
-    public void findBoardTest() throws Exception {
+    @DisplayName("개시물을 단건 조회한다.")
+    void find_board_success() throws Exception {
         // given
         Long id = 1L;
 
@@ -132,10 +129,9 @@ public class BoardControllerTest {
         verify(boardService).findBoard(id);
     }
 
-
     @Test
-    @DisplayName("추천글 조회")
-    public void getBestBoardsTest() throws Exception {
+    @DisplayName("추천글을 조회한다.")
+    void find_best_board_success() throws Exception {
         // given
         Pageable pageable = PageRequest.of(0, 5, Sort.Direction.DESC, "id");
         Page<Board> result = boardRepository.findByLikedGreaterThanEqual(pageable, 3);
@@ -145,8 +141,8 @@ public class BoardControllerTest {
     }
 
     @Test
-    @DisplayName("게시글 좋아요 및 취소")
-    public void likeBoardTest() throws Exception {
+    @DisplayName("게시글 좋아요 및 취소를 한다.")
+    void like_or_unlike_board_success() throws Exception {
         // given
         Long id = 1L;
         Member member = createUserWithAdminRole();
@@ -164,10 +160,9 @@ public class BoardControllerTest {
         verify(boardService).updateLikeOfBoard(id, member);
     }
 
-
     @Test
-    @DisplayName("즐겨찾기 등록 및 취소")
-    public void favoriteBoardTest() throws Exception {
+    @DisplayName("게시글을 즐겨찾기 등록 및 취소처리를 한다.")
+    void favorite_board_process_success() throws Exception {
         // given
         Long id = 1L;
         Member member = createUserWithAdminRole();
@@ -185,10 +180,9 @@ public class BoardControllerTest {
         verify(boardService).updateOfFavoriteBoard(id, member);
     }
 
-
     @Test
-    @DisplayName("게시글 수정")
-    public void editBoardTest() throws Exception {
+    @DisplayName("게시글을 수정한다.")
+    void edit_board_success() throws Exception {
         // given
         ArgumentCaptor<BoardUpdateRequest> boardUpdateRequestArgumentCaptor = ArgumentCaptor.forClass(
                 BoardUpdateRequest.class);

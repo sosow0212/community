@@ -33,7 +33,6 @@ import yoon.community.repository.commnet.CommentRepository;
 import yoon.community.repository.member.MemberRepository;
 import yoon.community.service.comment.CommentService;
 
-
 @ExtendWith(MockitoExtension.class)
 public class CommentServiceTest {
 

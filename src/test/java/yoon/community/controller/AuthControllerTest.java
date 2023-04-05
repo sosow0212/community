@@ -38,9 +38,9 @@ class AuthControllerTest {
         mockMvc = MockMvcBuilders.standaloneSetup(authController).build();
     }
 
-    @DisplayName("회원가입 테스트")
+    @DisplayName("회원가입을 한다.")
     @Test
-    void signUpTest() throws Exception {
+    void sign_up_success() throws Exception {
         // given
         SignUpRequestDto req = new SignUpRequestDto("test123", "test", "username", "nickname");
 
@@ -56,7 +56,7 @@ class AuthControllerTest {
 
     @DisplayName("로그인 테스트")
     @Test
-    void signInTest() throws Exception {
+    void sign_in_success() throws Exception {
         // given
         LoginRequestDto req = new LoginRequestDto("test123", "test");
         given(authService.signIn(req)).willReturn(new TokenResponseDto("access", "refresh"));
@@ -75,7 +75,7 @@ class AuthControllerTest {
 
     @DisplayName("응답 JSON 테스트")
     @Test
-    void ignoreNullValueInJsonResponseTest() throws Exception {
+    void ignore_null_value_in_json_response_success() throws Exception {
         // 응답결과로 반환되는 JSON 문자열이 올바르게 제거되는지 검증
         // given
         SignUpRequestDto req = new SignUpRequestDto("test123", "test", "username", "nickname");

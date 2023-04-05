@@ -54,8 +54,8 @@ public class AuthServiceTest {
     RefreshTokenRepository refreshTokenRepository;
 
     @Test
-    @DisplayName("signup 서비스 테스트")
-    void signupTest() {
+    @DisplayName("회원가입을 한다.")
+    void sign_up_success() {
         // given
         SignUpRequestDto req = new SignUpRequestDto("username", "1234", "name", "nickname");
         given(memberRepository.existsByNickname(req.getNickname())).willReturn(false);
@@ -69,8 +69,8 @@ public class AuthServiceTest {
     }
 
     @Test
-    @DisplayName("로그인 실패 테스트")
-    void signInExceptionByNoneMemberTest() {
+    @DisplayName("로그인에 실패한다.")
+    void throws_exception_when_login_with_username_failure() {
         // given
         given(memberRepository.findByUsername(any())).willReturn(Optional.of(createUser()));
 
@@ -80,8 +80,8 @@ public class AuthServiceTest {
     }
 
     @Test
-    @DisplayName("패스워드 검증 테스트")
-    void signInExceptionByInvalidPasswordTest() {
+    @DisplayName("패스워드 검증을 한다.")
+    void throws_exception_when_login_with_password_invalid() {
         // given
         given(memberRepository.findByUsername(any())).willReturn(Optional.of(createUser()));
         given(passwordEncoder.matches(anyString(), anyString())).willReturn(false);

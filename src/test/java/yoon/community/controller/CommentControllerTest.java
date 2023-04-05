@@ -46,13 +46,13 @@ public class CommentControllerTest {
     ObjectMapper objectMapper = new ObjectMapper();
 
     @BeforeEach
-    public void beforeEach() {
+    void beforeEach() {
         mockMvc = MockMvcBuilders.standaloneSetup(commentController).build();
     }
 
     @Test
     @DisplayName("댓글 작성을 한다.")
-    public void create_comment_success() throws Exception {
+    void create_comment_success() throws Exception {
         // given
         CommentCreateRequest req = new CommentCreateRequest(1L, "content");
 
@@ -72,10 +72,9 @@ public class CommentControllerTest {
         verify(commentService).createComment(req, member);
     }
 
-
     @Test
     @DisplayName("모든 댓글을 조회한다.")
-    public void find_all_comments_success() throws Exception {
+    void find_all_comments_success() throws Exception {
         // given
         CommentReadCondition commentReadCondition = new CommentReadCondition(1L);
 
@@ -91,7 +90,7 @@ public class CommentControllerTest {
 
     @Test
     @DisplayName("댓글 삭제를 한다.")
-    public void delete_comment_success() throws Exception {
+    void delete_comment_success() throws Exception {
         // given
         Long id = 1L;
 

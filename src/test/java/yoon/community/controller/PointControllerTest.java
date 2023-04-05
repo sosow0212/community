@@ -29,13 +29,13 @@ public class PointControllerTest {
     MockMvc mockMvc;
 
     @BeforeEach
-    public void beforeEach() {
+    void beforeEach() {
         mockMvc = MockMvcBuilders.standaloneSetup(pointController).build();
     }
 
     @Test
     @DisplayName("포인트 랭킹 조회")
-    public void findPointsRankingTest() throws Exception {
+    void find_point_ranking_success() throws Exception {
         // given
 
         // when

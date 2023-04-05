@@ -24,7 +24,7 @@ public class BoardTest {
 
     @Test
     @DisplayName("신고처리를 한다.")
-    public void board_report_success() {
+    void board_report_success() {
         // given
         Board board = createBoard();
         board.makeStatusReported();
@@ -38,7 +38,7 @@ public class BoardTest {
 
     @Test
     @DisplayName("좋아요, 즐겨찾기처리를 한다.")
-    public void like_and_favorite_success() {
+    void like_and_favorite_success() {
         // given
         Board board = createBoard();
 
@@ -53,7 +53,7 @@ public class BoardTest {
 
     @Test
     @DisplayName("신고 해제를 한다.")
-    public void un_report_success() {
+    void un_report_success() {
         // given
         Board board = createBoard();
         board.makeStatusReported();
@@ -68,7 +68,7 @@ public class BoardTest {
 
     @Test
     @DisplayName("게시글 수정에 성공한다.")
-    public void edit_board_success() {
+    void edit_board_success() {
         // given
         Image a = createImage();
         Image b = createImage();

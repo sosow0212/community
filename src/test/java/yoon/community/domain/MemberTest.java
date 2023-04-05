@@ -12,7 +12,7 @@ public class MemberTest {
 
     @Test
     @DisplayName("유저를 신고처리 한다.")
-    public void make_status_reported_success() {
+    void make_status_reported_success() {
         // given
         Member member = createUser();
 
@@ -25,7 +25,7 @@ public class MemberTest {
 
     @Test
     @DisplayName("유저의 신고 상태를 해제한다.")
-    public void unlock_reported_user_success() {
+    void unlock_reported_user_success() {
         // given
         Member member = createUser();
         member.makeStatusReported();
@@ -39,7 +39,7 @@ public class MemberTest {
 
     @Test
     @DisplayName("유저의 정보를 수정한다.")
-    public void edit_user_success() {
+    void edit_user_success() {
         // given
         Member member = createUser();
         Member editedMember = createUser();
@@ -54,7 +54,7 @@ public class MemberTest {
 
     @Test
     @DisplayName("같은 Member Id인지 확인한다.")
-    public void check_same_member_success() {
+    void check_same_member_success() {
         // given
         Member member = createUser();
 

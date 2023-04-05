@@ -10,9 +10,10 @@ import yoon.community.domain.comment.Comment;
 import yoon.community.domain.member.Member;
 
 public class CommentTest {
+
     @Test
     @DisplayName("자신의 댓글인지 확인한다.")
-    public void check_comment_is_mine() {
+    void check_comment_is_mine() {
         // given
         Member member = createUser();
         Comment comment = createComment(member);
