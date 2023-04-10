@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import yoon.community.domain.comment.Comment;
 import yoon.community.dto.member.MemberEditRequestDto;
+import yoon.community.dto.member.MemberSimpleNicknameResponseDto;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Data
@@ -16,14 +17,14 @@ public class CommentDto {
 
     private Long id;
     private String content;
-    private MemberEditRequestDto memberEditRequestDto;
+    private MemberSimpleNicknameResponseDto memberSimpleNicknameResponseDto;
     private LocalDateTime createdAt;
 
     public static CommentDto toDto(Comment comment) {
         return new CommentDto(
                 comment.getId(),
                 comment.getContent(),
-                MemberEditRequestDto.toDto(comment.getMember()),
+                MemberSimpleNicknameResponseDto.toDto(comment.getMember()),
                 comment.getCreatedAt()
         );
     }
