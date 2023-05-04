@@ -1,14 +1,5 @@
 package yoon.community.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.BDDMockito.given;
-import static yoon.community.factory.BoardFactory.createBoard;
-import static yoon.community.factory.UserFactory.createUser;
-import static yoon.community.factory.UserFactory.createUser2;
-
-import java.util.List;
-import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -33,6 +24,16 @@ import yoon.community.repository.member.MemberRepository;
 import yoon.community.repository.report.BoardReportRepository;
 import yoon.community.repository.report.MemberReportRepository;
 import yoon.community.service.report.ReportService;
+
+import java.util.List;
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.BDDMockito.given;
+import static yoon.community.factory.BoardFactory.createBoard;
+import static yoon.community.factory.UserFactory.createUser;
+import static yoon.community.factory.UserFactory.createUser2;
 
 @ExtendWith(MockitoExtension.class)
 public class ReportServiceTest {

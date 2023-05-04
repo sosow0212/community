@@ -29,7 +29,7 @@ public class MemberReportHistory extends EntityDate {
     @Column(nullable = false)
     private String content;
 
-    public MemberReportHistory(Long reporterId, Long reportedUserId, String content) {
+    public MemberReportHistory(final Long reporterId, final Long reportedUserId, final String content) {
         this.reporterId = reporterId;
         this.reportedUserId = reportedUserId;
         this.content = content;

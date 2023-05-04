@@ -1,5 +1,6 @@
 package yoon.community.controller;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -22,6 +23,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import yoon.community.config.guard.LoginMemberArgumentResolver;
 import yoon.community.controller.report.ReportController;
 import yoon.community.domain.member.Member;
 import yoon.community.dto.report.BoardReportRequest;
@@ -41,12 +43,17 @@ public class ReportControllerTest {
     @Mock
     MemberRepository memberRepository;
 
+    @Mock
+    LoginMemberArgumentResolver loginMemberArgumentResolver;
+
     MockMvc mockMvc;
     ObjectMapper objectMapper = new ObjectMapper();
 
     @BeforeEach
     void beforeEach() {
-        mockMvc = MockMvcBuilders.standaloneSetup(reportController).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(reportController)
+                .setCustomArgumentResolvers(loginMemberArgumentResolver)
+                .build();
     }
 
     @Test
@@ -54,12 +61,10 @@ public class ReportControllerTest {
     void report_member_success() throws Exception {
         // given
         MemberReportRequestDto req = new MemberReportRequestDto(1L, "내용");
-
         Member member = createUserWithAdminRole();
-        Authentication authentication = new UsernamePasswordAuthenticationToken(member.getId(), "",
-                Collections.emptyList());
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        given(memberRepository.findByUsername(authentication.getName())).willReturn(Optional.of(member));
+
+        given(loginMemberArgumentResolver.supportsParameter(any())).willReturn(true);
+        given(loginMemberArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(member);
 
         // when, then
         mockMvc.perform(
@@ -76,12 +81,10 @@ public class ReportControllerTest {
     void report_board_success() throws Exception {
         // given
         BoardReportRequest req = new BoardReportRequest(1L, "내용");
-
         Member member = createUserWithAdminRole();
-        Authentication authentication = new UsernamePasswordAuthenticationToken(member.getId(), "",
-                Collections.emptyList());
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        given(memberRepository.findByUsername(authentication.getName())).willReturn(Optional.of(member));
+
+        given(loginMemberArgumentResolver.supportsParameter(any())).willReturn(true);
+        given(loginMemberArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(member);
 
         // when, then
         mockMvc.perform(

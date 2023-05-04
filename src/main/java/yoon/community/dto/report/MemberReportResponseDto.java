@@ -18,12 +18,19 @@ public class MemberReportResponseDto {
     private String content;
     private LocalDateTime createdAt;
 
-    public MemberReportResponseDto toDto(MemberReportHistory memberReportHistory, Member reportedMember) {
+    public static MemberReportResponseDto toDto(MemberReportHistory memberReportHistory, Member reportedMember) {
         return new MemberReportResponseDto(
                 memberReportHistory.getId(),
                 MemberEditRequestDto.toDto(reportedMember),
                 memberReportHistory.getContent(),
                 memberReportHistory.getCreatedAt()
         );
+    }
+
+    public static MemberReportResponseDto toDto(final MemberReportHistory memberReportHistory, final MemberEditRequestDto editRequestDto, final MemberReportRequestDto memberReportRequestDto) {
+        return new MemberReportResponseDto(memberReportRequestDto.getReportedUserId(),
+                editRequestDto,
+                memberReportRequestDto.getContent(),
+                memberReportHistory.getCreatedAt());
     }
 }

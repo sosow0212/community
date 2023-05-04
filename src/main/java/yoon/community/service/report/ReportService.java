@@ -1,6 +1,5 @@
 package yoon.community.service.report;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import yoon.community.domain.board.Board;
@@ -21,7 +20,6 @@ import yoon.community.repository.member.MemberRepository;
 import yoon.community.repository.report.BoardReportRepository;
 import yoon.community.repository.report.MemberReportRepository;
 
-@RequiredArgsConstructor
 @Service
 public class ReportService {
 
@@ -33,8 +31,15 @@ public class ReportService {
     public final MemberRepository memberRepository;
     public final BoardRepository boardRepository;
 
+    public ReportService(final BoardReportRepository boardReportHistoryRepository, final MemberReportRepository memberReportHistoryRepository, final MemberRepository memberRepository, final BoardRepository boardRepository) {
+        this.boardReportHistoryRepository = boardReportHistoryRepository;
+        MemberReportHistoryRepository = memberReportHistoryRepository;
+        this.memberRepository = memberRepository;
+        this.boardRepository = boardRepository;
+    }
+
     @Transactional
-    public MemberReportResponseDto reportUser(Member reporter, MemberReportRequestDto req) {
+    public MemberReportResponseDto reportUser(final Member reporter, final MemberReportRequestDto req) {
         validateUserReportRequest(reporter, req);
 
         Member reportedMember = memberRepository.findById(req.getReportedUserId())
@@ -43,15 +48,10 @@ public class ReportService {
         MemberReportHistory memberReportHistory = createUserReportHistory(reporter, reportedMember, req);
         checkUserStatusIsBeingReported(reportedMember, req);
 
-        return new MemberReportResponseDto(
-                memberReportHistory.getId(),
-                MemberEditRequestDto.toDto(reportedMember),
-                req.getContent(),
-                memberReportHistory.getCreatedAt()
-        );
+        return MemberReportResponseDto.toDto(memberReportHistory, MemberEditRequestDto.toDto(reportedMember), req);
     }
 
-    private void validateUserReportRequest(Member reporter, MemberReportRequestDto req) {
+    private void validateUserReportRequest(final Member reporter, final MemberReportRequestDto req) {
         if (reporter.isSameMemberId(req.getReportedUserId())) {
             throw new NotSelfReportException();
         }
@@ -62,15 +62,15 @@ public class ReportService {
         }
     }
 
-    private void checkUserStatusIsBeingReported(Member reportedMember, MemberReportRequestDto req) {
+    private void checkUserStatusIsBeingReported(final Member reportedMember, final MemberReportRequestDto req) {
         if (MemberReportHistoryRepository.findByReportedUserId(req.getReportedUserId()).size()
                 >= NORMAL_USER_REPORT_LIMIT_FOR_BEING_REPORTED) {
             reportedMember.makeStatusReported();
         }
     }
 
-    private MemberReportHistory createUserReportHistory(Member reporter, Member reportedMember,
-                                                        MemberReportRequestDto req) {
+    private MemberReportHistory createUserReportHistory(final Member reporter, final Member reportedMember,
+                                                        final MemberReportRequestDto req) {
         MemberReportHistory memberReportHistory = new MemberReportHistory(reporter.getId(), reportedMember.getId(),
                 req.getContent());
         MemberReportHistoryRepository.save(memberReportHistory);
@@ -78,7 +78,7 @@ public class ReportService {
     }
 
     @Transactional
-    public BoardReportResponse reportBoard(Member reporter, BoardReportRequest req) {
+    public BoardReportResponse reportBoard(final Member reporter, final BoardReportRequest req) {
         Board reportedBoard = boardRepository.findById(req.getReportedBoardId())
                 .orElseThrow(BoardNotFoundException::new);
 
@@ -90,7 +90,7 @@ public class ReportService {
                 req.getContent(), boardReportHistory.getCreatedAt());
     }
 
-    private void validateBoard(Member reporter, Board reportedBoard, BoardReportRequest req) {
+    private void validateBoard(final Member reporter, final Board reportedBoard, final BoardReportRequest req) {
         if (reporter.isSameMemberId(reportedBoard.getMember().getId())) {
             throw new NotSelfReportException();
         }
@@ -101,14 +101,14 @@ public class ReportService {
         }
     }
 
-    private void checkBoardStatusIsBeingReported(Board reportedBoard, BoardReportRequest req) {
+    private void checkBoardStatusIsBeingReported(final Board reportedBoard, final BoardReportRequest req) {
         if (boardReportHistoryRepository.findByReportedBoardId(req.getReportedBoardId()).size()
                 >= NORMAL_BOARD_REPORT_LIMIT_FOR_BEING_REPORTED) {
             reportedBoard.makeStatusReported();
         }
     }
 
-    private BoardReportHistory createBoardReportHistory(Member reporter, Board reportedBoard, BoardReportRequest req) {
+    private BoardReportHistory createBoardReportHistory(final Member reporter, final Board reportedBoard, final BoardReportRequest req) {
         BoardReportHistory boardReportHistory = new BoardReportHistory(reporter.getId(), reportedBoard.getId(),
                 req.getContent());
 
