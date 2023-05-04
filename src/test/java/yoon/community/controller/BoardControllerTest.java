@@ -1,6 +1,7 @@
 package yoon.community.controller;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -33,6 +34,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.multipart.MultipartFile;
+import yoon.community.config.guard.LoginMemberArgumentResolver;
 import yoon.community.controller.board.BoardController;
 import yoon.community.domain.board.Board;
 import yoon.community.domain.member.Member;
@@ -54,29 +56,31 @@ public class BoardControllerTest {
     BoardRepository boardRepository;
     @Mock
     MemberRepository memberRepository;
+
+    @Mock
+    LoginMemberArgumentResolver loginMemberArgumentResolver;
+
     MockMvc mockMvc;
 
     @BeforeEach
     void beforeEach() {
-        mockMvc = MockMvcBuilders.standaloneSetup(boardController).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(boardController)
+                .setCustomArgumentResolvers(loginMemberArgumentResolver)
+                .build();
     }
 
     @Test
     @DisplayName("게시글을 작성한다.")
     void create_board_success() throws Exception {
         // given
-        ArgumentCaptor<BoardCreateRequest> boardCreateRequestArgumentCaptor = ArgumentCaptor.forClass(
-                BoardCreateRequest.class);
         List<MultipartFile> images = new ArrayList<>();
         images.add(new MockMultipartFile("test1", "test1.PNG", MediaType.IMAGE_PNG_VALUE, "test1".getBytes()));
         images.add(new MockMultipartFile("test2", "test2.PNG", MediaType.IMAGE_PNG_VALUE, "test2".getBytes()));
         BoardCreateRequest req = new BoardCreateRequest("title", "content", images);
 
         Member member = createUserWithAdminRole();
-        Authentication authentication = new UsernamePasswordAuthenticationToken(member.getId(), "",
-                Collections.emptyList());
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        given(memberRepository.findByUsername(authentication.getName())).willReturn(Optional.of(member));
+        given(loginMemberArgumentResolver.supportsParameter(any())).willReturn(true);
+        given(loginMemberArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(member);
 
         // when, then
         mockMvc.perform(
@@ -146,10 +150,8 @@ public class BoardControllerTest {
         // given
         Long id = 1L;
         Member member = createUserWithAdminRole();
-        Authentication authentication = new UsernamePasswordAuthenticationToken(member.getId(), "",
-                Collections.emptyList());
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        given(memberRepository.findByUsername(authentication.getName())).willReturn(Optional.of(member));
+        given(loginMemberArgumentResolver.supportsParameter(any())).willReturn(true);
+        given(loginMemberArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(member);
 
         // when, then
         mockMvc.perform(
@@ -166,10 +168,8 @@ public class BoardControllerTest {
         // given
         Long id = 1L;
         Member member = createUserWithAdminRole();
-        Authentication authentication = new UsernamePasswordAuthenticationToken(member.getId(), "",
-                Collections.emptyList());
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        given(memberRepository.findByUsername(authentication.getName())).willReturn(Optional.of(member));
+        given(loginMemberArgumentResolver.supportsParameter(any())).willReturn(true);
+        given(loginMemberArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(member);
 
         // when, then
         mockMvc.perform(
@@ -184,18 +184,15 @@ public class BoardControllerTest {
     @DisplayName("게시글을 수정한다.")
     void edit_board_success() throws Exception {
         // given
-        ArgumentCaptor<BoardUpdateRequest> boardUpdateRequestArgumentCaptor = ArgumentCaptor.forClass(
-                BoardUpdateRequest.class);
         List<MultipartFile> addedImages = new ArrayList<>();
         addedImages.add(new MockMultipartFile("test1", "test1.PNG", MediaType.IMAGE_PNG_VALUE, "test1".getBytes()));
         addedImages.add(new MockMultipartFile("test2", "test2.PNG", MediaType.IMAGE_PNG_VALUE, "test2".getBytes()));
         List<Integer> deletedImages = List.of(1, 2);
         BoardUpdateRequest req = new BoardUpdateRequest("title", "content", addedImages, deletedImages);
         Member member = createUserWithAdminRole();
-        Authentication authentication = new UsernamePasswordAuthenticationToken(member.getId(), "",
-                Collections.emptyList());
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        given(memberRepository.findByUsername(authentication.getName())).willReturn(Optional.of(member));
+
+        given(loginMemberArgumentResolver.supportsParameter(any())).willReturn(true);
+        given(loginMemberArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(member);
 
         // when, then
         mockMvc.perform(

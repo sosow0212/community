@@ -1,27 +1,6 @@
 package yoon.community.domain.board;
 
-import static java.util.stream.Collectors.toList;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.web.multipart.MultipartFile;
@@ -29,6 +8,13 @@ import yoon.community.domain.category.Category;
 import yoon.community.domain.common.EntityDate;
 import yoon.community.domain.member.Member;
 import yoon.community.dto.board.BoardUpdateRequest;
+
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import static java.util.stream.Collectors.toList;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
@@ -71,7 +57,11 @@ public class Board extends EntityDate {
     @Column(nullable = false)
     private boolean reported;
 
-    public Board(String title, String content, Member member, Category category, List<Image> images) {
+    public Board(final String title,
+                 final String content,
+                 final Member member,
+                 final Category category,
+                 final List<Image> images) {
         this.title = title;
         this.content = content;
         this.member = member;
@@ -83,7 +73,7 @@ public class Board extends EntityDate {
         addImages(images);
     }
 
-    public ImageUpdatedResult update(BoardUpdateRequest req) {
+    public ImageUpdatedResult update(final BoardUpdateRequest req) {
         this.title = req.getTitle();
         this.content = req.getContent();
 
@@ -93,25 +83,25 @@ public class Board extends EntityDate {
         return result;
     }
 
-    private void addImages(List<Image> addedImages) {
+    private void addImages(final List<Image> addedImages) {
         addedImages.forEach(addedImage -> {
             images.add(addedImage);
             addedImage.initBoard(this);
         });
     }
 
-    private void deleteImages(List<Image> deletedImages) {
+    private void deleteImages(final List<Image> deletedImages) {
         deletedImages.forEach(deletedImage -> this.images.remove(deletedImage));
     }
 
-    private ImageUpdatedResult findImageUpdatedResult(List<MultipartFile> addedImageFiles,
-                                                      List<Integer> deletedImageIds) {
+    private ImageUpdatedResult findImageUpdatedResult(final List<MultipartFile> addedImageFiles,
+                                                      final List<Integer> deletedImageIds) {
         List<Image> addedImages = convertImageFilesToImages(addedImageFiles);
         List<Image> deletedImages = convertImageIdsToImages(deletedImageIds);
         return new ImageUpdatedResult(addedImageFiles, addedImages, deletedImages);
     }
 
-    private List<Image> convertImageIdsToImages(List<Integer> imageIds) {
+    private List<Image> convertImageIdsToImages(final List<Integer> imageIds) {
         return imageIds.stream()
                 .map(this::convertImageIdToImage)
                 .filter(Optional::isPresent)
@@ -119,15 +109,15 @@ public class Board extends EntityDate {
                 .collect(toList());
     }
 
-    private Optional<Image> convertImageIdToImage(int id) {
+    private Optional<Image> convertImageIdToImage(final int id) {
         return this.images.stream()
                 .filter(image -> image.isSameImageId(id))
                 .findAny();
     }
 
-    private List<Image> convertImageFilesToImages(List<MultipartFile> imageFiles) {
+    private List<Image> convertImageFilesToImages(final List<MultipartFile> imageFiles) {
         return imageFiles.stream()
-                .map(imageFile -> new Image(imageFile.getOriginalFilename()))
+                .map(imageFile -> Image.from(imageFile.getOriginalFilename()))
                 .collect(toList());
     }
 

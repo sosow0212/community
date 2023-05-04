@@ -44,22 +44,26 @@ public class Image extends EntityDate {
 
     private final static List<String> supportedExtensions = List.of("jpg", "jpeg", "gif", "bmp", "png");
 
-    public Image(String originName) {
+    private Image(final String originName) {
         this.originName = originName;
         this.uniqueName = generateUniqueName(extractExtension(originName));
     }
 
-    public void initBoard(Board board) {
+    public static Image from(final String originName) {
+        return new Image(originName);
+    }
+
+    public void initBoard(final Board board) {
         if (this.board == null) {
             this.board = board;
         }
     }
 
-    private String generateUniqueName(String extension) {
+    private String generateUniqueName(final String extension) {
         return UUID.randomUUID() + "." + extension;
     }
 
-    private String extractExtension(String originName) {
+    private String extractExtension(final String originName) {
         String extension = originName.substring(originName.lastIndexOf(".") + 1);
 
         if (isSupportedFormat(extension)) {
@@ -69,12 +73,12 @@ public class Image extends EntityDate {
         throw new UnsupportedImageFormatException();
     }
 
-    private boolean isSupportedFormat(String extension) {
+    private boolean isSupportedFormat(final String extension) {
         return supportedExtensions.stream()
                 .anyMatch(supportedExtension -> supportedExtension.equalsIgnoreCase(extension));
     }
 
-    public boolean isSameImageId(int id) {
+    public boolean isSameImageId(final int id) {
         return this.getId() == id;
     }
 }
