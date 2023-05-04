@@ -11,6 +11,8 @@ import lombok.Setter;
 import yoon.community.dto.member.MemberEditRequestDto;
 import yoon.community.domain.common.EntityDate;
 
+import java.util.Objects;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -64,7 +66,7 @@ public class Member extends EntityDate {
     }
 
     public boolean isSameMemberId(Long id) {
-        return this.id == id;
+        return Objects.equals(this.id, id);
     }
 
     public void makeStatusReported() {
