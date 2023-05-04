@@ -1,8 +1,5 @@
 package yoon.community.service.comment;
 
-import java.util.List;
-import java.util.stream.Collectors;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,7 +15,9 @@ import yoon.community.exception.MemberNotEqualsException;
 import yoon.community.repository.board.BoardRepository;
 import yoon.community.repository.commnet.CommentRepository;
 
-@RequiredArgsConstructor
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @Slf4j
 public class CommentService {
@@ -26,17 +25,20 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final BoardRepository boardRepository;
 
-    @Transactional(readOnly = true)
-    public List<CommentDto> findAllComments(CommentReadCondition condition) {
-        List<Comment> comments = commentRepository.findByBoardId(condition.getBoardId());
+    public CommentService(final CommentRepository commentRepository, final BoardRepository boardRepository) {
+        this.commentRepository = commentRepository;
+        this.boardRepository = boardRepository;
+    }
 
-        return comments.stream()
+    @Transactional(readOnly = true)
+    public List<CommentDto> findAllComments(final CommentReadCondition condition) {
+        return commentRepository.findByBoardId(condition.getBoardId()).stream()
                 .map(CommentDto::toDto)
                 .collect(Collectors.toList());
     }
 
     @Transactional
-    public CommentDto createComment(CommentCreateRequest req, Member member) {
+    public CommentDto createComment(final CommentCreateRequest req, final Member member) {
         Board board = boardRepository.findById(req.getBoardId())
                 .orElseThrow(BoardNotFoundException::new);
 
@@ -47,7 +49,7 @@ public class CommentService {
     }
 
     @Transactional
-    public void deleteComment(Long id, Member member) {
+    public void deleteComment(final Long id, final Member member) {
         Comment comment = commentRepository.findById(id)
                 .orElseThrow(CommentNotFoundException::new);
 
@@ -55,7 +57,7 @@ public class CommentService {
         commentRepository.delete(comment);
     }
 
-    private void validateDeleteComment(Comment comment, Member member) {
+    private void validateDeleteComment(final Comment comment, final Member member) {
         if (!comment.isOwnComment(member)) {
             throw new MemberNotEqualsException();
         }

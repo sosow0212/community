@@ -35,13 +35,13 @@ public class Comment extends EntityDate {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Board board;
 
-    public Comment(String content, Member member, Board board) {
+    public Comment(final String content, final Member member, final Board board) {
         this.content = content;
         this.member = member;
         this.board = board;
     }
 
-    public boolean isOwnComment(Member member) {
+    public boolean isOwnComment(final Member member) {
         return this.member.equals(member);
     }
 }
