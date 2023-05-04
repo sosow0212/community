@@ -4,7 +4,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import javax.validation.Valid;
-import lombok.RequiredArgsConstructor;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,12 +19,15 @@ import yoon.community.response.Response;
 import yoon.community.service.category.CategoryService;
 
 @Api(value = "Category Controller", tags = "Category")
-@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api")
 public class CategoryController {
 
     private final CategoryService categoryService;
+
+    public CategoryController(final CategoryService categoryService) {
+        this.categoryService = categoryService;
+    }
 
     @ApiOperation(value = "모든 카테고리 조회", notes = "모든 카테고리를 조회합니다.")
     @GetMapping("/categories")
@@ -36,7 +39,7 @@ public class CategoryController {
     @ApiOperation(value = "카테고리 생성", notes = "카테고리를 생성합니다.")
     @PostMapping("/categories")
     @ResponseStatus(HttpStatus.CREATED)
-    public Response createCategory(@Valid @RequestBody CategoryCreateRequest req) {
+    public Response createCategory(@Valid @RequestBody final CategoryCreateRequest req) {
         categoryService.createCategory(req);
         return Response.success();
     }
@@ -52,7 +55,7 @@ public class CategoryController {
     @ApiOperation(value = "카테고리 삭제", notes = "카테고리를 삭제합니다.")
     @DeleteMapping("/categories/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Response deleteCategory(@ApiParam(value = "카테고리 id", required = true) @PathVariable int id) {
+    public Response deleteCategory(@ApiParam(value = "카테고리 id", required = true) final @PathVariable int id) {
         categoryService.deleteCategory(id);
         return Response.success();
     }

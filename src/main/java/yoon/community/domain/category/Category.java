@@ -26,7 +26,7 @@ public class Category {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Category parent;
 
-    public Category(String name, Category parent) {
+    public Category(final String name, final Category parent) {
         this.name = name;
         this.parent = parent;
     }
