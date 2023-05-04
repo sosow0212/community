@@ -43,12 +43,16 @@ public class Message extends EntityDate {
     @OnDelete(action = OnDeleteAction.NO_ACTION)
     private Member receiver;
 
-    public Message(String title, String content, Member sender, Member receiver) {
+    public Message(final String title, final String content, final Member sender, final Member receiver) {
         this.title = title;
         this.content = content;
         this.sender = sender;
         this.receiver = receiver;
         this.deletedBySender = this.deletedByReceiver = false;
+    }
+
+    public boolean isSender(final Member member) {
+        return this.getSender().equals(member);
     }
 
     public void deleteBySender() {

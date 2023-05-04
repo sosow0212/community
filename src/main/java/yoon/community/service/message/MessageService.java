@@ -1,8 +1,5 @@
 package yoon.community.service.message;
 
-import java.util.List;
-import java.util.stream.Collectors;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import yoon.community.domain.member.Member;
@@ -15,41 +12,46 @@ import yoon.community.exception.MessageNotFoundException;
 import yoon.community.repository.member.MemberRepository;
 import yoon.community.repository.message.MessageRepository;
 
-@RequiredArgsConstructor
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class MessageService {
 
     private final MessageRepository messageRepository;
     private final MemberRepository memberRepository;
 
+    public MessageService(final MessageRepository messageRepository, final MemberRepository memberRepository) {
+        this.messageRepository = messageRepository;
+        this.memberRepository = memberRepository;
+    }
+
     @Transactional
-    public MessageDto createMessage(Member sender, MessageCreateRequest req) {
+    public MessageDto createMessage(final Member sender, final MessageCreateRequest req) {
         Member receiver = getReceiver(req);
         Message message = getMessage(sender, req, receiver);
 
         return MessageDto.toDto(messageRepository.save(message));
     }
 
-    private Member getReceiver(MessageCreateRequest req) {
+    private Member getReceiver(final MessageCreateRequest req) {
         return memberRepository.findByNickname(req.getReceiverNickname())
                 .orElseThrow(MemberNotFoundException::new);
     }
 
-    private Message getMessage(Member sender, MessageCreateRequest req, Member receiver) {
+    private Message getMessage(final Member sender, final MessageCreateRequest req, final Member receiver) {
         return new Message(req.getTitle(), req.getContent(), sender, receiver);
     }
 
     @Transactional(readOnly = true)
-    public List<MessageDto> receiveMessages(Member member) {
-        List<Message> messageList = messageRepository.findAllByReceiverAndDeletedByReceiverFalseOrderByIdDesc(member);
-
-        return messageList.stream()
+    public List<MessageDto> receiveMessages(final Member member) {
+        return messageRepository.findAllByReceiverAndDeletedByReceiverFalseOrderByIdDesc(member).stream()
                 .map(MessageDto::toDto)
                 .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
-    public MessageDto receiveMessage(Long id, Member receiver) {
+    public MessageDto receiveMessage(final Long id, final Member receiver) {
         Message message = messageRepository.findById(id)
                 .orElseThrow(MessageNotFoundException::new);
 
@@ -57,7 +59,7 @@ public class MessageService {
         return MessageDto.toDto(message);
     }
 
-    private void validateReceiveMessage(Member member, Message message) {
+    private void validateReceiveMessage(final Member member, final Message message) {
         if (!message.getReceiver().isSameMemberId(member.getId())) {
             throw new MemberNotEqualsException();
         }
@@ -68,16 +70,14 @@ public class MessageService {
     }
 
     @Transactional(readOnly = true)
-    public List<MessageDto> sendMessages(Member member) {
-        List<Message> messageList = messageRepository.findAllBySenderAndDeletedBySenderFalseOrderByIdDesc(member);
-
-        return messageList.stream()
+    public List<MessageDto> sendMessages(final Member member) {
+        return messageRepository.findAllBySenderAndDeletedBySenderFalseOrderByIdDesc(member).stream()
                 .map(MessageDto::toDto)
                 .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
-    public MessageDto sendMessage(Long id, Member member) {
+    public MessageDto sendMessage(final Long id, final Member member) {
         Message message = messageRepository.findById(id)
                 .orElseThrow(MessageNotFoundException::new);
 
@@ -85,8 +85,8 @@ public class MessageService {
         return MessageDto.toDto(message);
     }
 
-    private void validateSendMessage(Member member, Message message) {
-        if (message.getSender() != member) {
+    private void validateSendMessage(final Member member, final Message message) {
+        if (!message.isSender(member)) {
             throw new MemberNotEqualsException();
         }
 
@@ -96,7 +96,7 @@ public class MessageService {
     }
 
     @Transactional
-    public void deleteMessageByReceiver(Long id, Member member) {
+    public void deleteMessageByReceiver(final Long id, final Member member) {
         Message message = messageRepository.findById(id)
                 .orElseThrow(MessageNotFoundException::new);
 
@@ -104,7 +104,7 @@ public class MessageService {
         checkIsMessageDeletedBySenderAndReceiver(message);
     }
 
-    private void processDeleteReceiverMessage(Member member, Message message) {
+    private void processDeleteReceiverMessage(final Member member, final Message message) {
         if (message.getReceiver().isSameMemberId(member.getId())) {
             message.deleteByReceiver();
             return;
@@ -113,14 +113,14 @@ public class MessageService {
         throw new MemberNotEqualsException();
     }
 
-    private void checkIsMessageDeletedBySenderAndReceiver(Message message) {
+    private void checkIsMessageDeletedBySenderAndReceiver(final Message message) {
         if (message.isDeletedMessage()) {
             messageRepository.delete(message);
         }
     }
 
     @Transactional
-    public void deleteMessageBySender(Long id, Member member) {
+    public void deleteMessageBySender(final Long id, final Member member) {
         Message message = messageRepository.findById(id)
                 .orElseThrow(MessageNotFoundException::new);
 
@@ -128,7 +128,7 @@ public class MessageService {
         checkIsMessageDeletedBySenderAndReceiver(message);
     }
 
-    private void processDeleteSenderMessage(Member member, Message message) {
+    private void processDeleteSenderMessage(final Member member, final Message message) {
         if (message.getSender().equals(member)) {
             message.deleteBySender();
             return;

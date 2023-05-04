@@ -1,16 +1,6 @@
 package yoon.community.controller;
 
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.verify;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static yoon.community.factory.UserFactory.createUserWithAdminRole;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.Collections;
-import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -24,11 +14,22 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import yoon.community.config.guard.LoginMemberArgumentResolver;
 import yoon.community.controller.message.MessageController;
 import yoon.community.domain.member.Member;
 import yoon.community.dto.message.MessageCreateRequest;
 import yoon.community.repository.member.MemberRepository;
 import yoon.community.service.message.MessageService;
+
+import java.util.Collections;
+import java.util.Optional;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verify;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static yoon.community.factory.UserFactory.createUserWithAdminRole;
 
 @ExtendWith(MockitoExtension.class)
 public class MessageControllerTest {
@@ -38,15 +39,21 @@ public class MessageControllerTest {
 
     @Mock
     MessageService messageService;
-    MockMvc mockMvc;
-    ObjectMapper objectMapper = new ObjectMapper();
 
     @Mock
     MemberRepository memberRepository;
 
+    @Mock
+    LoginMemberArgumentResolver loginMemberArgumentResolver;
+
+    MockMvc mockMvc;
+    ObjectMapper objectMapper = new ObjectMapper();
+
     @BeforeEach
     void beforeEach() {
-        mockMvc = MockMvcBuilders.standaloneSetup(messageController).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(messageController)
+                .setCustomArgumentResolvers(loginMemberArgumentResolver)
+                .build();
     }
 
     @Test
@@ -54,12 +61,10 @@ public class MessageControllerTest {
     void create_message_success() throws Exception {
         // given
         MessageCreateRequest req = new MessageCreateRequest("타이틀", "내용", "유저닉네임");
-
         Member member = createUserWithAdminRole();
-        Authentication authentication = new UsernamePasswordAuthenticationToken(member.getId(), "",
-                Collections.emptyList());
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        given(memberRepository.findByUsername(authentication.getName())).willReturn(Optional.of(member));
+
+        given(loginMemberArgumentResolver.supportsParameter(any())).willReturn(true);
+        given(loginMemberArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(member);
 
         // when, then
         mockMvc.perform(
@@ -76,10 +81,9 @@ public class MessageControllerTest {
     void receive_messages_success() throws Exception {
         // given
         Member member = createUserWithAdminRole();
-        Authentication authentication = new UsernamePasswordAuthenticationToken(member.getId(), "",
-                Collections.emptyList());
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        given(memberRepository.findByUsername(authentication.getName())).willReturn(Optional.of(member));
+
+        given(loginMemberArgumentResolver.supportsParameter(any())).willReturn(true);
+        given(loginMemberArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(member);
 
         // when, then
         mockMvc.perform(
@@ -93,12 +97,10 @@ public class MessageControllerTest {
     void receiver_message_success() throws Exception {
         // given
         Long id = 1L;
-
         Member member = createUserWithAdminRole();
-        Authentication authentication = new UsernamePasswordAuthenticationToken(member.getId(), "",
-                Collections.emptyList());
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        given(memberRepository.findByUsername(authentication.getName())).willReturn(Optional.of(member));
+
+        given(loginMemberArgumentResolver.supportsParameter(any())).willReturn(true);
+        given(loginMemberArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(member);
 
         // when, then
         mockMvc.perform(
@@ -112,10 +114,8 @@ public class MessageControllerTest {
     void send_messages_success() throws Exception {
         // given
         Member member = createUserWithAdminRole();
-        Authentication authentication = new UsernamePasswordAuthenticationToken(member.getId(), "",
-                Collections.emptyList());
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        given(memberRepository.findByUsername(authentication.getName())).willReturn(Optional.of(member));
+        given(loginMemberArgumentResolver.supportsParameter(any())).willReturn(true);
+        given(loginMemberArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(member);
 
         // when, then
         mockMvc.perform(
@@ -129,13 +129,10 @@ public class MessageControllerTest {
     void send_message_success() throws Exception {
         // given
         Long id = 1L;
-
-        // 테스트 코드 진행시 SecurityContext에 유저 정보 미리 담아두기
         Member member = createUserWithAdminRole();
-        Authentication authentication = new UsernamePasswordAuthenticationToken(member.getId(), "",
-                Collections.emptyList());
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        given(memberRepository.findByUsername(authentication.getName())).willReturn(Optional.of(member));
+
+        given(loginMemberArgumentResolver.supportsParameter(any())).willReturn(true);
+        given(loginMemberArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(member);
 
         // when, then
         mockMvc.perform(
@@ -149,12 +146,10 @@ public class MessageControllerTest {
     void delete_received_message_success() throws Exception {
         // given
         Long id = 1L;
-
         Member member = createUserWithAdminRole();
-        Authentication authentication = new UsernamePasswordAuthenticationToken(member.getId(), "",
-                Collections.emptyList());
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        given(memberRepository.findByUsername(authentication.getName())).willReturn(Optional.of(member));
+
+        given(loginMemberArgumentResolver.supportsParameter(any())).willReturn(true);
+        given(loginMemberArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(member);
 
         // when, then
         mockMvc.perform(
@@ -168,13 +163,10 @@ public class MessageControllerTest {
     void delete_sender_message_success() throws Exception {
         // given
         Long id = 1L;
-
-        // 테스트 코드 진행시 SecurityContext에 유저 정보 미리 담아두기
         Member member = createUserWithAdminRole();
-        Authentication authentication = new UsernamePasswordAuthenticationToken(member.getId(), "",
-                Collections.emptyList());
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        given(memberRepository.findByUsername(authentication.getName())).willReturn(Optional.of(member));
+
+        given(loginMemberArgumentResolver.supportsParameter(any())).willReturn(true);
+        given(loginMemberArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(member);
 
         // when, then
         mockMvc.perform(
