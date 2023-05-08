@@ -12,7 +12,7 @@
 - [X] 확장성을 위해 Domain 기본키 Long 타입으로 리팩토링 작업 (Done 22.12.31)
 - [X] User 도메인의 네이밍을 Member로 모두 변경 (Done 23.01.01)
 - [X] 페이징 처리 리팩토링 작업 (Done 23.01.03)
-- [x] Filter 이용한 유저 인증 리팩토링 작업 -> HandlerMethodArgumentResolver로 해결 (Done 23.05.04)
+- [x] 로그인 중복 로직 제거 및 빠른 인증 가능하도록 HandlerMethodArgumentResolver로 리팩토링 (Done 23.05.04)
 - [X] Redis를 이용한 포인트 랭킹 API 추가 (Done 23.01.18)
 - [ ] 기존에 해결한 N+1 문제 다른 방식으로 해결하기
 - [x] 2차 클린코드 리팩토링 작업, 테스트 다양한 케이스 추가 및 커버리지 높이기 (Done 23.04.04)
